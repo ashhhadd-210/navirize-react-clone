@@ -2,5 +2,5 @@
 # Without this it ships node_modules and the 104 MB reference recording.
 node_modules
 dist
-*.mp4
+/*.mp4
 .git

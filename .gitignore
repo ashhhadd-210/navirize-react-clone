@@ -4,6 +4,7 @@ dist
 *.local
 
 # screen recordings kept locally as reference, far over GitHub's 100 MB limit
-*.mp4
+# (root only - public/media ships real video assets)
+/*.mp4
 
 .vercel
