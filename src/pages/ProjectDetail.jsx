@@ -63,7 +63,7 @@ export default function ProjectDetail() {
               srcSet={`${project.image}?width=1200 1200w, ${project.image}?width=1800 1800w`}
               sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
               alt={project.alt}
-              fetchPriority="high"
+              fetchpriority="high"
               decoding="async"
             />
           </figure>

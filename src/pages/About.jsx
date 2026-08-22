@@ -15,7 +15,7 @@ function Media({ item, priority = false }) {
         sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
         alt={item.alt}
         loading={priority ? 'eager' : 'lazy'}
-        fetchPriority={priority ? 'high' : 'auto'}
+        fetchpriority={priority ? 'high' : 'auto'}
         decoding="async"
       />
     </figure>

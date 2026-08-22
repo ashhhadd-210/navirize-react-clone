@@ -27,7 +27,8 @@ export default function ProjectCard({ project, variant = 'grid', priority = fals
           }
           alt={project.alt}
           loading={priority ? 'eager' : 'lazy'}
-          fetchPriority={priority ? 'high' : 'auto'}
+          /* lowercase: React 18 does not recognise the camelCase form */
+          fetchpriority={priority ? 'high' : 'auto'}
           decoding="async"
         />
         <span className="card__badge">
