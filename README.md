@@ -224,10 +224,9 @@ Audit findings fixed rather than reproduced:
 
 ## Known approximations
 
-- The wordmark is set in letterspaced type; the original ships vector art. Its
-  first letter is U+144E CANADIAN SYLLABICS TI, not a Latin `N` — it falls
-  outside every Manrope subset, so that one glyph renders in a fallback face.
-  Worth replacing with vector art or a real Latin `N`.
+- ~~The wordmark is set in letterspaced type~~ — now the original's actual
+  vector wordmark, extracted from its data-URI background and inlined as a
+  single `currentColor` path in `icons.jsx`.
 - The services accordion's expanded state is reconstructed — the original keeps
   its 24 items in a clipped zero-height container, so the collapsed design is
   measured but the open state is inferred from the down-arrow affordance.
