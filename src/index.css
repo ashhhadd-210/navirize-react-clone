@@ -297,10 +297,24 @@ textarea {
 
 .nav__logo {
   justify-self: start;
-  font-size: 20px;
-  font-weight: 400;
-  letter-spacing: 0.18em;
+  display: flex;
+  align-items: center;
   line-height: 1;
+}
+
+/* Vector wordmark, 143x26 on the original at 1440. It inherits `color`, so the
+   same mark works on the light nav and on the black footer. */
+.nav__wordmark {
+  display: block;
+  width: 143px;
+  height: 26px;
+}
+
+@media (max-width: 767px) {
+  .nav__wordmark {
+    width: 118px;
+    height: 21px;
+  }
 }
 
 .nav__links {
@@ -706,17 +720,26 @@ textarea {
 
 .pagehead__lede {
   margin-top: 34px;
-  max-width: 795px;
-  font-size: 28px;
-  line-height: 1.45;
+  max-width: 800px;
+  font-size: 32px;
+  line-height: 1.4;
 }
 
 /* Paired media, measured on /about: two 24px-radius tiles side by side. */
 .media-pair {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 26px;
+  /* measured: 743px + 24px gap + 495px = the 1262px content box */
+  grid-template-columns: 743fr 495fr;
+  gap: 24px;
   margin-top: 120px;
+}
+
+.media-pair .media--about:first-child {
+  aspect-ratio: 743 / 400;
+}
+
+.media-pair .media--about:last-child {
+  aspect-ratio: 495 / 400;
 }
 
 .media-pair .media {
@@ -741,12 +764,33 @@ textarea {
   aspect-ratio: 16 / 10;
 }
 
-.media--16x10 img {
+/* About-page media, measured: radius 16px (project media are 24), and the two
+   full-width images are 1262x650. */
+.media--about {
+  border-radius: 16px;
+}
+
+.media--1262x650 {
+  aspect-ratio: 1262 / 650;
+}
+
+.media--16x10 img,
+.media--about img {
+  width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* ---------- numbered list (why us) ---------- */
+
+.stack__item--plain {
+  grid-template-columns: 1fr;
+}
+
+.row--wide .row__body {
+  max-width: 994px;
+}
+
 
 .stack {
   margin-top: 34px;
@@ -757,15 +801,14 @@ textarea {
   display: grid;
   grid-template-columns: var(--label-col) minmax(0, 795px);
   gap: 0;
-  padding: 30px 0;
+  padding: 18px 0;
   border-bottom: 1px solid var(--rule);
   align-items: start;
 }
 
 .stack__k {
-  font-size: var(--fs-label);
-  color: var(--grey);
-  padding-top: 10px;
+  font-size: var(--fs-card);
+  line-height: 1.4;
 }
 
 .stack__title {
@@ -774,10 +817,10 @@ textarea {
 }
 
 .stack__body {
-  margin-top: 10px;
+  margin-top: 4px;
   color: var(--grey);
-  font-size: var(--fs-base);
-  line-height: 1.55;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 /* ---------- contact ---------- */
@@ -896,62 +939,6 @@ textarea {
   background: var(--grey-soft);
 }
 
-/* ---------- project detail ---------- */
-
-.proj__facts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 200px));
-  gap: 40px;
-  margin-bottom: 46px;
-}
-
-.proj__fact-k {
-  font-size: var(--fs-label);
-  color: var(--grey);
-  margin-bottom: 8px;
-}
-
-.proj__block {
-  padding-top: 120px;
-}
-
-.proj__prose > * + * {
-  margin-top: 22px;
-}
-
-.proj__prose p {
-  color: var(--grey);
-  font-size: var(--fs-base);
-  line-height: 1.6;
-}
-
-.proj__prose p:first-child {
-  color: var(--black);
-  font-size: 22px;
-  line-height: 1.5;
-}
-
-.proj__gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
-  margin-top: 120px;
-}
-
-.proj__gallery .media {
-  margin-top: 0;
-}
-
-.proj__nextnav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin-top: 120px;
-  padding-top: 40px;
-  border-top: 1px solid var(--rule);
-}
-
 /* ---------- legal ---------- */
 
 .legal {
@@ -1055,14 +1042,22 @@ textarea {
     margin-top: 100px;
   }
 
-  .proj__gallery {
-    gap: 24px;
-  }
 }
 
 /* ==========================================================================
    Phone: <=767  (measured gutter 24px)
    ========================================================================== */
+
+@media (max-width: 767px) {
+  .media-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .media-pair .media--about:first-child,
+  .media-pair .media--about:last-child {
+    aspect-ratio: 16 / 10;
+  }
+}
 
 @media (max-width: 767px) {
   :root {
@@ -1174,28 +1169,13 @@ textarea {
   }
 
   .media,
-  .proj__block,
-  .proj__gallery,
-  .proj__nextnav {
+  .proj__media,
+  .proj__prose {
     margin-top: 70px;
   }
 
-  .proj__block {
-    padding-top: 70px;
-  }
 
-  .proj__gallery {
-    grid-template-columns: 1fr;
-  }
 
-  .proj__facts {
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-
-  .proj__prose p:first-child {
-    font-size: 18px;
-  }
 
   .body--lg {
     font-size: 18px;
@@ -1211,6 +1191,179 @@ textarea {
     gap: 16px;
     margin-top: 70px;
   }
+}
+
+/* ---------- project case study ----------
+
+   Measured on the original: prose in a 1200px column centred in the 1262px
+   content box; 64px/76.8 lede, 32px/44.8 section titles with their prefixes
+   inline, 24px/33.6 paragraphs, all #000. Media: wide frames around 1262x680
+   and 611x600 pairs (40px gap), radius 24. */
+
+.proj__meta {
+  display: flex;
+  gap: 64px;
+  margin-bottom: 60px;
+}
+
+.proj__meta dd {
+  margin: 8px 0 0;
+  font-size: 18px;
+}
+
+.proj__hero {
+  margin-top: 126px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--grey-soft);
+  aspect-ratio: 1280 / 709;
+}
+
+.proj__hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.proj__prose {
+  max-width: 1200px;
+  margin: 150px auto 0;
+}
+
+.proj__lede {
+  font-size: var(--fs-display, 64px);
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.proj__subtitle {
+  font-size: 32px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.proj__prose p {
+  margin-top: 33px;
+  font-size: 24px;
+  line-height: 1.4;
+  /* measured rgb(0,0,0) on the original — not the grey body colour */
+  color: var(--black);
+}
+
+.proj__media {
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--grey-soft);
+  margin-top: 130px;
+}
+
+.proj__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.proj__media--wide {
+  aspect-ratio: 1262 / 680;
+}
+
+.proj__media--sq {
+  aspect-ratio: 611 / 600;
+  margin-top: 0;
+}
+
+.proj__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 75px;
+}
+
+/* ---------- closing marquee ----------
+
+   Full-bleed strip that drifts left at ~28px/s (measured frame to frame on the
+   recording). Two copies of the run, track translates -50%, so the loop never
+   shows a seam. */
+
+.proj__marquee {
+  overflow: hidden;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 90px;
+}
+
+.proj__marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 120s) linear infinite;
+}
+
+.proj__marquee-run {
+  display: flex;
+  gap: 40px;
+  padding-right: 40px;
+}
+
+.proj__tile {
+  height: 340px;
+  flex: none;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--grey-soft);
+}
+
+.proj__tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 767px) {
+  .proj__meta {
+    flex-wrap: wrap;
+    gap: 28px;
+  }
+
+  .proj__prose p {
+    font-size: 20px;
+  }
+
+  .proj__pair {
+    grid-template-columns: 1fr;
+  }
+
+  .proj__tile {
+    height: 220px;
+  }
+}
+
+/* ---------- footer curtain ----------
+
+   The page content (.page-wrap) rides above the footer on its own layer; the
+   footer, when .foot--curtain is set from JS, is fixed to the viewport bottom
+   at z 0 and gets uncovered as the content scrolls away. The spacer keeps the
+   document tall enough that the scrollbar still reaches it. */
+
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+}
+
+.foot--curtain {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 0;
 }
 
 /* ---------- motion ----------
@@ -1298,5 +1451,10 @@ textarea {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+
+  /* A zero-duration infinite loop is a strobe, not stillness. */
+  .proj__marquee-track {
+    animation-play-state: paused;
   }
 }

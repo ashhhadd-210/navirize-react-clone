@@ -5,7 +5,7 @@ import TwoTone from '../components/TwoTone.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import ProjectCard from '../components/ProjectCard.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
-import { projects, headings, marks, img } from '../data/site.js'
+import { projects, headings } from '../data/site.js'
 import Reveal from '../components/Reveal.jsx'
 
 export default function Projects() {
@@ -52,16 +52,6 @@ export default function Projects() {
         </SectionRow>
       </Reveal>
 
-      <div className="shell mark">
-        <img
-          src={img(marks.n, 512)}
-          alt=""
-          width="181"
-          height="196"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
     </>
   )
 }

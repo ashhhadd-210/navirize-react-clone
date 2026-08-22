@@ -4,12 +4,12 @@ import RiseIn from '../components/RiseIn.jsx'
 import TwoTone from '../components/TwoTone.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
-import { whyUs, process, headings, aboutMedia, marks, img, imgSrcSet } from '../data/site.js'
+import { whyUs, process, headings, aboutMedia, img, imgSrcSet } from '../data/site.js'
 import Reveal from '../components/Reveal.jsx'
 
-function Media({ item, priority = false }) {
+function Media({ item, priority = false, wide = true }) {
   return (
-    <figure className="media media--16x10">
+    <figure className={`media media--about ${wide ? 'media--1262x650' : ''}`}>
       <img
         src={img(item.src, 2048)}
         srcSet={imgSrcSet(item.src)}
@@ -44,14 +44,14 @@ export default function About() {
 
         {/* paired media directly under the hero */}
         <div className="media-pair">
-          <Media item={aboutMedia[0]} priority />
-          <Media item={aboutMedia[1]} />
+          <Media item={aboutMedia[0]} priority wide={false} />
+          <Media item={aboutMedia[1]} wide={false} />
         </div>
       </section>
 
       {/* ---------- mission ---------- */}
       <Reveal as="section" className="shell section">
-        <SectionRow label="Our Mission">
+        <SectionRow label="Our Mission" className="row--wide">
           <TwoTone as="h2" className="h-section" {...headings.mission1} />
           <TwoTone as="p" className="h-section" {...headings.mission2} />
         </SectionRow>
@@ -60,14 +60,13 @@ export default function About() {
 
       {/* ---------- why us ---------- */}
       <Reveal as="section" className="shell section">
-        <SectionRow label="Why Us">
-          <TwoTone as="h2" className="h-section" {...headings.whyUs} />
+        <SectionRow label="Why Us" className="row--wide">
+          <TwoTone as="h2" className="h-section" breakLine {...headings.whyUs} />
         </SectionRow>
 
         <div className="stack">
-          {whyUs.map((item, i) => (
-            <div className="stack__item" key={item.title}>
-              <p className="stack__k">{String(i + 1).padStart(2, '0')}</p>
+          {whyUs.map((item) => (
+            <div className="stack__item stack__item--plain" key={item.title}>
               <div>
                 <h3 className="stack__title">{item.title}</h3>
                 <p className="stack__body">{item.body}</p>
@@ -75,11 +74,15 @@ export default function About() {
             </div>
           ))}
         </div>
+
+        {/* On the original this image sits between Why Us and How We Work,
+            not after the process steps. */}
+        <Media item={aboutMedia[3]} />
       </Reveal>
 
       {/* ---------- process ---------- */}
       <Reveal as="section" className="shell section">
-        <SectionRow label="How We Work">
+        <SectionRow label="How We Work" className="row--wide">
           <TwoTone as="h2" className="h-section" {...headings.process} />
         </SectionRow>
 
@@ -94,8 +97,6 @@ export default function About() {
             </li>
           ))}
         </ol>
-
-        <Media item={aboutMedia[3]} />
       </Reveal>
 
       {/* ---------- work closer ---------- */}
@@ -113,16 +114,6 @@ export default function About() {
         </SectionRow>
       </Reveal>
 
-      <div className="shell mark">
-        <img
-          src={img(marks.n, 512)}
-          alt=""
-          width="181"
-          height="196"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
     </>
   )
 }

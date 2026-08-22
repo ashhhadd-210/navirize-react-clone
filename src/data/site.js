@@ -350,13 +350,14 @@ export const headings = {
     black: 'Every project begins with a simple question:',
     grey: 'How should this brand be remembered?',
   },
+  // Grey span measured on the original: it starts at "every", with "so" black.
   process: {
-    black: 'Our process is built for momentum, organization and precision,',
-    grey: 'so every phase leads into the next with purpose.',
+    black: 'Our process is built for momentum, organization and precision, so',
+    grey: 'every phase leads into the next with purpose.',
   },
   aboutWork: {
-    black: 'See how we’ve helped brands communicate with',
-    grey: 'greater clarity, confidence, and authority.',
+    black: 'See how we’ve helped brands communicate with greater',
+    grey: 'clarity, confidence, and authority.',
   },
   contactHero: { black: 'Get in touch', grey: '' },
 }
@@ -550,6 +551,91 @@ export const legalPages = {
           'If you have questions about this policy or how we handle your data, reach us at contact@navirize.com.',
         ],
       },
+    ],
+  },
+}
+
+/**
+ * Case-study copy, scraped verbatim from each project page of the original
+ * (innerText, so paragraph breaks survive). Three sections per project:
+ * a 64px lede, then two 32px-titled sections whose prefixes ("The Thinking:",
+ * "The Outcome:") are part of the heading text itself on the original.
+ */
+export const caseStudies = {
+  'yachting-perfection-branding': {
+    lede: 'Reengineering Yacht Finishing: A Minimal, Precision-Driven Brand System.',
+    intro: [
+      'Yachting Perfection was designed to reposition yacht finishing through precision, restraint, and controlled perception.',
+      'The project combined competitive analysis, client personas, strategic positioning, and a minimal identity system to create a brand that feels composed, detail-aware, and uncompromising in standards.',
+      'The challenge was to establish a distinctive presence within a competitive market where many businesses relied on similar visual cues and inconsistent brand presentation. Beyond creating recognition, the objective was to build a brand system capable of communicating expertise, craftsmanship, and trust before a client ever experienced the work itself.',
+      'Rather than relying on expected luxury aesthetics or decorative elements, the identity was intentionally designed to stand apart through clarity, structure, and refinement.',
+    ],
+    thinkingTitle: 'The Thinking: Designing Through Structure Rather Than Decoration.',
+    thinking: [
+      'In a service where clients often judge quality before seeing results, perception becomes a competitive advantage.',
+      'Research revealed an opportunity to differentiate Yachting Perfection from competitors that relied heavily on conventional marine aesthetics. Instead of communicating luxury through excess, the brand was designed to communicate confidence through sharp simplicity.',
+      'Client personas, archetypes, and positioning work helped define a personality built around control, standards, and restraint. This foundation informed every decision throughout the brand identity system.',
+      'Typography was selected to balance structure with sophistication, combining geometric clarity with subtle refinement. A restrained palette of charcoal, linen, teak, and taupe was chosen to reflect the materials, environments, and craftsmanship associated with high-end yacht finishing.',
+      'Together, these elements created a system designed to feel calm, deliberate, and highly controlled, reflecting the standards behind the work itself.',
+    ],
+    outcomeTitle: 'The Outcome: A Brand Designed To Feel As Precise As The Work It Represents.',
+    outcome: [
+      'The final identity positions Yachting Perfection as the reference point for properly finished vessels.',
+      'Across print, apparel, signage, and digital applications, the system maintains a consistent sense of craftsmanship, professionalism, and control. Every component was designed to reinforce the same message: meticulous work deserves equally meticulous presentation.',
+      'The restrained visual language allows the brand to stand apart without relying on visual noise or exaggerated luxury cues. Instead, quality is communicated through clarity, consistency, and attention to detail.',
+      'The result is a cohesive identity that feels considered, trustworthy, and enduring, creating a brand experience that mirrors the standards of the work it represents.',
+    ],
+  },
+  'sea-coat-innovations-rebranding': {
+    lede: 'Turning Years Of Skill Into A Recognisable Brand.',
+    intro: [
+      'Sea Coat Innovations was built on years of skill, technical knowledge, and hands-on experience. The objective wasn’t to reinvent the business, but to create a brand identity capable of communicating the quality, professionalism, and precision already present within it.',
+      'Through strategic branding, web design, and positioning, the project focused on transforming years of expertise into a recognizable brand experience designed to build trust before a single conversation takes place.',
+    ],
+    thinkingTitle: 'The Thinking: Closing The Gap Between Perception And Reality.',
+    thinking: [
+      'Sea Coat Innovations had already earned its reputation through years of craftsmanship, technical expertise, and uncompromising standards. The challenge wasn’t improving the work itself. It was ensuring the brand reflected it.',
+      'The project began with an in-depth analysis of the three leading competitors in the market, uncovering opportunities for differentiation, positioning, and user experience.',
+      'While many competitors demonstrated strong technical capabilities, their brands often failed to communicate the level of expertise behind the work.',
+      'Generic messaging, inconsistent presentation, and familiar industry aesthetics created a disconnect between perception and reality.',
+      'The strategy focused on repositioning Sea Coat Innovations away from the expected aesthetics of the category. A more structured, technical, and innovative visual language was developed to reflect the standards, expertise, and discipline behind the work itself.',
+    ],
+    outcomeTitle: 'The Outcome: A Sharper & More Competent Reflection Of The Business.',
+    outcome: [
+      'Sea Coat Innovations now presents itself with the same level of precision, expertise, and professionalism that defines its work. What was once communicated primarily through reputation and word of mouth is now reflected consistently across every touchpoint.',
+      'Through a refined brand identity, strategic positioning, and a cohesive digital presence, the business gained a clearer and more distinctive market position. The result is a brand that communicates confidence, competence, and technical excellence before a single conversation takes place.',
+    ],
+  },
+  'sea-coat-innovations-web-design': {
+    lede: 'Translating Technical Expertise Online.',
+    intro: [
+      'Sea Coat Innovations had already earned the trust of clients through craftsmanship and technical excellence. The challenge was ensuring the digital experience reflected the same standard.',
+      'Rather than creating a conventional marketing website, the project focused on building an experience that communicates precision through clarity, structure, and intentional interaction. The result is a digital presence designed to express the quality of the business before its work is even seen.',
+    ],
+    thinkingTitle: 'The Thinking: The Experience Before The Service.',
+    thinking: [
+      'The website was developed to become a natural extension of the brand, carrying the same standards of precision, professionalism, and technical expertise into the digital space.',
+      'Rather than relying on conventional marketing patterns or unnecessary visual complexity, the experience focused on clarity, structure, and intentional interaction. Every page was designed to make information easier to understand, navigation effortless, and the overall experience feel as refined as the work itself.',
+      'The objective was simple: create a digital presence capable of communicating the same confidence and attention to detail clients could expect from Sea Coat Innovations long before the first conversation begins.',
+    ],
+    outcomeTitle: 'The Outcome: A Sharper & More Competent Reflection Of The Business.',
+    outcome: [
+      'Sea Coat Innovations now presents itself with the same level of precision, expertise, and professionalism that defines its work. What was once communicated primarily through reputation and word of mouth is now reflected consistently across every touchpoint.',
+    ],
+  },
+  'greenleaf-branding': {
+    lede: 'Bringing Clarity To Modern Wellness',
+    intro: [
+      'The wellness market is crowded with competing claims, natural ingredients, and visual clichés. GreenLeaf was created as a concept brand exploring how thoughtful strategy and contemporary design could build trust without relying on familiar industry tropes. Rather than simply appearing organic, the goal was to create a brand experience that feels fresh, approachable, and genuinely reassuring.',
+    ],
+    thinkingTitle: 'The Thinking: Research Before Resolution.',
+    thinking: [
+      'Rather than jumping straight into design, the project began by understanding the people behind the products. The research phase explored user personas, competitor positioning, journey mapping, customer motivations, industry opportunities, information architecture, and user flows to uncover what today’s wellness audience actually values.',
+      'The goal wasn’t simply to create another wellness brand, but to identify opportunities that competitors had overlooked and build an identity rooted in clarity, optimism, and trust. Every visual decision, from the bright botanical palette to the organic forms, typography, and digital experience, was shaped by those strategic insights rather than personal preference.',
+    ],
+    outcomeTitle: 'The Outcome: A More Desirable Wellness Brand.',
+    outcome: [
+      'What emerged wasn’t simply a visual identity, but a feeling. A brand that invites people to slow down, breathe deeper, and reconnect with themselves before they’ve even experienced the product. Every interaction was designed to feel effortless, every detail intentional, creating a quiet confidence that reflects the philosophy behind Greenleaf itself. The result is a brand that doesn’t compete for attention. It earns trust through clarity, consistency, and calm.',
     ],
   },
 }

@@ -1,122 +1,191 @@
-import { Link, useParams } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
 import RiseIn from '../components/RiseIn.jsx'
-import SectionRow from '../components/SectionRow.jsx'
-import { ArrowUpRight } from '../components/icons.jsx'
 import NotFound from './NotFound.jsx'
-import { projects, galleries, galleryUrl, img, imgSrcSet } from '../data/site.js'
+import { projects, galleries, galleryUrl, caseStudies, img, imgSrcSet } from '../data/site.js'
 
-function Block({ label, title, lede, paragraphs }) {
+/*
+ * Case-study layout, measured off the original at 1440:
+ *   meta row      Industry | Service | Project at y=213, values 18px below
+ *   title         64px, max 800px
+ *   hero          content-width frame, radius 24; the image inside is
+ *                 scroll-linked, scale ~1.25 -> 1.0 across its traversal
+ *   prose         1200px centred (x=111 in the 1262 content box), 64px lede,
+ *                 24px/33.6 paragraphs, section titles 32px/44.8 with their
+ *                 "The Thinking:" / "The Outcome:" prefixes inline
+ *   media         wide 1262x680-ish (ar 1.86-1.96) and 611x600 pairs (ar 1.02)
+ *                 interleaved between sections, radius 24
+ *   marquee       an auto-scrolling full-bleed strip of the remaining gallery,
+ *                 alternating 500x340 / 350x340 tiles, drifting left ~28px/s
+ */
+
+/* The original's hero zoom: measured at scale 1.226 with the hero just below
+   the fold, easing to 1 as it travels up the viewport. Scroll-linked, so a
+   plain rAF-throttled scroll handler, not an animation. */
+function ZoomHero({ project }) {
+  const frameRef = useRef(null)
+  const imgRef = useRef(null)
+
+  useEffect(() => {
+    const frame = frameRef.current
+    const image = imgRef.current
+    if (!frame || !image) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const r = frame.getBoundingClientRect()
+      const vh = window.innerHeight
+      // 0 when the frame's top touches the viewport bottom, 1 when its bottom
+      // leaves through the top — the full traversal.
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)))
+      image.style.transform = `scale(${(1.25 - 0.25 * p).toFixed(4)})`
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
   return (
-    <div className="proj__block">
-      <SectionRow label={label}>
-        <h2 className="h-section">{title}</h2>
-        <div className="proj__prose">
-          {lede ? <p>{lede}</p> : null}
-          {paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
-      </SectionRow>
+    <figure className="proj__hero" ref={frameRef}>
+      <img
+        ref={imgRef}
+        src={img(project.image, 2048)}
+        srcSet={imgSrcSet(project.image)}
+        sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
+        alt={project.alt}
+        fetchpriority="high"
+        decoding="async"
+      />
+    </figure>
+  )
+}
+
+function Wide({ src, alt }) {
+  return (
+    <figure className="proj__media proj__media--wide">
+      <img src={img(src, 2048)} srcSet={imgSrcSet(src)}
+        sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
+        alt={alt} loading="lazy" decoding="async" />
+    </figure>
+  )
+}
+
+function Pair({ items }) {
+  return (
+    <div className="proj__pair">
+      {items.map((it) => (
+        <figure className="proj__media proj__media--sq" key={it.src}>
+          <img src={img(it.src, 1024)} srcSet={imgSrcSet(it.src)}
+            sizes="(max-width: 767px) 100vw, (max-width: 1099px) calc(50vw - 60px), 611px"
+            alt={it.alt} loading="lazy" decoding="async" />
+        </figure>
+      ))}
+    </div>
+  )
+}
+
+function Prose({ title, big = false, paragraphs }) {
+  const Tag = big ? 'h2' : 'h3'
+  return (
+    <div className="proj__prose">
+      <Tag className={big ? 'proj__lede' : 'proj__subtitle'}>{title}</Tag>
+      {paragraphs.map((p) => (
+        <p key={p.slice(0, 32)}>{p}</p>
+      ))}
+    </div>
+  )
+}
+
+/* The closing strip on the original drifts left at ~28px/s, full-bleed,
+   alternating 500x340 and 350x340 tiles. The track is rendered twice and
+   translated -50%, so the loop is seamless; duration comes from the measured
+   speed and the actual track width. */
+function Marquee({ ids, title }) {
+  if (!ids.length) return null
+  const widths = ids.map((_, i) => (i % 2 === 0 ? 500 : 350))
+  const trackWidth = widths.reduce((a, w) => a + w + 40, 0)
+  const duration = Math.round(trackWidth / 28)
+  const tiles = ids.map((id, i) => ({ id, w: widths[i] }))
+  return (
+    <div className="proj__marquee" aria-hidden="true">
+      <div className="proj__marquee-track" style={{ '--marquee-duration': `${duration}s` }}>
+        {[0, 1].map((copy) => (
+          <div className="proj__marquee-run" key={copy}>
+            {tiles.map(({ id, w }) => (
+              <figure className="proj__tile" style={{ width: w }} key={copy + id}>
+                <img src={img(galleryUrl(id), 512)} alt="" loading="lazy" decoding="async" />
+              </figure>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
 
 export default function ProjectDetail() {
   const { slug } = useParams()
-  const index = projects.findIndex((p) => p.slug === slug)
-  if (index === -1) return <NotFound />
+  const project = projects.find((p) => p.slug === slug)
+  if (!project) return <NotFound />
 
-  const project = projects[index]
-  const next = projects[(index + 1) % projects.length]
+  const study = caseStudies[slug]
   const gallery = galleries[slug] || []
+  const g = (i) => (gallery[i] ? galleryUrl(gallery[i]) : null)
+  const alt = (i) => `${project.title} — application ${i + 1}`
+  const marqueeIds = gallery.slice(6)
 
   return (
     <>
-      <Seo title={`${project.title} - Navirize`} description={project.lede} />
+      <Seo
+        title={`Navirize - ${project.title}`}
+        description={project.lede}
+      />
 
       <article>
         <header className="shell pagehead">
-          <RiseIn delay={0.15}>
-            <div className="proj__facts">
+          <RiseIn delay={0.1}>
+            <dl className="proj__meta">
               <div>
-                <p className="proj__fact-k">Industry</p>
-                <p>{project.industry}</p>
+                <dt className="label">Industry</dt>
+                <dd>{project.industry}</dd>
               </div>
               <div>
-                <p className="proj__fact-k">Service</p>
-                <p>{project.service}</p>
+                <dt className="label">Service</dt>
+                <dd>{project.service}</dd>
               </div>
               <div>
-                <p className="proj__fact-k">Project</p>
-                <p>{project.code}</p>
+                <dt className="label">Project</dt>
+                <dd>{project.code}</dd>
               </div>
-            </div>
-
-            <h1 className="display">{project.title}</h1>
-            <p className="body--lg grey pagehead__lede">{project.lede}</p>
+            </dl>
+            <h1 className="display display--narrow">{project.title}</h1>
           </RiseIn>
 
-          <figure className="media media--16x10">
-            <img
-              src={img(project.image, 2048)}
-              srcSet={imgSrcSet(project.image)}
-              sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
-              alt={project.alt}
-              fetchpriority="high"
-              decoding="async"
-            />
-          </figure>
+          <ZoomHero project={project} />
         </header>
 
         <div className="shell">
-          <Block
-            label="Overview"
-            title={project.lede}
-            lede={null}
-            paragraphs={project.intro}
-          />
-          <Block
-            label="The Thinking"
-            title={project.thinkingTitle}
-            lede={project.thinkingLede}
-            paragraphs={project.thinking}
-          />
+          <Prose big title={study.lede} paragraphs={study.intro} />
+          {g(0) && <Wide src={g(0)} alt={alt(0)} />}
+          {g(1) && g(2) && <Pair items={[{ src: g(1), alt: alt(1) }, { src: g(2), alt: alt(2) }]} />}
 
-          {gallery.length > 0 && (
-            <div className="proj__gallery">
-              {gallery.map((id, i) => (
-                <figure className="media media--16x10" key={id}>
-                  <img
-                    src={img(galleryUrl(id), 1024)}
-                    srcSet={imgSrcSet(galleryUrl(id))}
-                    sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
-                    alt={`${project.title} — application ${i + 1}`}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </figure>
-              ))}
-            </div>
-          )}
+          <Prose title={study.thinkingTitle} paragraphs={study.thinking} />
+          {g(3) && <Wide src={g(3)} alt={alt(3)} />}
+          {g(4) && g(5) && <Pair items={[{ src: g(4), alt: alt(4) }, { src: g(5), alt: alt(5) }]} />}
 
-          <Block
-            label="The Outcome"
-            title={project.outcomeTitle}
-            lede={project.outcomeLede}
-            paragraphs={project.outcome}
-          />
-
-          <nav className="proj__nextnav" aria-label="Project navigation">
-            <Link to="/projects" className="nav__link">
-              All projects
-            </Link>
-            <Link to={`/projects/${next.slug}`} className="btn btn--soft">
-              Next: {next.title}
-              <ArrowUpRight />
-            </Link>
-          </nav>
+          <Prose title={study.outcomeTitle} paragraphs={study.outcome} />
         </div>
+
+        <Marquee ids={marqueeIds} />
       </article>
     </>
   )

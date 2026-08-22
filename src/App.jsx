@@ -22,11 +22,16 @@ import NotFound from './pages/NotFound.jsx'
    a multi-page site the original renders with plain document loads bought
    nothing but latency. Keying <main> on the pathname remounts it, which
    restarts the CSS enter fade. */
+/* .page-wrap carries the opaque background and z-index that keep the page
+   above the fixed footer; the fade lives on <main> inside it, so the footer
+   never flashes through during a route transition. */
 function Page({ children }) {
   return (
-    <main id="main" className="page-fade">
-      {children}
-    </main>
+    <div className="page-wrap">
+      <main id="main" className="page-fade">
+        {children}
+      </main>
+    </div>
   )
 }
 
