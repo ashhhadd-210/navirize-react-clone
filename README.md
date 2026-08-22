@@ -222,6 +222,21 @@ Audit findings fixed rather than reproduced:
 10. Content fixes: "User **Psycology**" → "Psychology"; "work that **feel**
     timeless" → "feels"; the duplicated About mission sentence removed.
 
+## The chrome "N" mark
+
+On the original the brand mark between the last section and the footer is a
+live WebGL shader (`data-framer-component-type="Shader"`) — liquid metal
+flowing over the letterform — with the static PNG as a fade-in fallback. The
+shader source isn't extractable, so this build ships a capture of its canvas
+output, recorded straight off the live site at 2x via `canvas.captureStream()`:
+
+- `public/media/n-mark.webm` — VP9 **with alpha** (the recording keeps the
+  canvas's transparency), composites onto the page background
+- `public/media/n-mark-white.mp4` — H.264 matted onto white for Safari, which
+  drops VP9 alpha; on the white page the matte is invisible
+
+The PNG stays as `poster` and reduced-motion fallback.
+
 ## Known approximations
 
 - ~~The wordmark is set in letterspaced type~~ — now the original's actual

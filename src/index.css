@@ -1349,10 +1349,12 @@ textarea {
 
 /* ---------- footer curtain ----------
 
-   The page content (.page-wrap) rides above the footer on its own layer; the
-   footer, when .foot--curtain is set from JS, is fixed to the viewport bottom
-   at z 0 and gets uncovered as the content scrolls away. The spacer keeps the
-   document tall enough that the scrollbar still reaches it. */
+   The page content (.page-wrap) rides above the footer on its own layer. The
+   footer wrapper stays in normal flow (its rect is the flow position the JS
+   measures against); the inner footer is the parallax-translated curtain,
+   emerging from beneath the white content as the page nears its end.
+   The wrapper keeps its own black background so the strip the inner element
+   vacates at the bottom never flashes white. */
 
 .page-wrap {
   position: relative;
@@ -1360,10 +1362,10 @@ textarea {
   background: var(--white);
 }
 
-.foot--curtain {
-  position: fixed;
-  inset: auto 0 0 0;
+.foot-wrap {
+  position: relative;
   z-index: 0;
+  background: var(--black);
 }
 
 /* ---------- motion ----------

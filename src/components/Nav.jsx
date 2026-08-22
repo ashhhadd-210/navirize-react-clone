@@ -4,19 +4,27 @@ import { brand, nav } from '../data/site.js'
 import { ArrowUpRight, Wordmark } from './icons.jsx'
 
 /**
- * Measured behaviour on the original: the header is position:fixed with a
- * transparent background (no blur, no border) and is visible ONLY at the very
- * top of the document. A sweep of scrollY = 0 / 20 / 40 / 60 / 80 / 120 / 200
- * / 400 showed it visible at 0 and translated out of view at every other
- * offset — it does not return on scroll-up, only on reaching the top again.
+ * The header is position:fixed and transparent — no blur, no border. An
+ * earlier probe concluded it was visible only at the very top; screen
+ * recordings of the original show it returning mid-page the moment you
+ * scroll UP (it overlays the content, still transparent), then hiding again
+ * on the next downward scroll. Programmatic scrollTo jumps don't trigger
+ * Framer's direction variant, which is how the first probe got it wrong.
  */
 export default function Nav() {
-  const [atTop, setAtTop] = useState(true)
+  const [shown, setShown] = useState(true)
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
 
   useEffect(() => {
-    const onScroll = () => setAtTop(window.scrollY <= 8)
+    let lastY = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      if (y <= 8) setShown(true)
+      else if (y < lastY - 2) setShown(true)   // any upward intent reveals it
+      else if (y > lastY + 2) setShown(false)  // downward hides it
+      lastY = y
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -32,7 +40,7 @@ export default function Nav() {
   }, [open])
 
   // While the mobile sheet is open the bar must stay put regardless of scroll.
-  const hidden = !atTop && !open
+  const hidden = !shown && !open
 
   return (
     <header className={`nav${hidden ? ' nav--hidden' : ''}`}>

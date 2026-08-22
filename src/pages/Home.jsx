@@ -7,7 +7,8 @@ import ProjectCard from '../components/ProjectCard.jsx'
 import Accordion from '../components/Accordion.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
-import { projects, services, headings, marks, img } from '../data/site.js'
+import MarkVideo from '../components/MarkVideo.jsx'
+import { projects, services, headings } from '../data/site.js'
 
 export default function Home() {
   const [featured, ...rest] = projects
@@ -89,16 +90,7 @@ export default function Home() {
       </Reveal>
 
       {/* ---------- centred brand mark before the black footer ---------- */}
-      <div className="shell mark">
-        <img
-          src={img(marks.n, 512)}
-          alt=""
-          width="181"
-          height="196"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
+      <MarkVideo />
     </>
   )
 }
