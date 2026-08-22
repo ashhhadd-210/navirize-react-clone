@@ -1,0 +1,6 @@
+# The CLI uploads the working directory, and it does not read .gitignore.
+# Without this it ships node_modules and the 104 MB reference recording.
+node_modules
+dist
+*.mp4
+.git

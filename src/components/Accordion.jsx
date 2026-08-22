@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowDown } from './icons.jsx'
 
 /**
@@ -7,6 +6,12 @@ import { ArrowDown } from './icons.jsx'
  * with a 1px rule between them and a down-arrow at the right edge, while the
  * 24 child items sit in the DOM inside a clipped, zero-height container —
  * i.e. a collapsed accordion. Expanding is reconstructed here.
+ *
+ * The open/close used to be a motion library animating `height: auto`. It is
+ * now the CSS grid `0fr -> 1fr` transition, which gets the same auto-height
+ * easing with no library and no JS measuring pass. The panel stays mounted, so
+ * `visibility` on the clip keeps collapsed items out of the tab order and away
+ * from screen readers — the job the old unmount-on-close did.
  */
 export default function Accordion({ groups }) {
   const [openIndex, setOpenIndex] = useState(null)
@@ -29,24 +34,15 @@ export default function Accordion({ groups }) {
               <ArrowDown />
             </button>
 
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  id={panelId}
-                  className="acc__panel"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
-                >
-                  <ul className="acc__list">
-                    {group.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div id={panelId} className="acc__panel" data-open={isOpen ? 'true' : 'false'}>
+              <div className="acc__panel-clip">
+                <ul className="acc__list">
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         )
       })}

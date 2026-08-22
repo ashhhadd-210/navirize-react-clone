@@ -12,6 +12,25 @@
      footer      #000 with white text
    ========================================================================== */
 
+/* Manrope, self-hosted. Previously two render-blocking hops to Google
+   (fonts.googleapis.com for the CSS, then fonts.gstatic.com for the file) —
+   a DNS + TLS handshake to each before a single glyph could paint. This is one
+   same-origin, immutably-cached request, preloaded from index.html.
+
+   Latin subset only, 24.8 KB for the whole 200..800 weight axis: every
+   character in the site's copy was checked against the subset's unicode-range
+   and falls inside it. */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('/fonts/manrope-latin-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --white: #fff;
   --black: #000;
@@ -370,8 +389,28 @@ textarea {
 }
 
 .nav__sheet {
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: 0fr;
   background: var(--white);
+  transition: grid-template-rows 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.nav__sheet[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+/* The grid row can only collapse if the single child is itself clippable and
+   allowed to shrink past its content. `visibility` keeps the closed sheet's
+   links out of the tab order without unmounting them. */
+.nav__sheet-clip {
+  overflow: hidden;
+  min-height: 0;
+  visibility: hidden;
+  transition: visibility 0.35s;
+}
+
+.nav__sheet[data-open='true'] .nav__sheet-clip {
+  visibility: visible;
 }
 
 .nav__sheet-inner {
@@ -540,7 +579,28 @@ textarea {
 }
 
 .acc__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.4s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.acc__panel[data-open='true'] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.acc__panel-clip {
   overflow: hidden;
+  min-height: 0;
+  visibility: hidden;
+  transition: visibility 0.4s;
+}
+
+.acc__panel[data-open='true'] .acc__panel-clip {
+  visibility: visible;
 }
 
 .acc__list {
@@ -1149,6 +1209,45 @@ textarea {
     gap: 16px;
     margin-top: 70px;
   }
+}
+
+/* ---------- motion ----------
+
+   These two keyframes are the whole animation budget of the site. They
+   replaced framer-motion, which cost 37.8 KB gzipped — a third of the JS
+   bundle — to do exactly this. Running them as CSS keeps them off the main
+   thread and off the critical path. */
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-y, 50px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* `both` holds the from-state through the delay, the way the old library's
+   `initial` prop did — without it a delayed element flashes in at full
+   opacity before its animation starts. */
+.rise-in {
+  animation: rise-in var(--rise-duration, 0.5s) cubic-bezier(0.33, 1, 0.68, 1)
+    var(--rise-delay, 0s) both;
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-fade {
+  animation: page-fade 0.22s linear both;
 }
 
 /* ---------- reduced motion ---------- */

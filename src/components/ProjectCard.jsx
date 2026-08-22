@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from './icons.jsx'
+import { img, imgSrcSet } from '../data/site.js'
 
 /**
  * Two variants, both measured on the original:
@@ -11,15 +12,17 @@ import { ArrowUpRight } from './icons.jsx'
  */
 export default function ProjectCard({ project, variant = 'grid', priority = false }) {
   const featured = variant === 'featured'
-  const w = featured ? 1800 : 1200
+  // Featured renders 1280 CSS px, grid cards 620 — so 2048 covers the featured
+  // at 1.6x and the grid cards well past 2x. 4096 is never worth its weight.
+  const fallback = featured ? 2048 : 1024
 
   return (
     <Link to={`/projects/${project.slug}`} className="card">
       <div className={`card__frame card__frame--${featured ? 'featured' : 'grid'}`}>
         <img
           className="card__img"
-          src={`${project.image}?width=${w}`}
-          srcSet={`${project.image}?width=800 800w, ${project.image}?width=1200 1200w, ${project.image}?width=1800 1800w`}
+          src={img(project.image, fallback)}
+          srcSet={imgSrcSet(project.image)}
           sizes={
             featured
               ? '(max-width: 767px) 100vw, (max-width: 1099px) calc(100vw - 80px), 1280px'

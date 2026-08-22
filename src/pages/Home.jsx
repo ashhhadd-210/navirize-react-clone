@@ -6,7 +6,7 @@ import SectionRow from '../components/SectionRow.jsx'
 import ProjectCard from '../components/ProjectCard.jsx'
 import Accordion from '../components/Accordion.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
-import { projects, services, headings, marks } from '../data/site.js'
+import { projects, services, headings, marks, img } from '../data/site.js'
 
 export default function Home() {
   const [featured, ...rest] = projects
@@ -90,7 +90,7 @@ export default function Home() {
       {/* ---------- centred brand mark before the black footer ---------- */}
       <div className="shell mark">
         <img
-          src={`${marks.n}?width=362`}
+          src={img(marks.n, 512)}
           alt=""
           width="181"
           height="196"

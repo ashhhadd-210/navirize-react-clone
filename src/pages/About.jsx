@@ -4,14 +4,14 @@ import RiseIn from '../components/RiseIn.jsx'
 import TwoTone from '../components/TwoTone.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
-import { whyUs, process, headings, aboutMedia, marks } from '../data/site.js'
+import { whyUs, process, headings, aboutMedia, marks, img, imgSrcSet } from '../data/site.js'
 
 function Media({ item, priority = false }) {
   return (
     <figure className="media media--16x10">
       <img
-        src={`${item.src}?width=1800`}
-        srcSet={`${item.src}?width=1200 1200w, ${item.src}?width=1800 1800w`}
+        src={img(item.src, 2048)}
+        srcSet={imgSrcSet(item.src)}
         sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
         alt={item.alt}
         loading={priority ? 'eager' : 'lazy'}
@@ -114,7 +114,7 @@ export default function About() {
 
       <div className="shell mark">
         <img
-          src={`${marks.n}?width=362`}
+          src={img(marks.n, 512)}
           alt=""
           width="181"
           height="196"

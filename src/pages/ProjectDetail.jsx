@@ -4,7 +4,7 @@ import RiseIn from '../components/RiseIn.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import NotFound from './NotFound.jsx'
-import { projects, galleries, galleryUrl } from '../data/site.js'
+import { projects, galleries, galleryUrl, img, imgSrcSet } from '../data/site.js'
 
 function Block({ label, title, lede, paragraphs }) {
   return (
@@ -59,8 +59,8 @@ export default function ProjectDetail() {
 
           <figure className="media media--16x10">
             <img
-              src={`${project.image}?width=1800`}
-              srcSet={`${project.image}?width=1200 1200w, ${project.image}?width=1800 1800w`}
+              src={img(project.image, 2048)}
+              srcSet={imgSrcSet(project.image)}
               sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
               alt={project.alt}
               fetchpriority="high"
@@ -88,7 +88,9 @@ export default function ProjectDetail() {
               {gallery.map((id, i) => (
                 <figure className="media media--16x10" key={id}>
                   <img
-                    src={`${galleryUrl(id)}?width=1200`}
+                    src={img(galleryUrl(id), 1024)}
+                    srcSet={imgSrcSet(galleryUrl(id))}
+                    sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
                     alt={`${project.title} — application ${i + 1}`}
                     loading="lazy"
                     decoding="async"

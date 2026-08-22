@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
 import { brand, nav } from '../data/site.js'
 import { ArrowUpRight, Wordmark } from './icons.jsx'
 
@@ -66,40 +65,34 @@ export default function Nav() {
         </button>
       </div>
 
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id="nav-sheet"
-            className="nav__sheet"
-            initial={{ height: 0 }}
-            animate={{ height: 'auto' }}
-            exit={{ height: 0 }}
-            transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }}
-          >
-            <div className="shell nav__sheet-inner">
-              <Link to="/" className="nav__sheet-link">
-                Home
+      {/* Height animated with the CSS grid 0fr -> 1fr transition rather than a
+          motion library. The sheet stays mounted, so the clip carries
+          `visibility: hidden` while closed to keep its links untabbable. */}
+      <div id="nav-sheet" className="nav__sheet" data-open={open ? 'true' : 'false'}>
+        <div className="nav__sheet-clip">
+          <div className="shell nav__sheet-inner">
+            <Link to="/" className="nav__sheet-link">
+              Home
+            </Link>
+            {nav.map((item) => (
+              <Link key={item.to} to={item.to} className="nav__sheet-link">
+                {item.label}
               </Link>
-              {nav.map((item) => (
-                <Link key={item.to} to={item.to} className="nav__sheet-link">
-                  {item.label}
-                </Link>
-              ))}
-              <Link to="/contact" className="nav__sheet-link">
-                Contact
-              </Link>
-              <Link
-                to="/contact"
-                className="btn btn--dark"
-                style={{ marginTop: 26, alignSelf: 'flex-start' }}
-              >
-                Start Your Project
-                <ArrowUpRight />
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            ))}
+            <Link to="/contact" className="nav__sheet-link">
+              Contact
+            </Link>
+            <Link
+              to="/contact"
+              className="btn btn--dark"
+              style={{ marginTop: 26, alignSelf: 'flex-start' }}
+            >
+              Start Your Project
+              <ArrowUpRight />
+            </Link>
+          </div>
+        </div>
+      </div>
     </header>
   )
 }

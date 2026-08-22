@@ -3,6 +3,23 @@
 
 const CDN = 'https://framerusercontent.com/images'
 
+/**
+ * Framer's CDN resizes via `scale-down-to`, and only accepts the buckets
+ * 512 / 1024 / 2048 / 4096. The `?width=` param this build used previously is
+ * silently ignored: every image came back at its full original size — the home
+ * page pulled 5.9 MB of PNG where 183 KB was needed. The same URL also
+ * content-negotiates, so a browser sending `Accept: image/webp` gets WebP back
+ * for free.
+ */
+const BUCKETS = [512, 1024, 2048]
+
+/** One resized URL. `bucket` must be one of BUCKETS (or 4096). */
+export const img = (src, bucket = 1024) => `${src}?scale-down-to=${bucket}`
+
+/** A full srcset across the buckets, so the browser picks by `sizes`. */
+export const imgSrcSet = (src, buckets = BUCKETS) =>
+  buckets.map((b) => `${img(src, b)} ${b}w`).join(', ')
+
 export const brand = {
   name: 'Navirize',
   legalName: 'Navirize OÜ',

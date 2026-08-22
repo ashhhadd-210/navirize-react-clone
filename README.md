@@ -25,10 +25,12 @@ npm run preview  # serve the production build
 | Build | Vite 5 |
 | UI | React 18 |
 | Routing | react-router-dom 6 (8 routes, mirrors the original sitemap) |
-| Motion | framer-motion 11 |
+| Motion | Plain CSS keyframes and transitions |
 | Styling | Plain CSS with custom properties |
+| Fonts | Manrope variable, self-hosted (latin subset, 24.8 KB) |
 
-Bundle: **~105 KB gzipped JS**, vs **~243 KB** for the original's Framer runtime.
+Bundle: **67.8 KB gzipped JS** across three cache-split chunks, vs **~243 KB**
+for the original's Framer runtime.
 Rendered page height 5657px vs the original's 5969px at 1440 wide.
 
 ## What the measurement pass found
@@ -108,6 +110,56 @@ src/
    Home · Projects · ProjectDetail · About · Contact · Legal · NotFound
 ```
 
+## Performance
+
+The first deploy was slow for one reason, and it was not the bundle.
+
+**Images were being requested at full original size.** Framer's CDN resizes via
+`?scale-down-to=`, which only accepts the buckets 512 / 1024 / 2048 / 4096. This
+build was passing `?width=`, which the CDN silently ignores — so every `<img>`,
+`srcset` candidate included, came back as the untouched source PNG. The home
+page pulled **5.9 MB** of images where **183 KB** was needed; the hero alone was
+1.3 MB instead of 106 KB. `src/data/site.js` now exports `img()` and
+`imgSrcSet()` and every call site goes through them, so the bucket set is
+defined once. The same URLs content-negotiate, so browsers get WebP for free.
+
+**framer-motion was a third of the JS.** 37.8 KB gzipped for four transitions:
+a mount rise, a route fade, and two panels animating to `height: auto`. All four
+are CSS now — a `rise-in` keyframe, a `page-fade` keyframe, and the grid
+`0fr -> 1fr` trick for the accordion and the mobile nav sheet, which gets
+auto-height easing with no measuring pass. The panels stay mounted, so
+`visibility` on the clip keeps collapsed content out of the tab order, which is
+the job the old unmount-on-close was doing.
+
+**Fonts were two render-blocking third-party hops** — resolve and handshake
+`fonts.googleapis.com`, fetch the CSS, only then discover the file on
+`fonts.gstatic.com`. Manrope is now self-hosted in `public/fonts/`, latin subset,
+24.8 KB for the whole 200..800 axis, preloaded and immutably cached. Every
+character in the site's copy was checked against the subset's `unicode-range`.
+
+**Hashed assets were served `max-age=0, must-revalidate`**, costing a round trip
+per asset per visit. `vercel.json` now marks `/assets/*` and `/fonts/*`
+immutable for a year.
+
+**The LCP image could not be discovered until React had rendered it.** An inline
+script in `index.html` injects a `rel=preload` with the same
+`imagesrcset`/`imagesizes` as `ProjectCard`'s featured variant — injected rather
+than static, because one `index.html` serves every route and a visitor landing
+on `/contact` should not pay for a hero they never see.
+
+| | before | after |
+| --- | --- | --- |
+| Home page images | 5,927 KB | 183 KB |
+| JS (gzipped) | ~105 KB | 67.8 KB |
+| JS chunks | 1 | 3 (react / router / app) |
+| Blocking font requests | 2 cross-origin | 0 |
+| Repeat-visit asset revalidation | every asset | none |
+| **Home page first load** | **~6.0 MB** | **~280 KB** |
+
+Route-level `React.lazy` was considered and skipped: the whole app chunk is
+14 KB gzipped, so splitting it would trade a real navigation waterfall for a
+saving smaller than the router itself.
+
 ## Deliberate differences from the original
 
 Audit findings fixed rather than reproduced:
@@ -131,7 +183,10 @@ Audit findings fixed rather than reproduced:
 
 ## Known approximations
 
-- The wordmark is set in letterspaced type; the original ships vector art.
+- The wordmark is set in letterspaced type; the original ships vector art. Its
+  first letter is U+144E CANADIAN SYLLABICS TI, not a Latin `N` — it falls
+  outside every Manrope subset, so that one glyph renders in a fallback face.
+  Worth replacing with vector art or a real Latin `N`.
 - The services accordion's expanded state is reconstructed — the original keeps
   its 24 items in a clipped zero-height container, so the collapsed design is
   measured but the open state is inferred from the down-arrow affordance.

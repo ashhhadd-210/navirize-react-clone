@@ -2,3 +2,8 @@ node_modules
 dist
 .DS_Store
 *.local
+
+# screen recordings kept locally as reference, far over GitHub's 100 MB limit
+*.mp4
+
+.vercel

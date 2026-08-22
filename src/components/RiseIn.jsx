@@ -1,5 +1,3 @@
-import { motion, useReducedMotion } from 'framer-motion'
-
 /**
  * The original's ONE animation, measured off the live site:
  *   opacity 0 -> 1, translateY 50px -> 0, ~500ms, ease-out, on mount.
@@ -10,6 +8,12 @@ import { motion, useReducedMotion } from 'framer-motion'
  * measured opacity:1 / transform:none while still far below the fold, so the
  * original has no scroll-triggered reveals at all. This component is used
  * only where the original actually animates.
+ *
+ * This was framer-motion. The library cost 37.8 KB gzipped — a third of the JS
+ * bundle — to drive four transitions the platform does natively, so it is now
+ * a CSS keyframe (`.rise-in` in index.css) parameterised through custom
+ * properties. It runs off the main thread and needs no JS at all.
+ * `prefers-reduced-motion` is handled by the global rule in index.css.
  */
 export default function RiseIn({
   children,
@@ -17,30 +21,22 @@ export default function RiseIn({
   y = 50,
   duration = 0.5,
   className = '',
-  as = 'div',
+  as: Tag = 'div',
+  style,
   ...rest
 }) {
-  const reduce = useReducedMotion()
-  const Tag = as
-  const MotionTag = motion[as] || motion.div
-
-  if (reduce) {
-    return (
-      <Tag className={className} {...rest}>
-        {children}
-      </Tag>
-    )
-  }
-
   return (
-    <MotionTag
-      className={className}
-      initial={{ opacity: 0, y }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration, delay, ease: [0.33, 1, 0.68, 1] }}
+    <Tag
+      className={className ? `rise-in ${className}` : 'rise-in'}
+      style={{
+        '--rise-y': `${y}px`,
+        '--rise-duration': `${duration}s`,
+        '--rise-delay': `${delay}s`,
+        ...style,
+      }}
       {...rest}
     >
       {children}
-    </MotionTag>
+    </Tag>
   )
 }

@@ -26,13 +26,30 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000'/%3E%3Ctext x='16' y='23' font-family='Manrope,Arial,sans-serif' font-size='19' font-weight='500' fill='%23fff' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E"
     />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Manrope self-hosted (@font-face in index.css); replaces two
+         render-blocking hops to Google. crossorigin is required even
+         same-origin or the preload misses and the font downloads twice. -->
+    <link rel="preload" as="font" type="font/woff2"
+          href="/fonts/manrope-latin-var.woff2" crossorigin />
+
     <link rel="preconnect" href="https://framerusercontent.com" crossorigin />
+
+    <!-- LCP preload. React renders the hero card, so the browser cannot
+         discover it until the bundle has parsed and committed. Injected rather
+         than static because one index.html serves every route: a visitor
+         landing on /contact should not pay for a hero they never see.
+         imagesrcset/imagesizes must stay in step with ProjectCard's featured
+         variant, or the browser preloads one candidate and fetches another. -->
+    <script>
+      if (location.pathname === '/') {
+        var u = 'https://framerusercontent.com/images/JNziGdwpvT1dypSYFfqgibRKDzg.png'
+        var l = document.createElement('link')
+        l.rel = 'preload'; l.as = 'image'; l.fetchPriority = 'high'
+        l.imageSrcset = u + '?scale-down-to=512 512w,' + u + '?scale-down-to=1024 1024w,' + u + '?scale-down-to=2048 2048w'
+        l.imageSizes = '(max-width: 767px) 100vw, (max-width: 1099px) calc(100vw - 80px), 1280px'
+        document.head.appendChild(l)
+      }
+    </script>
 
     <script type="application/ld+json">
       {
