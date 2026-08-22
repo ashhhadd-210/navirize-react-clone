@@ -1,0 +1,127 @@
+import { Link } from 'react-router-dom'
+import Seo from '../components/Seo.jsx'
+import RiseIn from '../components/RiseIn.jsx'
+import TwoTone from '../components/TwoTone.jsx'
+import SectionRow from '../components/SectionRow.jsx'
+import { ArrowUpRight } from '../components/icons.jsx'
+import { whyUs, process, headings, aboutMedia, marks } from '../data/site.js'
+
+function Media({ item, priority = false }) {
+  return (
+    <figure className="media media--16x10">
+      <img
+        src={`${item.src}?width=1800`}
+        srcSet={`${item.src}?width=1200 1200w, ${item.src}?width=1800 1800w`}
+        sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
+        alt={item.alt}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
+        decoding="async"
+      />
+    </figure>
+  )
+}
+
+export default function About() {
+  return (
+    <>
+      <Seo
+        title="Navirize - About"
+        description="Navirize combines strategy, psychology, and design to create work that feels timeless, intentional, and world-class."
+      />
+
+      <section className="shell pagehead">
+        <RiseIn delay={0.15}>
+          <p className="label pagehead__label">About Us</p>
+          <TwoTone
+            as="h1"
+            className="display display--narrow"
+            {...headings.aboutHero}
+          />
+          <p className="pagehead__lede">{headings.aboutLede}</p>
+        </RiseIn>
+
+        {/* paired media directly under the hero */}
+        <div className="media-pair">
+          <Media item={aboutMedia[0]} priority />
+          <Media item={aboutMedia[1]} />
+        </div>
+      </section>
+
+      {/* ---------- mission ---------- */}
+      <section className="shell section">
+        <SectionRow label="Our Mission">
+          <TwoTone as="h2" className="h-section" {...headings.mission1} />
+          <TwoTone as="p" className="h-section" {...headings.mission2} />
+        </SectionRow>
+        <Media item={aboutMedia[2]} />
+      </section>
+
+      {/* ---------- why us ---------- */}
+      <section className="shell section">
+        <SectionRow label="Why Us">
+          <TwoTone as="h2" className="h-section" {...headings.whyUs} />
+        </SectionRow>
+
+        <div className="stack">
+          {whyUs.map((item, i) => (
+            <div className="stack__item" key={item.title}>
+              <p className="stack__k">{String(i + 1).padStart(2, '0')}</p>
+              <div>
+                <h3 className="stack__title">{item.title}</h3>
+                <p className="stack__body">{item.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------- process ---------- */}
+      <section className="shell section">
+        <SectionRow label="How We Work">
+          <TwoTone as="h2" className="h-section" {...headings.process} />
+        </SectionRow>
+
+        <ol className="stack">
+          {process.map((item) => (
+            <li className="stack__item" key={item.step}>
+              <p className="stack__k">{item.step}</p>
+              <div>
+                <h3 className="stack__title">{item.title}</h3>
+                <p className="stack__body">{item.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <Media item={aboutMedia[3]} />
+      </section>
+
+      {/* ---------- work closer ---------- */}
+      <section className="shell section">
+        <SectionRow
+          label="Designing Success"
+          action={
+            <Link to="/projects" className="btn btn--soft">
+              Our Work
+              <ArrowUpRight />
+            </Link>
+          }
+        >
+          <TwoTone as="h2" className="h-section" {...headings.aboutWork} />
+        </SectionRow>
+      </section>
+
+      <div className="shell mark">
+        <img
+          src={`${marks.n}?width=362`}
+          alt=""
+          width="181"
+          height="196"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </>
+  )
+}
