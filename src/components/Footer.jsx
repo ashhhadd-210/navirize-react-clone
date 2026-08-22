@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { brand, footerNav, footerLegal, socials } from '../data/site.js'
 import { ArrowUpRight } from './icons.jsx'
+import Reveal from './Reveal.jsx'
 
 /**
  * Black footer, measured off the original at 1440x900:
@@ -19,7 +20,7 @@ export default function Footer() {
   return (
     <footer className="foot">
       <div className="shell">
-        <div className="foot__top">
+        <Reveal className="foot__top">
           <div>
             {showCta && (
               <>
@@ -60,7 +61,7 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-        </div>
+        </Reveal>
 
         <hr className="foot__rule" />
 

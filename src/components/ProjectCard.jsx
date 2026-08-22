@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from './icons.jsx'
 import { img, imgSrcSet } from '../data/site.js'
+import { useReveal } from './Reveal.jsx'
 
 /**
  * Two variants, both measured on the original:
@@ -11,13 +12,14 @@ import { img, imgSrcSet } from '../data/site.js'
  * and the category/title stacked 24px below the image.
  */
 export default function ProjectCard({ project, variant = 'grid', priority = false }) {
+  const { ref, className: reveal } = useReveal()
   const featured = variant === 'featured'
   // Featured renders 1280 CSS px, grid cards 620 — so 2048 covers the featured
   // at 1.6x and the grid cards well past 2x. 4096 is never worth its weight.
   const fallback = featured ? 2048 : 1024
 
   return (
-    <Link to={`/projects/${project.slug}`} className="card">
+    <Link ref={ref} to={`/projects/${project.slug}`} className={`card ${reveal}`}>
       <div className={`card__frame card__frame--${featured ? 'featured' : 'grid'}`}>
         <img
           className="card__img"

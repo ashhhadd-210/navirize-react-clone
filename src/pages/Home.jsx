@@ -5,6 +5,7 @@ import TwoTone from '../components/TwoTone.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import ProjectCard from '../components/ProjectCard.jsx'
 import Accordion from '../components/Accordion.jsx'
+import Reveal from '../components/Reveal.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import { projects, services, headings, marks, img } from '../data/site.js'
 
@@ -45,7 +46,7 @@ export default function Home() {
       </section>
 
       {/* ---------- shaping perception ---------- */}
-      <section className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow
           label="Shaping Perception"
           action={
@@ -62,18 +63,18 @@ export default function Home() {
             {...headings.perception}
           />
         </SectionRow>
-      </section>
+      </Reveal>
 
       {/* ---------- services accordion ---------- */}
-      <section className="shell section" aria-labelledby="services-label">
+      <Reveal as="section" className="shell section" aria-labelledby="services-label">
         <p className="label" id="services-label">
           Services
         </p>
         <Accordion groups={services} />
-      </section>
+      </Reveal>
 
       {/* ---------- our story ---------- */}
-      <section className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow
           label="Our Story"
           action={
@@ -85,7 +86,7 @@ export default function Home() {
         >
           <TwoTone as="h2" className="h-section" {...headings.story} />
         </SectionRow>
-      </section>
+      </Reveal>
 
       {/* ---------- centred brand mark before the black footer ---------- */}
       <div className="shell mark">

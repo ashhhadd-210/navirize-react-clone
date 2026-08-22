@@ -6,6 +6,7 @@ import SectionRow from '../components/SectionRow.jsx'
 import ProjectCard from '../components/ProjectCard.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import { projects, headings, marks, img } from '../data/site.js'
+import Reveal from '../components/Reveal.jsx'
 
 export default function Projects() {
   const [featured, ...rest] = projects
@@ -37,7 +38,7 @@ export default function Projects() {
         </div>
       </section>
 
-      <section className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow
           label="Our Story"
           action={
@@ -49,7 +50,7 @@ export default function Projects() {
         >
           <TwoTone as="h2" className="h-section" {...headings.projectsStory} />
         </SectionRow>
-      </section>
+      </Reveal>
 
       <div className="shell mark">
         <img

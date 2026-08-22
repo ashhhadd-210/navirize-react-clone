@@ -78,8 +78,8 @@ ease-out**. There is no per-character stagger; the first build had a rippling
 0.016s-per-character reveal that the original does not do.
 
 Mid-page sections measured `opacity: 1` / `transform: none` while still 3000px+
-below the fold, so **the original has no scroll-triggered reveals at all**. The
-first build wrapped nearly every block in a scroll reveal. Those are gone.
+below the fold. That reading was a **false negative** and is corrected below —
+those particular sections are static, but nine other blocks are not.
 
 **Nav**
 `position: fixed`, fully transparent — no blur, no border. A scroll sweep
@@ -109,6 +109,47 @@ src/
 └─ pages/
    Home · Projects · ProjectDetail · About · Contact · Legal · NotFound
 ```
+
+## Correction: the original does have scroll reveals
+
+The measurement pass above concluded the original had none. It sampled a
+handful of mid-page sections, found them at `opacity: 1` below the fold, and
+generalised. Snapshotting the computed style of **every** element, scrolling
+the whole document, then diffing tells a different story: nine blocks on the
+home page start hidden and animate in.
+
+    y=947   featured card      Yachting Perfection Branding
+    y=1787  grid card          Sea Coat Innovations Rebrand
+    y=1787  grid card          SCI Web Development
+    y=2427  grid card          Greenleaf Branding
+    y=3237  section + button   Shaping Perception / Our Work
+    y=3645  section            Services
+    y=4315  section + button   Our Story / About Us
+    y=4659  footer block       Contact / Ready when you are.
+
+Sampled frame by frame in headless Chrome:
+
+| | |
+| --- | --- |
+| trigger | element top crossing 40px inside the viewport bottom |
+| from | `opacity: 0`, `translateY(30px)` |
+| to | `opacity: 1`, `translateY(0)` |
+| duration | ~1500ms |
+| easing | a spring: slow to leave, hard acceleration near 300ms, then a long asymptotic tail |
+| repeat | one-shot, does not reverse on scroll back |
+
+Both properties are driven by one progress function — at t=378ms opacity read
+`0.4579` and translateY read `16.26`, and `30 * (1 - 0.4579) = 16.26` exactly.
+
+`Reveal.jsx` reproduces this with a single shared `IntersectionObserver`
+(`rootMargin: 0px 0px -40px 0px`) toggling one class. The spring itself is CSS:
+a `linear()` timing function built from the measured samples, which a
+cubic-bezier cannot express — a cubic-bezier fallback is declared first for
+browsers without `linear()`. Total cost over the static build: **0.3 KB
+gzipped**, no animation library.
+
+Also corrected: the nav hides with a pure translate on the original. This build
+was fading it out as well, which reads as a softer exit than it should.
 
 ## Performance
 

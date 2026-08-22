@@ -5,6 +5,7 @@ import TwoTone from '../components/TwoTone.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import { whyUs, process, headings, aboutMedia, marks, img, imgSrcSet } from '../data/site.js'
+import Reveal from '../components/Reveal.jsx'
 
 function Media({ item, priority = false }) {
   return (
@@ -49,16 +50,16 @@ export default function About() {
       </section>
 
       {/* ---------- mission ---------- */}
-      <section className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow label="Our Mission">
           <TwoTone as="h2" className="h-section" {...headings.mission1} />
           <TwoTone as="p" className="h-section" {...headings.mission2} />
         </SectionRow>
         <Media item={aboutMedia[2]} />
-      </section>
+      </Reveal>
 
       {/* ---------- why us ---------- */}
-      <section className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow label="Why Us">
           <TwoTone as="h2" className="h-section" {...headings.whyUs} />
         </SectionRow>
@@ -74,10 +75,10 @@ export default function About() {
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* ---------- process ---------- */}
-      <section className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow label="How We Work">
           <TwoTone as="h2" className="h-section" {...headings.process} />
         </SectionRow>
@@ -95,10 +96,10 @@ export default function About() {
         </ol>
 
         <Media item={aboutMedia[3]} />
-      </section>
+      </Reveal>
 
       {/* ---------- work closer ---------- */}
-      <section className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow
           label="Designing Success"
           action={
@@ -110,7 +111,7 @@ export default function About() {
         >
           <TwoTone as="h2" className="h-section" {...headings.aboutWork} />
         </SectionRow>
-      </section>
+      </Reveal>
 
       <div className="shell mark">
         <img
