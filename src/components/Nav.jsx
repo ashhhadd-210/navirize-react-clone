@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { brand, nav } from '../data/site.js'
 import { ArrowUpRight, Wordmark } from './icons.jsx'
+import RollText from './RollText.jsx'
 
 /**
  * The header is position:fixed and transparent — no blur, no border. An
@@ -52,7 +53,7 @@ export default function Nav() {
         <nav className="nav__links" aria-label="Primary">
           {nav.map((item) => (
             <NavLink key={item.to} to={item.to} className="nav__link">
-              {item.label}
+              <RollText>{item.label}</RollText>
             </NavLink>
           ))}
         </nav>

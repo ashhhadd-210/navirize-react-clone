@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { brand, footerNav, footerLegal, socials } from '../data/site.js'
 import { ArrowUpRight } from './icons.jsx'
 import Reveal from './Reveal.jsx'
+import RollText from './RollText.jsx'
 
 /**
  * Black footer, measured off the original at 1440x900:
@@ -87,7 +88,9 @@ export default function Footer() {
             <ul className="foot__col">
               {links.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to}>{item.label}</Link>
+                  <Link to={item.to}>
+                    <RollText>{item.label}</RollText>
+                  </Link>
                 </li>
               ))}
             </ul>
