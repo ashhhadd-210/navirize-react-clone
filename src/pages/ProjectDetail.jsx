@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
 import RiseIn from '../components/RiseIn.jsx'
+import { ArrowUpRight } from '../components/icons.jsx'
 import NotFound from './NotFound.jsx'
 import { projects, galleryUrl, caseStudies, caseMedia, img, imgSrcSet } from '../data/site.js'
 
@@ -105,24 +106,106 @@ function Prose({ title, big = false, paragraphs }) {
   )
 }
 
-/* The closing strip on the original drifts left at ~28px/s, full-bleed,
-   alternating 500x340 and 350x340 tiles. The track is rendered twice and
-   translated -50%, so the loop is seamless; duration comes from the measured
-   speed and the actual track width. */
-function Marquee({ ids, title }) {
-  if (!ids.length) return null
+/* The closing strip. Evidence, in order of trust:
+   - idle drift ~28px/s leftward, measured frame-by-frame off a recording of
+     the original (it does not animate at all in headless Chrome, so the live
+     measurement could never be repeated there);
+   - the client's own screen recording shows the strip being DRAGGED with
+     momentum — velocity samples across its frames decay ~0.43x per 1.4s,
+     an exponential glide with a ~1.6s time constant.
+   So: a pointer-draggable strip with inertia, drifting slowly left when
+   idle, wrapping seamlessly across one strip's width. Reduced motion turns
+   off the drift; dragging still works. */
+function Marquee({ ids }) {
+  const trackRef = useRef(null)
+  const state = useRef({ offset: 0, vel: 0, dragging: false, lastX: 0, lastT: 0 })
+
   const widths = ids.map((_, i) => (i % 2 === 0 ? 500 : 350))
-  const trackWidth = widths.reduce((a, w) => a + w + 40, 0)
-  const duration = Math.round(trackWidth / 28)
+  const stripWidth = widths.reduce((a, w) => a + w + 40, 0)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const st = state.current
+    const drift = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 28
+    let raf = 0
+    let last = performance.now()
+
+    const step = (now) => {
+      const dt = Math.min(64, now - last) / 1000
+      last = now
+      if (!st.dragging) {
+        st.offset -= drift * dt
+        if (Math.abs(st.vel) > 2) {
+          st.offset += st.vel * dt
+          st.vel *= Math.exp(-dt / 1.6)
+        } else {
+          st.vel = 0
+        }
+      }
+      // keep the offset inside (-stripWidth, 0] so the doubled runs cover it
+      st.offset = ((st.offset % stripWidth) - stripWidth) % stripWidth
+      track.style.transform = `translateX(${st.offset.toFixed(2)}px)`
+      raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+
+    const down = (e) => {
+      st.dragging = true
+      st.vel = 0
+      st.lastX = e.clientX
+      st.lastT = performance.now()
+      track.setPointerCapture(e.pointerId)
+      track.style.cursor = 'grabbing'
+    }
+    const move = (e) => {
+      if (!st.dragging) return
+      const now = performance.now()
+      const dx = e.clientX - st.lastX
+      const dt = Math.max(1, now - st.lastT) / 1000
+      st.offset += dx
+      st.vel = 0.8 * st.vel + 0.2 * (dx / dt)
+      st.lastX = e.clientX
+      st.lastT = now
+    }
+    const up = (e) => {
+      st.dragging = false
+      track.style.cursor = 'grab'
+      try {
+        track.releasePointerCapture(e.pointerId)
+      } catch {
+        /* pointer already released */
+      }
+    }
+    track.addEventListener('pointerdown', down)
+    track.addEventListener('pointermove', move)
+    track.addEventListener('pointerup', up)
+    track.addEventListener('pointercancel', up)
+    return () => {
+      cancelAnimationFrame(raf)
+      track.removeEventListener('pointerdown', down)
+      track.removeEventListener('pointermove', move)
+      track.removeEventListener('pointerup', up)
+      track.removeEventListener('pointercancel', up)
+    }
+  }, [stripWidth])
+
+  if (!ids.length) return null
   const tiles = ids.map((id, i) => ({ id, w: widths[i] }))
   return (
     <div className="proj__marquee" aria-hidden="true">
-      <div className="proj__marquee-track" style={{ '--marquee-duration': `${duration}s` }}>
-        {[0, 1].map((copy) => (
+      <div className="proj__marquee-track proj__marquee-track--drag" ref={trackRef}>
+        {[0, 1, 2].map((copy) => (
           <div className="proj__marquee-run" key={copy}>
             {tiles.map(({ id, w }) => (
               <figure className="proj__tile" style={{ width: w }} key={copy + id}>
-                <img src={img(galleryUrl(id), 512)} alt="" loading="lazy" decoding="async" />
+                <img
+                  src={img(galleryUrl(id), 512)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  draggable="false"
+                />
               </figure>
             ))}
           </div>
@@ -174,6 +257,19 @@ export default function ProjectDetail() {
 
         <div className="shell">
           <Prose big title={study.lede} paragraphs={study.intro} />
+          {study.link && (
+            <div className="proj__prose proj__visit">
+              <a
+                className="btn btn--soft"
+                href={study.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {study.link.label}
+                <ArrowUpRight />
+              </a>
+            </div>
+          )}
           <Wide src={g(media.band1)} alt={alt(0)} />
           <Pair items={[{ src: g(media.pair1[0]), alt: alt(1) }, { src: g(media.pair1[1]), alt: alt(2) }]} />
 

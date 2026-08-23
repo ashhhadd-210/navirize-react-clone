@@ -200,8 +200,9 @@ textarea {
 }
 
 .body--lg {
-  font-size: 22px;
-  line-height: 1.5;
+  /* measured 24px on the original's contact lede */
+  font-size: 24px;
+  line-height: 1.4;
 }
 
 .grey {
@@ -230,7 +231,10 @@ textarea {
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
-  transition: background var(--t), color var(--t), opacity var(--t);
+  /* measured hover blend: ~75% complete at 80ms, settled ~400ms */
+  transition:
+    background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .btn--dark {
@@ -238,8 +242,11 @@ textarea {
   color: var(--white);
 }
 
+/* Measured: the dark button inverts to WHITE on hover (bg #000 -> #fff,
+   label #fff -> #0d0d0d), blending over ~300ms and reverting on leave. */
 .btn--dark:hover {
-  background: #1c1c1c;
+  background: var(--white);
+  color: #0d0d0d;
 }
 
 .btn--soft {
@@ -247,23 +254,23 @@ textarea {
   color: var(--black);
 }
 
+/* Measured: the grey pill lightens to white; the label stays black. */
 .btn--soft:hover {
-  background: var(--black);
-  color: var(--white);
+  background: var(--white);
+  color: var(--black);
 }
 
 .btn--block {
   width: 100%;
   justify-content: center;
+  /* measured on the original's submit: 46px tall, 15px label */
+  padding-block: 12px;
+  font-size: 15px;
 }
 
 .btn__arrow {
   flex: 0 0 auto;
   transition: transform var(--t);
-}
-
-.btn:hover .btn__arrow {
-  transform: translate(2px, -2px);
 }
 
 .btn:disabled {
@@ -278,7 +285,7 @@ textarea {
   inset: 0 0 auto 0;
   z-index: 200;
   background: transparent;
-  transition: transform 0.45s var(--ease-out);
+  transition: transform 0.5s var(--ease-out);
 }
 
 /* Measured on the original: hiding is a pure translate — it holds opacity 1 the
@@ -342,10 +349,8 @@ textarea {
   transition: transform var(--t);
 }
 
-.nav__link:hover::after,
-.nav__link[aria-current='page']::after {
-  transform: scaleX(1);
-}
+/* Measured on the original: nav links have NO hover effect — color and
+   opacity are unchanged under the pointer. */
 
 .nav__cta {
   justify-self: end;
@@ -502,29 +507,31 @@ textarea {
   transition: transform 0.8s var(--ease-out);
 }
 
-.card:hover .card__img {
-  transform: scale(1.04);
-}
-
 /* translucent circular arrow, bottom-left inside the frame */
+/* Measured: 57px disc, inset 16 left / 24 bottom, rgba(255,255,255,0.2)
+   with no backdrop blur. The arrow rests rotated -45deg (pointing up) and
+   spins to 0 as the disc turns solid white on hover. */
 .card__badge {
   position: absolute;
-  left: 20px;
-  bottom: 20px;
-  width: 46px;
-  height: 46px;
+  left: 16px;
+  bottom: 24px;
+  width: 57px;
+  height: 57px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(-45deg);
+  transition:
+    background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   display: grid;
   place-items: center;
-  color: var(--white);
-  transition: background var(--t), transform var(--t);
+  /* the original's arrow path carries no fill attribute - it renders black */
+  color: var(--black);
 }
 
 .card:hover .card__badge {
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--white);
+  transform: rotate(0deg);
 }
 
 .card__meta {
@@ -631,18 +638,17 @@ textarea {
   visibility: visible;
 }
 
+/* Measured open: ONE column, 24px black items, 50px pitch (34px line +
+   16px gap), 24px below the last item. */
 .acc__list {
-  columns: 2;
-  column-gap: 40px;
-  padding-bottom: 28px;
-  max-width: 795px;
+  padding-bottom: 24px;
 }
 
 .acc__list li {
-  font-size: var(--fs-base);
-  color: var(--grey);
-  padding: 7px 0;
-  break-inside: avoid;
+  font-size: 24px;
+  line-height: 34px;
+  color: var(--black);
+  padding: 8px 0;
 }
 
 /* ---------- centred brand mark ---------- */
@@ -696,10 +702,6 @@ textarea {
   transition: opacity var(--t);
 }
 
-.foot__col a:hover {
-  opacity: 0.6;
-}
-
 .foot__ext {
   display: flex;
   align-items: center;
@@ -720,7 +722,26 @@ textarea {
   color: var(--grey-dark);
 }
 
+.proj__visit {
+  margin-top: 56px;
+}
+
 /* ---------- page header (inner pages) ---------- */
+
+/* Measured on /projects: 32px/44.8 grey lede 24px under the title, and the
+   grid starting 159px below it with no featured card. */
+.pagehead__lede--big {
+  font-size: 32px;
+  line-height: 1.4;
+  color: var(--grey);
+  margin-top: 24px;
+  max-width: 800px;
+}
+
+.work--listing {
+  padding-top: 159px;
+}
+
 
 .pagehead {
   padding-top: 163px;
@@ -854,7 +875,7 @@ textarea {
 
 .contact {
   display: grid;
-  grid-template-columns: minmax(0, 440px) 460px;
+  grid-template-columns: minmax(0, 400px) 460px;
   justify-content: space-between;
   gap: 60px;
   padding-top: 163px;
@@ -874,7 +895,7 @@ textarea {
 .contact__k {
   font-size: var(--fs-label);
   color: var(--grey);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .contact__mail {
@@ -886,8 +907,9 @@ textarea {
 }
 
 .form {
+  /* measured field pitch 83: 16px label + 8 + 44px field + 15 */
   display: grid;
-  gap: 18px;
+  gap: 15px;
 }
 
 .field__label {
@@ -901,11 +923,12 @@ textarea {
 .field__select,
 .field__area {
   width: 100%;
-  background: var(--grey-soft);
+  /* measured on the original: rgba(0,0,0,0.03) wrapper, 44px tall, 15px text */
+  background: rgba(0, 0, 0, 0.03);
   border: 1px solid transparent;
   border-radius: 12px;
-  padding: 12px 16px;
-  font-size: 16px;
+  padding: 11px 14px;
+  font-size: 15px;
   line-height: 1.4;
   transition: border-color var(--t), background var(--t);
 }
@@ -1208,9 +1231,7 @@ textarea {
     padding-top: 110px;
   }
 
-  .media,
-  .proj__media,
-  .proj__prose {
+  .media {
     margin-top: 70px;
   }
 
@@ -1346,6 +1367,13 @@ textarea {
   margin-top: 90px;
 }
 
+.proj__marquee-track--drag {
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  animation: none !important;
+}
+
 .proj__marquee-track {
   display: flex;
   width: max-content;
@@ -1395,6 +1423,22 @@ textarea {
 
   .proj__prose p {
     font-size: 20px;
+  }
+
+  /* Measured at 390: prose ~30px under the previous block, media ~32,
+     subheads 22px, pairs tight under their band. */
+  .proj__media,
+  .proj__prose {
+    margin-top: 32px;
+  }
+
+  .proj__subtitle {
+    font-size: 22px;
+    line-height: 1.4;
+  }
+
+  .proj__pair {
+    margin-top: 18px;
   }
 
   .proj__hero {
@@ -1543,7 +1587,14 @@ textarea {
   }
 
   /* A zero-duration infinite loop is a strobe, not stillness. */
-  .proj__marquee-track {
+  .proj__marquee-track--drag {
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  animation: none !important;
+}
+
+.proj__marquee-track {
     animation-play-state: paused;
   }
 }

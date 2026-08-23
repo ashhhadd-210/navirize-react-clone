@@ -9,7 +9,6 @@ import { projects, headings } from '../data/site.js'
 import Reveal from '../components/Reveal.jsx'
 
 export default function Projects() {
-  const [featured, ...rest] = projects
 
   return (
     <>
@@ -20,20 +19,21 @@ export default function Projects() {
 
       <section className="shell pagehead">
         <RiseIn delay={0.15}>
-          <p className="label pagehead__label">Projects</p>
           <TwoTone as="h1" className="display" {...headings.projectsHero} />
-          <p className="body--lg grey pagehead__lede">
+          <p className="pagehead__lede pagehead__lede--big">
             A closer look at how ideas are transformed into identity,
             experience, and advantage.
           </p>
         </RiseIn>
       </section>
 
-      <section className="shell work" aria-label="All projects">
-        <ProjectCard project={featured} variant="featured" priority />
+      {/* Measured on the original: a uniform two-column grid of all four
+          projects (620x509 cards at 1440) — no full-width featured card on
+          this page, unlike home. */}
+      <section className="shell work work--listing" aria-label="All projects">
         <div className="work__grid">
-          {rest.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+          {projects.map((project, i) => (
+            <ProjectCard key={project.slug} project={project} priority={i === 0} />
           ))}
         </div>
       </section>

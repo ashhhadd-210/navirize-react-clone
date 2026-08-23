@@ -235,7 +235,7 @@ export const services = [
       'Positioning',
       'Market Fit',
       'Competitive Analysis',
-      'User Psychology',
+      'User Psycology', // sic — matches the original site's label verbatim
       'Creative Direction',
       'Differentiation',
     ],
@@ -336,7 +336,7 @@ export const headings = {
   // Solid black on the original — not a two-tone heading. ("feel" -> "feels"
   // is the one grammar fix carried into the clone.)
   aboutLede:
-    'Navirize combines strategy, psychology, and design to create work that feels timeless, intentional, and world-class.',
+    'Navirize combines strategy, psychology, and design to create work that feel timeless, intentional, and world-class.',
   mission1: {
     black:
       'Our mission is to redefine digital aesthetics with precision, clarity, and premium craftsmanship.',
@@ -647,6 +647,8 @@ export const caseStudies = {
     ],
   },
   'sea-coat-innovations-web-design': {
+    // the original's intro ends with a grey "Visit Website" pill to the live site
+    link: { label: 'Visit Website', href: 'https://www.seacoatinnovations.gr/' },
     lede: 'Translating Technical Expertise Online.',
     intro: [
       'Sea Coat Innovations had already earned the trust of clients through craftsmanship and technical excellence. The challenge was ensuring the digital experience reflected the same standard.',

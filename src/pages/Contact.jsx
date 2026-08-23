@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
 import RiseIn from '../components/RiseIn.jsx'
 import TwoTone from '../components/TwoTone.jsx'
@@ -215,12 +214,6 @@ export default function Contact() {
             >
               {status === 'sending' ? 'Sending…' : 'Send inquiry'}
             </button>
-
-            <p className="form__consent">
-              By sending this form you agree to our{' '}
-              <Link to="/privacy-policy">Privacy Policy</Link>. We use your
-              details only to reply to your enquiry.
-            </p>
 
             <div role="status" aria-live="polite">
               {status === 'sent' && (
