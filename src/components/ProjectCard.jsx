@@ -27,8 +27,8 @@ export default function ProjectCard({ project, variant = 'grid', priority = fals
           srcSet={imgSrcSet(project.image)}
           sizes={
             featured
-              ? '(max-width: 767px) 100vw, (max-width: 1099px) calc(100vw - 80px), 1280px'
-              : '(max-width: 767px) 100vw, (max-width: 1099px) calc(50vw - 60px), 620px'
+              ? '(max-width: 767px) calc(100vw - 50px), (max-width: 1099px) calc(100vw - 128px), calc(100vw - 160px)'
+              : '(max-width: 767px) calc(100vw - 50px), calc(50vw - 100px)'
           }
           alt={project.alt}
           loading={priority ? 'eager' : 'lazy'}

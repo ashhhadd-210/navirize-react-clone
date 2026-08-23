@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
+import SmoothScroll from './components/SmoothScroll.jsx'
 
 import Home from './pages/Home.jsx'
 import Projects from './pages/Projects.jsx'
@@ -55,6 +56,7 @@ export default function App() {
         Skip to content
       </a>
       <ScrollToTop />
+      <SmoothScroll />
       <Nav />
 
       <Routes location={location} key={location.pathname}>

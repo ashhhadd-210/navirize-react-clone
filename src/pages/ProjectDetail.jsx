@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
 import RiseIn from '../components/RiseIn.jsx'
 import NotFound from './NotFound.jsx'
-import { projects, galleries, galleryUrl, caseStudies, img, imgSrcSet } from '../data/site.js'
+import { projects, galleryUrl, caseStudies, caseMedia, img, imgSrcSet } from '../data/site.js'
 
 /*
  * Case-study layout, measured off the original at 1440:
@@ -60,7 +60,7 @@ function ZoomHero({ project }) {
         ref={imgRef}
         src={img(project.image, 2048)}
         srcSet={imgSrcSet(project.image)}
-        sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
+        sizes="(max-width: 767px) calc(100vw - 50px), (max-width: 1099px) calc(100vw - 128px), calc(100vw - 160px)"
         alt={project.alt}
         fetchpriority="high"
         decoding="async"
@@ -69,11 +69,11 @@ function ZoomHero({ project }) {
   )
 }
 
-function Wide({ src, alt }) {
+function Wide({ src, alt, second = false }) {
   return (
-    <figure className="proj__media proj__media--wide">
+    <figure className={`proj__media proj__media--wide${second ? ' proj__media--second' : ''}`}>
       <img src={img(src, 2048)} srcSet={imgSrcSet(src)}
-        sizes="(max-width: 1099px) calc(100vw - 80px), 1280px"
+        sizes="(max-width: 767px) calc(100vw - 50px), (max-width: 1099px) calc(100vw - 128px), calc(100vw - 160px)"
         alt={alt} loading="lazy" decoding="async" />
     </figure>
   )
@@ -85,7 +85,7 @@ function Pair({ items }) {
       {items.map((it) => (
         <figure className="proj__media proj__media--sq" key={it.src}>
           <img src={img(it.src, 1024)} srcSet={imgSrcSet(it.src)}
-            sizes="(max-width: 767px) 100vw, (max-width: 1099px) calc(50vw - 60px), 611px"
+            sizes="(max-width: 767px) 50vw, calc(50vw - 84px)"
             alt={it.alt} loading="lazy" decoding="async" />
         </figure>
       ))}
@@ -138,10 +138,9 @@ export default function ProjectDetail() {
   if (!project) return <NotFound />
 
   const study = caseStudies[slug]
-  const gallery = galleries[slug] || []
-  const g = (i) => (gallery[i] ? galleryUrl(gallery[i]) : null)
+  const media = caseMedia[slug]
+  const g = (id) => (id ? galleryUrl(id) : null)
   const alt = (i) => `${project.title} — application ${i + 1}`
-  const marqueeIds = gallery.slice(6)
 
   return (
     <>
@@ -175,17 +174,17 @@ export default function ProjectDetail() {
 
         <div className="shell">
           <Prose big title={study.lede} paragraphs={study.intro} />
-          {g(0) && <Wide src={g(0)} alt={alt(0)} />}
-          {g(1) && g(2) && <Pair items={[{ src: g(1), alt: alt(1) }, { src: g(2), alt: alt(2) }]} />}
+          <Wide src={g(media.band1)} alt={alt(0)} />
+          <Pair items={[{ src: g(media.pair1[0]), alt: alt(1) }, { src: g(media.pair1[1]), alt: alt(2) }]} />
 
           <Prose title={study.thinkingTitle} paragraphs={study.thinking} />
-          {g(3) && <Wide src={g(3)} alt={alt(3)} />}
-          {g(4) && g(5) && <Pair items={[{ src: g(4), alt: alt(4) }, { src: g(5), alt: alt(5) }]} />}
+          <Wide src={g(media.band2)} alt={alt(3)} second />
+          <Pair items={[{ src: g(media.pair2[0]), alt: alt(4) }, { src: g(media.pair2[1]), alt: alt(5) }]} />
 
           <Prose title={study.outcomeTitle} paragraphs={study.outcome} />
         </div>
 
-        <Marquee ids={marqueeIds} />
+        <Marquee ids={media.ticker} />
       </article>
     </>
   )

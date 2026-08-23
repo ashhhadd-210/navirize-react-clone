@@ -561,6 +561,46 @@ export const legalPages = {
  * a 64px lede, then two 32px-titled sections whose prefixes ("The Thinking:",
  * "The Outcome:") are part of the heading text itself on the original.
  */
+
+/**
+ * Which gallery image goes in which slot, read off each live project page in
+ * document order. The alphabetical `galleries` lists above scrambled these —
+ * the client's "images are all over the place" was exactly this.
+ *   band1 -> full-width after the intro     pair1 -> two-up after band1
+ *   band2 -> full-width after The Thinking  pair2 -> two-up after band2
+ *   ticker -> the closing marquee, in its measured order
+ */
+export const caseMedia = {
+  'yachting-perfection-branding': {
+    band1: 'NNUyHspB9ScKbwkPTgP8V9ggLk8',
+    pair1: ['TLUHWFOn8zER8JBF9Sn2ecKBjE', 'HlsaiQzvcEkb1kNRMGYT7GGkdo'],
+    band2: 'Iw7GJ21IrQHCLAvRG7hfvKMzD5s',
+    pair2: ['fhgsm0GxjrwSgHkya9riOvAVFk', 'WTyTGBko1pDNa9rkW1K0aIaA1w'],
+    ticker: ['0rvWx4y21Xsgbi7s9eMwTeTAs4', '8OiWWgkSiEEtqnkrc9n7ykJ6oNo', '2szIkBRbUrvTHlk5lcW0cfXUzRc', 'DqYXGhRIpb2bfRtDD4TDkbsvFg'],
+  },
+  'sea-coat-innovations-rebranding': {
+    band1: 'Aj3YeuKJuFCrur4VGH8FDRS3eQw',
+    pair1: ['OStks2GFfwxumqT0JXHWcDkUtY', '2eowcXdHQz5LoMiykjlLfhJHu2U'],
+    band2: 'LI5kTSx5rbrz2fqVDPwKWbhKs',
+    pair2: ['VhPfWJpUZgL0MhSaFqesw0vvZYM', '7ixGVTVNCrrz7o6OcINKiIB2DU'],
+    ticker: ['BM5YDwE0p1omb0EDo6npcbgQ40', '7ixGVTVNCrrz7o6OcINKiIB2DU', 'K2ZGuFbKgw2r7UF9pnODGqaWmM', 'XznPnUqTQUdZdCjCu2YNVm4diI'],
+  },
+  'sea-coat-innovations-web-design': {
+    band1: '8cl6oW0WBLvqI0N9Q1y6gENzNV4',
+    pair1: ['QXKkcAufXELLFEveg9djQ1bAX4', 'rubXvYQwZsvJj74DrUkB03lMhyc'],
+    band2: '4nqiMu94wpxr0I6b4xqXHs3Cfs',
+    pair2: ['7JQLvWnwzLYmudSCkYrt2HWcI0', 'O4w1pWUrBMjFYRW76QFxR4fd0'],
+    ticker: ['1oEouVxBZ7GChSJKsyDJHRwvgpA', 'XW3b1Hi1uVkZKp4PT3JEBQZs', 'Zgv25kUxk1x89Flozw6wiGZWsI', '2xZrSVRmq11tS6U2oowHWDjoMs'],
+  },
+  'greenleaf-branding': {
+    band1: 'QWhjasyGEDoftOBEcMw4KbeZYVs',
+    pair1: ['2nElq9dFmQIyXPkOPgKOh7xNm60', 'P6aoGkHV5EjWggw0x1R7ylCw4D8'],
+    band2: 'VVHFddpAkz3dylRWxwMbPtuYoeQ',
+    pair2: ['pO7kLOIljdF0KL2Rf2M9B7A0K6I', 'Wh5W2D8fxbmDwv43oQ6D9M8yVc'],
+    ticker: ['FFiW23IIgw3Od1Eurzn8sGqtxI', 'pO7kLOIljdF0KL2Rf2M9B7A0K6I', 'eMa1aJJIgDJzeres6QGRcrPC0', '5PEZVL3czCvkBaMAOV2jxdkl3U'],
+  },
+}
+
 export const caseStudies = {
   'yachting-perfection-branding': {
     lede: 'Reengineering Yacht Finishing: A Minimal, Precision-Driven Brand System.',

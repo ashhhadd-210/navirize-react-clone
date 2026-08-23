@@ -44,7 +44,6 @@
     'Segoe UI', sans-serif;
 
   --gutter: 80px;
-  --shell: 1440px;
 
   /* measured type scale */
   --fs-display: 64px;
@@ -136,9 +135,11 @@ textarea {
 /* ---------- shell ---------- */
 
 .shell {
+  /* The original is FLUID: a fixed 80px gutter and no maximum width. At the
+     client's 1920 screen the featured card measures 1760px wide on the
+     original; a 1440 cap left this build floating in a centred box with
+     280px of dead margin each side. */
   width: 100%;
-  max-width: var(--shell);
-  margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
@@ -459,8 +460,11 @@ textarea {
 /* ---------- work ---------- */
 
 .work {
-  /* measured: featured image top 916.8 == hero button bottom 693 + 223 */
+  /* measured: featured image top 916.8 == hero button bottom 693 + 223;
+     240 below the last card's meta before the next section label, matching
+     the 240 rhythm every block on the page keeps at desktop. */
   padding-top: 223px;
+  padding-bottom: 120px;
 }
 
 .work__grid {
@@ -481,12 +485,14 @@ textarea {
   background: var(--grey-soft);
 }
 
+/* Heights are FIXED on the original — 709/509 at any desktop width (the
+   crop widens as the viewport grows), 362 tablet, 223 phone. */
 .card__frame--featured {
-  aspect-ratio: 1280 / 709;
+  height: 709px;
 }
 
 .card__frame--grid {
-  aspect-ratio: 620 / 509;
+  height: 509px;
 }
 
 .card__img {
@@ -522,7 +528,8 @@ textarea {
 }
 
 .card__meta {
-  margin-top: 24px;
+  /* category text top measures 22px below the frame on the original */
+  margin-top: 22px;
 }
 
 .card__cat {
@@ -540,13 +547,17 @@ textarea {
 
 .row {
   display: grid;
-  grid-template-columns: var(--label-col) minmax(0, 795px) 1fr;
+  /* Label column measured as 20% of content + 46px at every desktop and
+     tablet width (302px at 1440, 398px at 1920, 225px at 1024); the action
+     column is a constant 183px with the button right-aligned into it. */
+  grid-template-columns: calc(20% + 46px) minmax(0, 1fr) 183px;
   align-items: start;
   column-gap: 0;
 }
 
 .row__label {
-  padding-top: 16px;
+  /* top-aligned with the heading on the original (both measure y=3237) */
+  padding-top: 0;
 }
 
 .row__action {
@@ -561,7 +572,7 @@ textarea {
 
 .acc {
   /* The original has no rule above the first row — only between and below. */
-  margin-top: 34px;
+  margin-top: 24px;
 }
 
 .acc__item {
@@ -574,7 +585,8 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 22px 0;
+  /* row pitch measures 96 on the original: the 56px line box + 20/20 */
+  padding: 20px 0;
   background: none;
   border: 0;
   text-align: left;
@@ -638,7 +650,7 @@ textarea {
 .mark {
   display: grid;
   place-items: center;
-  padding-block: 150px 120px;
+  padding-block: 120px 220px;
 }
 
 .mark img {
@@ -652,7 +664,7 @@ textarea {
   background: var(--black);
   color: var(--white);
   padding-top: 100px;
-  padding-bottom: 40px;
+  padding-bottom: 80px;
 }
 
 .foot__top {
@@ -699,7 +711,7 @@ textarea {
   height: 1px;
   background: var(--rule-dark);
   border: 0;
-  margin: 190px 0 22px;
+  margin: 333px 0 36px;
 }
 
 .foot__legal {
@@ -731,15 +743,12 @@ textarea {
   /* measured: 743px + 24px gap + 495px = the 1262px content box */
   grid-template-columns: 743fr 495fr;
   gap: 24px;
-  margin-top: 120px;
+  margin-top: 163px;
 }
 
-.media-pair .media--about:first-child {
-  aspect-ratio: 743 / 400;
-}
-
-.media-pair .media--about:last-child {
-  aspect-ratio: 495 / 400;
+/* Fixed 400px at any desktop width, measured on the original at 1920. */
+.media-pair .media--about {
+  height: 400px;
 }
 
 .media-pair .media {
@@ -771,7 +780,8 @@ textarea {
 }
 
 .media--1262x650 {
-  aspect-ratio: 1262 / 650;
+  /* fixed 650 on the original at any desktop width */
+  height: 650px;
 }
 
 .media--16x10 img,
@@ -787,23 +797,40 @@ textarea {
   grid-template-columns: 1fr;
 }
 
+.row--wide {
+  grid-template-columns: calc(20% + 22px) minmax(0, 1fr) 183px;
+}
+
 .row--wide .row__body {
   max-width: 994px;
 }
 
 
 .stack {
-  margin-top: 34px;
-  border-top: 1px solid var(--rule);
+  /* Items sit in the section's content column on the original (x=454 at
+     1920 = gutter + 20% + 22px), one per row, no rules between. */
+  margin-top: 80px;
+  margin-left: calc(20% + 22px);
+  list-style: none;
+  padding: 0;
 }
 
 .stack__item {
   display: grid;
-  grid-template-columns: var(--label-col) minmax(0, 795px);
+  grid-template-columns: minmax(0, 1fr);
   gap: 0;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--rule);
   align-items: start;
+}
+
+/* Why Us pitch measures 104 (34px title + 16 + 22px body + 44). */
+.stack__item--plain {
+  margin-bottom: 44px;
+}
+
+/* Numbered rows: "01" in a 41px column, body under the title, pitch 117. */
+.stack__item:not(.stack__item--plain) {
+  grid-template-columns: 41px minmax(0, 1fr);
+  margin-bottom: 45px;
 }
 
 .stack__k {
@@ -1007,21 +1034,21 @@ textarea {
 
 @media (max-width: 1099px) {
   :root {
-    --gutter: 40px;
-    --fs-display: 48px;
-    --fs-section: 34px;
+    /* Measured on the original's tablet range: gutter 64, display 52,
+       section headings 32, cards 362 tall. */
+    --gutter: 64px;
+    --fs-display: 52px;
+    --fs-section: 32px;
     --label-col: 200px;
     --section-y: 100px;
   }
 
-  .row {
-    grid-template-columns: var(--label-col) minmax(0, 1fr);
-  }
+  /* The original KEEPS the three-column row at tablet (heading x=246 at
+     810 wide, button on the same line). */
 
-  .row__action {
-    grid-column: 2;
-    justify-self: start;
-    margin-top: 36px;
+  .card__frame--featured,
+  .card__frame--grid {
+    height: 362px;
   }
 
   .stack__item {
@@ -1061,12 +1088,16 @@ textarea {
 
 @media (max-width: 767px) {
   :root {
-    --gutter: 24px;
-    --fs-display: 34px;
+    /* Measured on the original's phone range: gutter 25, display 32,
+       section headings 26, cards 223 tall. */
+    --gutter: 25px;
+    --fs-display: 32px;
     --fs-section: 26px;
     --fs-card: 20px;
     --fs-base: 16px;
-    --section-y: 76px;
+    /* block separation measures 80 at phone (shaping label sits 80 under
+       the last card meta; sections repeat at content + 80) */
+    --section-y: 40px;
   }
 
   .nav__links,
@@ -1097,6 +1128,7 @@ textarea {
 
   .work {
     padding-top: 80px;
+    padding-bottom: 40px;
   }
 
   .work__grid {
@@ -1106,7 +1138,7 @@ textarea {
 
   .card__frame--featured,
   .card__frame--grid {
-    aspect-ratio: 4 / 3;
+    height: 223px;
   }
 
   .row,
@@ -1116,12 +1148,13 @@ textarea {
 
   .row__label {
     padding-top: 0;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
 
   .row__action {
     grid-column: 1;
-    margin-top: 30px;
+    justify-self: start;
+    margin-top: 48px;
   }
 
   .stack__k {
@@ -1130,7 +1163,8 @@ textarea {
   }
 
   .acc__btn {
-    padding: 18px 0;
+    /* row pitch measures 92 at phone: 36px line box + 27/27 */
+    padding: 27px 0;
   }
 
   .acc__list {
@@ -1138,7 +1172,13 @@ textarea {
   }
 
   .mark {
-    padding-block: 90px 70px;
+    padding-block: 110px 140px;
+  }
+
+  .mark video,
+  .mark img {
+    width: 150px;
+    height: 162px;
   }
 
   .mark img {
@@ -1216,7 +1256,9 @@ textarea {
   border-radius: 24px;
   overflow: hidden;
   background: var(--grey-soft);
-  aspect-ratio: 1280 / 709;
+  /* Fixed heights on the original, measured with the zoom settled at 1:
+     700 at any desktop width, 600 tablet, 350 phone. */
+  height: 700px;
 }
 
 .proj__hero img {
@@ -1228,6 +1270,8 @@ textarea {
 }
 
 .proj__prose {
+  /* Centred 1200 column at any width (x=360 at 1920, x=111 at 1422),
+     collapsing to the gutter width below 1360. */
   max-width: 1200px;
   margin: 150px auto 0;
 }
@@ -1265,12 +1309,18 @@ textarea {
   object-fit: cover;
 }
 
+/* Fixed heights on the original at any desktop width: the first band 680,
+   the second 643 (both measured), pairs 600. */
 .proj__media--wide {
-  aspect-ratio: 1262 / 680;
+  height: 680px;
+}
+
+.proj__media--wide.proj__media--second {
+  height: 643px;
 }
 
 .proj__media--sq {
-  aspect-ratio: 611 / 600;
+  height: 600px;
   margin-top: 0;
 }
 
@@ -1329,21 +1379,58 @@ textarea {
 }
 
 @media (max-width: 767px) {
+  /* Measured at 390: meta becomes label/value rows, hero 350 tall, bands
+     250, the pair KEEPS two columns (tiny tiles ~230 tall with a 10px gap),
+     ticker tiles keep their 500/350 widths at 250 tall. */
   .proj__meta {
-    flex-wrap: wrap;
-    gap: 28px;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .proj__meta > div {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
   }
 
   .proj__prose p {
     font-size: 20px;
   }
 
+  .proj__hero {
+    height: 350px;
+  }
+
+  .proj__media--wide,
+  .proj__media--wide.proj__media--second {
+    height: 250px;
+  }
+
   .proj__pair {
-    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .proj__media--sq {
+    height: 230px;
   }
 
   .proj__tile {
-    height: 220px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 1099px) and (min-width: 768px) {
+  .proj__hero {
+    height: 600px;
+  }
+
+  .proj__media--wide,
+  .proj__media--wide.proj__media--second {
+    height: 560px;
+  }
+
+  .proj__media--sq {
+    height: 480px;
   }
 }
 
