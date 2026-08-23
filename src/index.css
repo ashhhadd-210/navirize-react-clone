@@ -299,12 +299,15 @@ textarea {
   transition: transform 0.5s var(--ease-out);
 }
 
-/* Measured on the original: hiding is a pure translate — it holds opacity 1 the
-   whole way and slides clear of the viewport. The earlier build also faded it
-   out, which reads as a softer, slower exit than the original's. */
+/* Measured on the original: hiding is a pure translate holding opacity 1.
+   The two directions use different curves — hiding starts SLOW and settles
+   (S-curve: 2%% at 35ms, 28%% at 85, 62%% at 150, done ~500ms), while showing
+   starts fast (ease-out, 48%% at 120ms). The base rule carries the show
+   curve; this rule overrides the timing while hidden is the destination. */
 .nav--hidden {
   transform: translateY(-100%);
   pointer-events: none;
+  transition-timing-function: cubic-bezier(0.55, 0, 0.35, 1);
 }
 
 .nav__inner {
@@ -1475,10 +1478,38 @@ textarea {
   }
 
   /* Measured at 390: prose ~30px under the previous block, media ~32,
-     subheads 22px, pairs tight under their band. */
+     subheads 22px, pairs tight under their band. The intro prose sits
+     flush under the hero (gap 30 comes from the hero's own spacing), the
+     second band is 234 tall and the second pair 200 — both measured
+     smaller than their first counterparts, mirroring desktop's 680/643. */
   .proj__media,
   .proj__prose {
     margin-top: 32px;
+  }
+
+  .shell > .proj__prose:first-child {
+    margin-top: 0;
+  }
+
+  /* the grouped 32px margin above must not leak onto tiles inside pairs */
+  .proj__pair .proj__media {
+    margin-top: 0;
+  }
+
+  .proj__hero {
+    margin-top: 104px;
+  }
+
+  .proj__media--wide.proj__media--second {
+    height: 234px;
+  }
+
+  .proj__pair--second .proj__media--sq {
+    height: 200px;
+  }
+
+  .proj__meta {
+    margin-bottom: 83px;
   }
 
   .proj__subtitle {
@@ -1494,8 +1525,7 @@ textarea {
     height: 350px;
   }
 
-  .proj__media--wide,
-  .proj__media--wide.proj__media--second {
+  .proj__media--wide {
     height: 250px;
   }
 
@@ -1623,8 +1653,33 @@ a:focus-visible > .roll .roll__stack {
   }
 }
 
+/* The LOAD spring, sampled per-frame on the original's /projects at
+   1920x1080: opacity equals progress, fast attack (68% at 165ms), long
+   tail settling ~1.4s. Distinct from the slower scroll-reveal spring. */
+:root {
+  --spring-load: linear(0 0%, 0.234 2.571%, 0.677 14.29%, 0.714 16.57%, 0.742 18.71%, 0.77 21.07%, 0.795 23.43%, 0.817 25.79%, 0.838 28.21%, 0.856 30.57%, 0.872 32.93%, 0.887 35.36%, 0.9 37.71%, 0.912 40.07%, 0.923 42.43%, 0.938 45.93%, 0.95 50%, 0.965 57.14%, 0.976 64.29%, 0.983 71.43%, 0.989 78.57%, 0.993 85.71%, 0.996 92.86%, 1 100%);
+}
+
 .slidein {
-  animation: slide-in-right 0.5s cubic-bezier(0.25, 1, 0.5, 1) var(--slide-delay, 0s) both;
+  animation: slide-in-right 1.4s cubic-bezier(0.19, 1, 0.4, 1) var(--slide-delay, 0s) both;
+  animation-timing-function: var(--spring-load);
+}
+
+/* In-view content at page load: same fast spring, 30px rise, trailing the
+   title by ~60ms (measured stagger on the original's first card row). */
+.reveal--load {
+  opacity: 0;
+  transform: translateY(30px);
+  transition-property: opacity, transform;
+  transition-duration: 1.4s;
+  transition-delay: 60ms;
+  transition-timing-function: cubic-bezier(0.19, 1, 0.4, 1);
+  transition-timing-function: var(--spring-load);
+}
+
+.reveal--load.reveal--in {
+  opacity: 1;
+  transform: none;
 }
 
 @keyframes page-fade {
@@ -1688,7 +1743,8 @@ a:focus-visible > .roll .roll__stack {
   /* The reveal's resting state is invisible, so zeroing its duration is not
      enough — anything whose observer has not fired yet would stay at
      opacity 0. Show it outright instead. */
-  .reveal {
+  .reveal,
+  .reveal--load {
     opacity: 1;
     transform: none;
   }

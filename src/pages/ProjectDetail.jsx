@@ -83,9 +83,9 @@ function Wide({ src, alt, second = false }) {
   )
 }
 
-function Pair({ items }) {
+function Pair({ items, second = false }) {
   return (
-    <Reveal className="proj__pair">
+    <Reveal className={second ? 'proj__pair proj__pair--second' : 'proj__pair'}>
       {items.map((it) => (
         <figure className="proj__media proj__media--sq" key={it.src}>
           <img src={img(it.src, 1024)} srcSet={imgSrcSet(it.src)}
@@ -278,7 +278,7 @@ export default function ProjectDetail() {
 
           <Prose title={study.thinkingTitle} paragraphs={study.thinking} />
           <Wide src={g(media.band2)} alt={alt(3)} second />
-          <Pair items={[{ src: g(media.pair2[0]), alt: alt(4) }, { src: g(media.pair2[1]), alt: alt(5) }]} />
+          <Pair second items={[{ src: g(media.pair2[0]), alt: alt(4) }, { src: g(media.pair2[1]), alt: alt(5) }]} />
 
           <Prose title={study.outcomeTitle} paragraphs={study.outcome} />
         </div>

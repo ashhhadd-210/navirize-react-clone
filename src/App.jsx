@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Routes, Route, useLocation, useNavigationType } from 'react-router-dom'
 
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
@@ -49,16 +49,27 @@ const HOLD_MS = 250
 
 export default function App() {
   const location = useLocation()
+  const navType = useNavigationType()
   const [shown, setShown] = useState(location)
+
+  /* The original is a multi-page site, so the browser restores the scroll
+     position on back/forward. Mirror that: remember where each history
+     entry was, scroll new navigations to the top, restore traversals. */
+  const positions = useRef(new Map())
 
   useEffect(() => {
     if (location === shown) return
+    // capture the outgoing page's position once, at navigation time —
+    // a continuous scroll listener would race the swap's own scrollTo
+    positions.current.set(shown.key, window.scrollY)
     const t = setTimeout(() => {
-      window.scrollTo(0, 0)
+      const y =
+        navType === 'POP' ? (positions.current.get(location.key) ?? 0) : 0
+      window.scrollTo(0, y)
       setShown(location)
     }, HOLD_MS)
     return () => clearTimeout(t)
-  }, [location, shown])
+  }, [location, shown, navType])
 
   return (
     <>

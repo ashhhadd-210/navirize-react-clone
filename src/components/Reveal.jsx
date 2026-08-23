@@ -79,14 +79,29 @@ export function useReveal() {
        30px/1.5s reveal. */
     const rect = el.getBoundingClientRect()
     if (rect.top < window.innerHeight - 40 && rect.bottom > 0) {
-      setState('instant')
+      // paint one frame hidden, then run the fast load spring
+      setState('load')
       return
     }
     return observe(el, () => setState('shown'))
   }, [state])
 
+  useEffect(() => {
+    if (state !== 'load') return
+    const raf = requestAnimationFrame(() =>
+      requestAnimationFrame(() => setState('load-in'))
+    )
+    return () => cancelAnimationFrame(raf)
+  }, [state])
+
   const className =
-    state === 'instant' ? '' : state === 'shown' ? 'reveal reveal--in' : 'reveal'
+    state === 'load'
+      ? 'reveal--load'
+      : state === 'load-in'
+        ? 'reveal--load reveal--in'
+        : state === 'shown'
+          ? 'reveal reveal--in'
+          : 'reveal'
   return { ref, className }
 }
 
