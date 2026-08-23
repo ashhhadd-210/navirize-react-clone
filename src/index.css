@@ -1598,9 +1598,12 @@ a:focus-visible > .roll .roll__stack {
 }
 
 .page-fade {
-  /* measured off the navigation recording: ~25% in at 120ms, ~70% at
-     340ms, settled ~450ms — a 400ms fast-out fade of the whole page */
-  animation: page-fade 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
+  /* Sampled on the original's /projects load: pure opacity, no translate,
+     following 1 - exp(-t/250ms) — 79% at 390ms, 90% at 590ms, settled
+     ~1.2s. Encoded exactly as linear(); the cubic-bezier line is the
+     fallback for browsers without linear(). */
+  animation: page-fade 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-timing-function: linear(0 0%, 0.3297 7.692%, 0.5507 15.38%, 0.6988 23.08%, 0.7981 30.77%, 0.8647 38.46%, 0.9093 46.15%, 0.9392 53.85%, 0.9592 61.54%, 0.9727 69.23%, 0.9817 76.92%, 0.9877 84.62%, 0.9918 92.31%, 1 100%);
 }
 
 /* ---------- scroll reveal ----------

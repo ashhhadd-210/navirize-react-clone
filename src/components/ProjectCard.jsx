@@ -19,7 +19,7 @@ export default function ProjectCard({ project, variant = 'grid', priority = fals
   const fallback = featured ? 2048 : 1024
 
   return (
-    <Link ref={ref} to={`/projects/${project.slug}`} className={`card ${reveal}`}>
+    <Link ref={ref} to={`/projects/${project.slug}`} className={`card ${reveal}`.trim()}>
       <div className={`card__frame card__frame--${featured ? 'featured' : 'grid'}`}>
         <img
           className="card__img"

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 /**
@@ -23,6 +23,7 @@ const TAU = 130
 
 export default function SmoothScroll() {
   const { pathname } = useLocation()
+  const resetRef = useRef(null)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -74,19 +75,29 @@ export default function SmoothScroll() {
       }
     }
 
+    /* Navigation must kill any in-flight glide: without this, the stale
+       target dragged the new page back to the old scroll position right
+       after ScrollToTop had jumped to 0. */
+    resetRef.current = () => {
+      animating = false
+      if (raf) cancelAnimationFrame(raf)
+      raf = 0
+      target = window.scrollY
+      current = window.scrollY
+    }
+
     window.addEventListener('wheel', onWheel, { passive: false })
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('scroll', onScroll)
       if (raf) cancelAnimationFrame(raf)
+      resetRef.current = null
     }
   }, [])
 
-  // route change: ScrollToTop resets the window; nothing to do here because
-  // the scroll listener above re-anchors, but cancel any in-flight glide
   useEffect(() => {
-    // the effect above re-anchors via its scroll listener
+    if (resetRef.current) resetRef.current()
   }, [pathname])
 
   return null

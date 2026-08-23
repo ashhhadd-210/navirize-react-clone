@@ -63,15 +63,27 @@ function observe(el, cb) {
 
 export function useReveal() {
   const ref = useRef(null)
-  const [shown, setShown] = useState(false)
+  // 'instant' | 'hidden' | 'shown'
+  const [state, setState] = useState('hidden')
 
   useEffect(() => {
     const el = ref.current
-    if (!el || shown) return
-    return observe(el, () => setShown(true))
-  }, [shown])
+    if (!el || state !== 'hidden') return
+    /* Sampled on the original's page loads: content already inside the
+       viewport fades in with the page itself — it does NOT run the slow
+       scroll spring. Only content that arrives by scrolling gets the
+       30px/1.5s reveal. */
+    const rect = el.getBoundingClientRect()
+    if (rect.top < window.innerHeight - 40 && rect.bottom > 0) {
+      setState('instant')
+      return
+    }
+    return observe(el, () => setState('shown'))
+  }, [state])
 
-  return { ref, className: shown ? 'reveal reveal--in' : 'reveal' }
+  const className =
+    state === 'instant' ? '' : state === 'shown' ? 'reveal reveal--in' : 'reveal'
+  return { ref, className }
 }
 
 export default function Reveal({ as: Tag = 'div', className = '', children, ...rest }) {
