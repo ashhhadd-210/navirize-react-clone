@@ -648,13 +648,16 @@ textarea {
   transform: rotate(180deg);
 }
 
+/* Measured on the original: the expansion decays fast (item travel
+   halves every ~65ms, settled ~500ms) while the items' fade trails,
+   reaching full opacity ~790ms after the click. */
 .acc__panel {
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
   transition:
-    grid-template-rows 0.4s cubic-bezier(0.33, 1, 0.68, 1),
-    opacity 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+    grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.7s cubic-bezier(0.19, 1, 0.4, 1);
 }
 
 .acc__panel[data-open='true'] {
@@ -992,12 +995,19 @@ textarea {
   color: var(--grey);
 }
 
+/* The original shows NO visual change on focus. Keyboard users still get
+   an outline via :focus-visible. */
 .field__input:focus,
 .field__select:focus,
 .field__area:focus {
   outline: none;
-  border-color: var(--black);
-  background: var(--white);
+}
+
+.field__input:focus-visible,
+.field__select:focus-visible,
+.field__area:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
 }
 
 .field__area {
@@ -1589,18 +1599,23 @@ textarea {
   }
 }
 
+/* Measured on the original at 810: hero 600, band 1 500, band 2 440,
+   pair tiles 400. */
 @media (max-width: 1099px) and (min-width: 768px) {
   .proj__hero {
     height: 600px;
   }
 
-  .proj__media--wide,
+  .proj__media--wide {
+    height: 500px;
+  }
+
   .proj__media--wide.proj__media--second {
-    height: 560px;
+    height: 440px;
   }
 
   .proj__media--sq {
-    height: 480px;
+    height: 400px;
   }
 }
 
