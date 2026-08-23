@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
-import RiseIn from '../components/RiseIn.jsx'
+import Reveal from '../components/Reveal.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import NotFound from './NotFound.jsx'
 import { projects, galleryUrl, caseStudies, caseMedia, img, imgSrcSet } from '../data/site.js'
@@ -72,17 +72,20 @@ function ZoomHero({ project }) {
 
 function Wide({ src, alt, second = false }) {
   return (
-    <figure className={`proj__media proj__media--wide${second ? ' proj__media--second' : ''}`}>
+    <Reveal
+      as="figure"
+      className={`proj__media proj__media--wide${second ? ' proj__media--second' : ''}`}
+    >
       <img src={img(src, 2048)} srcSet={imgSrcSet(src)}
         sizes="(max-width: 767px) calc(100vw - 50px), (max-width: 1099px) calc(100vw - 128px), calc(100vw - 160px)"
         alt={alt} loading="lazy" decoding="async" />
-    </figure>
+    </Reveal>
   )
 }
 
 function Pair({ items }) {
   return (
-    <div className="proj__pair">
+    <Reveal className="proj__pair">
       {items.map((it) => (
         <figure className="proj__media proj__media--sq" key={it.src}>
           <img src={img(it.src, 1024)} srcSet={imgSrcSet(it.src)}
@@ -90,19 +93,19 @@ function Pair({ items }) {
             alt={it.alt} loading="lazy" decoding="async" />
         </figure>
       ))}
-    </div>
+    </Reveal>
   )
 }
 
 function Prose({ title, big = false, paragraphs }) {
   const Tag = big ? 'h2' : 'h3'
   return (
-    <div className="proj__prose">
+    <Reveal className="proj__prose">
       <Tag className={big ? 'proj__lede' : 'proj__subtitle'}>{title}</Tag>
       {paragraphs.map((p) => (
         <p key={p.slice(0, 32)}>{p}</p>
       ))}
-    </div>
+    </Reveal>
   )
 }
 
@@ -234,7 +237,7 @@ export default function ProjectDetail() {
 
       <article>
         <header className="shell pagehead">
-          <RiseIn delay={0.1}>
+          <div>
             <dl className="proj__meta">
               <div>
                 <dt className="label">Industry</dt>
@@ -250,7 +253,7 @@ export default function ProjectDetail() {
               </div>
             </dl>
             <h1 className="display display--narrow">{project.title}</h1>
-          </RiseIn>
+          </div>
 
           <ZoomHero project={project} />
         </header>

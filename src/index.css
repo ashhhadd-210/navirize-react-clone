@@ -536,13 +536,15 @@ textarea {
     transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   display: grid;
   place-items: center;
-  /* the original's arrow path carries no fill attribute - it renders black */
-  color: var(--black);
+  /* white at rest — visible over the card image in the recordings */
+  color: var(--white);
 }
 
 .card:hover .card__badge {
   background: var(--white);
-  transform: rotate(0deg);
+  color: var(--black);
+  /* the up-right glyph swings from pointing up to pointing right */
+  transform: rotate(45deg);
 }
 
 .card__meta {
@@ -680,8 +682,21 @@ textarea {
 .foot {
   background: var(--black);
   color: var(--white);
-  padding-top: 100px;
+  /* Measured at scroll end across four viewport heights: the footer is
+     min(90vh, 1000px) tall (720/855/945/1000 at vh 800/950/1050/1200),
+     80px padding, with the rule + legal line anchored to the bottom. */
+  min-height: min(90vh, 1000px);
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px;
   padding-bottom: 80px;
+}
+
+.foot > .shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
 }
 
 .foot__top {
@@ -724,7 +739,7 @@ textarea {
   height: 1px;
   background: var(--rule-dark);
   border: 0;
-  margin: 333px 0 36px;
+  margin: auto 0 36px;
 }
 
 .foot__legal {
@@ -1283,7 +1298,10 @@ textarea {
   font-size: 18px;
 }
 
+/* The case hero trails the page fade slightly in the load recording —
+   its own fade starts ~150ms in and runs ~600ms. */
 .proj__hero {
+  animation: page-fade 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.15s both;
   margin-top: 126px;
   border-radius: 24px;
   overflow: hidden;
@@ -1580,7 +1598,9 @@ a:focus-visible > .roll .roll__stack {
 }
 
 .page-fade {
-  animation: page-fade 0.22s linear both;
+  /* measured off the navigation recording: ~25% in at 120ms, ~70% at
+     340ms, settled ~450ms — a 400ms fast-out fade of the whole page */
+  animation: page-fade 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
 }
 
 /* ---------- scroll reveal ----------

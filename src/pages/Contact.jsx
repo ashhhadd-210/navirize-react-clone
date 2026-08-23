@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Seo from '../components/Seo.jsx'
-import RiseIn from '../components/RiseIn.jsx'
 import TwoTone from '../components/TwoTone.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import { brand, budgets, headings } from '../data/site.js'
@@ -66,7 +65,7 @@ export default function Contact() {
 
       <div className="shell contact">
         {/* ---- left: heading, lede, details ---- */}
-        <RiseIn delay={0.15}>
+        <div>
           <p className="label label--grey" style={{ marginBottom: 26 }}>
             Contact
           </p>
@@ -90,10 +89,10 @@ export default function Contact() {
               <p>Based in {brand.country}. Working Globally.</p>
             </div>
           </div>
-        </RiseIn>
+        </div>
 
         {/* ---- right: inquiry form ---- */}
-        <RiseIn delay={0.22}>
+        <div>
           <form className="form" onSubmit={onSubmit} noValidate>
             <label className="field">
               <span className="field__label">Name</span>
@@ -224,7 +223,7 @@ export default function Contact() {
               )}
             </div>
           </form>
-        </RiseIn>
+        </div>
       </div>
     </>
   )

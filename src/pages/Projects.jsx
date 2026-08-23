@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
-import RiseIn from '../components/RiseIn.jsx'
 import TwoTone from '../components/TwoTone.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import ProjectCard from '../components/ProjectCard.jsx'
@@ -18,13 +17,13 @@ export default function Projects() {
       />
 
       <section className="shell pagehead">
-        <RiseIn delay={0.15}>
+        <div>
           <TwoTone as="h1" className="display" {...headings.projectsHero} />
           <p className="pagehead__lede pagehead__lede--big">
             A closer look at how ideas are transformed into identity,
             experience, and advantage.
           </p>
-        </RiseIn>
+        </div>
       </section>
 
       {/* Measured on the original: a uniform two-column grid of all four

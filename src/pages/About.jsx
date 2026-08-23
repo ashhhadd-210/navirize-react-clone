@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
-import RiseIn from '../components/RiseIn.jsx'
 import TwoTone from '../components/TwoTone.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
@@ -32,7 +31,7 @@ export default function About() {
       />
 
       <section className="shell pagehead">
-        <RiseIn delay={0.15}>
+        <div>
           <p className="label pagehead__label">About Us</p>
           <TwoTone
             as="h1"
@@ -40,7 +39,7 @@ export default function About() {
             {...headings.aboutHero}
           />
           <p className="pagehead__lede">{headings.aboutLede}</p>
-        </RiseIn>
+        </div>
 
         {/* paired media directly under the hero */}
         <div className="media-pair">
