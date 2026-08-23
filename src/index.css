@@ -514,7 +514,16 @@ textarea {
   height: 509px;
 }
 
+/* Hover zoom, measured on the original (visible scale: 1.002 at 100ms,
+   1.042 at 200, 1.055 at 350, settling 1.06 ~500ms; reverses on leave).
+   Framer does it as a layout change + FLIP counter-scale; a transform
+   gives the same visible motion. */
+.card:hover .card__img {
+  transform: scale(1.06);
+}
+
 .card__img {
+  transition: transform 0.5s cubic-bezier(0.45, 0, 0.25, 1);
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -533,7 +542,6 @@ textarea {
   height: 57px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.2);
-  transform: rotate(-45deg);
   transition:
     background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
     transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -546,7 +554,7 @@ textarea {
 .card:hover .card__badge {
   background: var(--white);
   color: var(--black);
-  /* the up-right glyph swings from pointing up to pointing right */
+  /* the up-right arrow swings 45deg clockwise to point right */
   transform: rotate(45deg);
 }
 
@@ -1417,6 +1425,9 @@ textarea {
   left: 50%;
   transform: translateX(-50%);
   margin-top: 90px;
+  /* measured on the original: 240px of white between the strip and the
+     footer at desktop, 160px at phone */
+  margin-bottom: 240px;
 }
 
 .proj__marquee-track--drag {
@@ -1539,6 +1550,10 @@ textarea {
 
   .proj__tile {
     height: 250px;
+  }
+
+  .proj__marquee {
+    margin-bottom: 160px;
   }
 }
 
