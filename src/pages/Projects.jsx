@@ -32,7 +32,7 @@ export default function Projects() {
       <section className="shell work work--listing" aria-label="All projects">
         <div className="work__grid">
           {projects.map((project, i) => (
-            <ProjectCard key={project.slug} project={project} priority={i === 0} />
+            <ProjectCard key={project.slug} project={project} priority={i < 2} />
           ))}
         </div>
       </section>

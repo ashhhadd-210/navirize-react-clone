@@ -34,7 +34,10 @@ export default function ProjectCard({ project, variant = 'grid', priority = fals
           loading={priority ? 'eager' : 'lazy'}
           /* lowercase: React 18 does not recognise the camelCase form */
           fetchpriority={priority ? 'high' : 'auto'}
-          decoding="async"
+          /* sync decode for above-fold cards: with the cache warmed by
+             Prefetch, this paints the image on the mount frame instead of
+             a grey placeholder a few frames into the page fade */
+          decoding={priority ? 'sync' : 'async'}
         />
         <span className="card__badge">
           <ArrowUpRight size={18} className="" />

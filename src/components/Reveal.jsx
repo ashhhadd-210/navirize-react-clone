@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 /**
  * The original's scroll reveal, sampled frame by frame off the live site in
@@ -66,7 +66,11 @@ export function useReveal() {
   // 'instant' | 'hidden' | 'shown'
   const [state, setState] = useState('hidden')
 
-  useEffect(() => {
+  /* Layout effect, not effect: the in-view decision must land BEFORE the
+     first paint, or above-fold content flashes a frame (or more, under
+     load) of opacity 0 at every route change. The original paints its
+     in-view content faintly from the very first frame of a page fade. */
+  useLayoutEffect(() => {
     const el = ref.current
     if (!el || state !== 'hidden') return
     /* Sampled on the original's page loads: content already inside the
