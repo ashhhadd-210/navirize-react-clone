@@ -70,7 +70,7 @@ export default function Footer() {
     <footer className="foot-wrap" ref={wrapRef}>
       <div className="foot" ref={innerRef}>
       <div className="shell">
-        <Reveal className="foot__top">
+        <Reveal axis="x" className="foot__top">
           <div>
             {showCta && (
               <>

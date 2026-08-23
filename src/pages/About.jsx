@@ -49,7 +49,7 @@ export default function About() {
       </section>
 
       {/* ---------- mission ---------- */}
-      <Reveal as="section" className="shell section">
+      <Reveal as="section" axis="x" className="shell section">
         <SectionRow label="Our Mission" className="row--wide">
           <TwoTone as="h2" className="h-section" {...headings.mission1} />
           <TwoTone as="p" className="h-section" {...headings.mission2} />
@@ -58,7 +58,7 @@ export default function About() {
       </Reveal>
 
       {/* ---------- why us ---------- */}
-      <Reveal as="section" className="shell section">
+      <Reveal as="section" axis="x" className="shell section">
         <SectionRow label="Why Us" className="row--wide">
           <TwoTone as="h2" className="h-section" breakLine {...headings.whyUs} />
         </SectionRow>
@@ -80,7 +80,7 @@ export default function About() {
       </Reveal>
 
       {/* ---------- process ---------- */}
-      <Reveal as="section" className="shell section">
+      <Reveal as="section" axis="x" className="shell section">
         <SectionRow label="How We Work" className="row--wide">
           <TwoTone as="h2" className="h-section" {...headings.process} />
         </SectionRow>
@@ -99,7 +99,7 @@ export default function About() {
       </Reveal>
 
       {/* ---------- work closer ---------- */}
-      <Reveal as="section" className="shell section">
+      <Reveal as="section" axis="x" className="shell section">
         <SectionRow
           label="Designing Success"
           action={

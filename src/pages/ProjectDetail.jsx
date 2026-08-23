@@ -100,7 +100,7 @@ function Pair({ items, second = false }) {
 function Prose({ title, big = false, paragraphs }) {
   const Tag = big ? 'h2' : 'h3'
   return (
-    <Reveal className="proj__prose">
+    <Reveal axis="x" className="proj__prose">
       <Tag className={big ? 'proj__lede' : 'proj__subtitle'}>{title}</Tag>
       {paragraphs.map((p) => (
         <p key={p.slice(0, 32)}>{p}</p>

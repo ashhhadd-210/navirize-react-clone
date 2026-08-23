@@ -1684,12 +1684,17 @@ a:focus-visible > .roll .roll__stack {
    title by ~60ms (measured stagger on the original's first card row). */
 .reveal--load {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translate(var(--rvx, 0px), var(--rvy, 30px));
   transition-property: opacity, transform;
   transition-duration: 1.4s;
   transition-delay: 60ms;
   transition-timing-function: cubic-bezier(0.19, 1, 0.4, 1);
   transition-timing-function: var(--spring-load);
+}
+
+.reveal-x {
+  --rvx: 30px;
+  --rvy: 0px;
 }
 
 .reveal--load.reveal--in {
@@ -1729,9 +1734,14 @@ a:focus-visible > .roll .roll__stack {
   --reveal-spring: linear(0 0%, 0.0013 3%, 0.0148 7.4%, 0.0515 11.87%, 0.1325 16.33%, 0.2842 20.73%, 0.4579 25.2%, 0.5864 29.67%, 0.6757 34.07%, 0.7441 38.53%, 0.7973 43%, 0.8391 47.4%, 0.8731 51.87%, 0.9012 56.33%, 0.9238 60.73%, 0.9428 65.2%, 0.9581 69.67%, 0.9705 74.07%, 0.9804 78.53%, 0.9878 83%, 0.9933 87.4%, 0.9971 91.87%, 0.9993 96.33%, 1 100%);
 }
 
+/* Measured on the original: TEXT sections reveal by sliding from the
+   right (tx 30 -> 0, ty stays 0 — sampled on Shaping Perception, Services
+   and Our Story), while cards and images rise from below (ty 30 -> 0,
+   sampled on the project cards). The axis is set per element via
+   .reveal-x; vertical is the default. */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translate(var(--rvx, 0px), var(--rvy, 30px));
   transition-property: opacity, transform;
   transition-duration: 1.5s;
   transition-timing-function: cubic-bezier(0.22, 0.61, 0.24, 1);

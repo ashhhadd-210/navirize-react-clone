@@ -61,7 +61,7 @@ function observe(el, cb) {
   }
 }
 
-export function useReveal() {
+export function useReveal(axis = 'y') {
   const ref = useRef(null)
   // 'instant' | 'hidden' | 'shown'
   const [state, setState] = useState('hidden')
@@ -94,19 +94,20 @@ export function useReveal() {
     return () => cancelAnimationFrame(raf)
   }, [state])
 
+  const ax = axis === 'x' ? ' reveal-x' : ''
   const className =
-    state === 'load'
+    (state === 'load'
       ? 'reveal--load'
       : state === 'load-in'
         ? 'reveal--load reveal--in'
         : state === 'shown'
           ? 'reveal reveal--in'
-          : 'reveal'
+          : 'reveal') + ax
   return { ref, className }
 }
 
-export default function Reveal({ as: Tag = 'div', className = '', children, ...rest }) {
-  const { ref, className: revealClass } = useReveal()
+export default function Reveal({ as: Tag = 'div', axis = 'y', className = '', children, ...rest }) {
+  const { ref, className: revealClass } = useReveal(axis)
   return (
     <Tag ref={ref} className={className ? `${className} ${revealClass}` : revealClass} {...rest}>
       {children}
