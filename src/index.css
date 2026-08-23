@@ -370,14 +370,15 @@ textarea {
   justify-self: end;
 }
 
+/* Measured on the original at 390: a 40px disc, rgba(255,255,255,0.9). */
 .nav__burger {
   display: none;
   justify-self: end;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border: 0;
   border-radius: 999px;
-  background: var(--grey-soft);
+  background: rgba(255, 255, 255, 0.9);
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -449,16 +450,25 @@ textarea {
   visibility: visible;
 }
 
+/* Measured open on the original: "Projects" 18px centred at y=90,
+   "About" at y=138 (48px pitch), the pill centred at y=210, panel white
+   with no rules. */
 .nav__sheet-inner {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding-top: 14px;
   padding-bottom: 28px;
 }
 
 .nav__sheet-link {
-  font-size: 28px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--rule);
+  font-size: 18px;
+  line-height: 1.4;
+  padding: 12px 0;
+}
+
+.nav__sheet-cta {
+  margin-top: 12px;
 }
 
 /* ---------- hero ---------- */
@@ -564,7 +574,8 @@ textarea {
 }
 
 .card__cat {
-  font-size: var(--fs-base);
+  /* holds 18px at phone on the original while the base token drops to 16 */
+  font-size: 18px;
   color: var(--grey);
 }
 
@@ -732,7 +743,9 @@ textarea {
 }
 
 .foot__col a {
-  font-size: var(--fs-base);
+  /* the original keeps footer links at 18px even at phone, where the
+     base size drops to 16 */
+  font-size: 18px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -785,6 +798,10 @@ textarea {
 }
 
 .pagehead__label {
+  /* the page-head eyebrows measure 18px on the original — larger than the
+     16px section labels */
+  font-size: 18px;
+  color: var(--black);
   margin-bottom: 26px;
 }
 
@@ -1131,6 +1148,11 @@ textarea {
     height: 362px;
   }
 
+  /* Measured on the original at 810: About bands and pair are 400 tall. */
+  .media--1262x650 {
+    height: 400px;
+  }
+
   .stack__item {
     grid-template-columns: var(--label-col) minmax(0, 1fr);
   }
@@ -1160,10 +1182,7 @@ textarea {
     grid-template-columns: 1fr;
   }
 
-  .media-pair .media--about:first-child,
-  .media-pair .media--about:last-child {
-    aspect-ratio: 16 / 10;
-  }
+
 }
 
 @media (max-width: 767px) {
@@ -1175,6 +1194,8 @@ textarea {
     --fs-section: 26px;
     --fs-card: 20px;
     --fs-base: 16px;
+    /* footer links hold 18px at phone on the original */
+    --fs-foot-link: 18px;
     /* block separation measures 80 at phone (shaping label sits 80 under
        the last card meta; sections repeat at content + 80) */
     --section-y: 40px;
@@ -1247,6 +1268,10 @@ textarea {
     padding: 27px 0;
   }
 
+  .acc__list li {
+    font-size: 20px;
+  }
+
   .acc__list {
     columns: 1;
   }
@@ -1300,7 +1325,8 @@ textarea {
   }
 
   .pagehead__lede {
-    font-size: 20px;
+    /* measured 22px at 390 on the original's about lede */
+    font-size: 22px;
     margin-top: 24px;
   }
 
@@ -1308,6 +1334,12 @@ textarea {
     grid-template-columns: 1fr;
     gap: 16px;
     margin-top: 70px;
+  }
+
+  /* Measured on the original at 390: every About image is 250 tall. */
+  .media-pair .media--about,
+  .media--1262x650 {
+    height: 250px;
   }
 }
 
@@ -1424,7 +1456,7 @@ textarea {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 90px;
+  margin-top: 75px;
   /* measured on the original: 240px of white between the strip and the
      footer at desktop, 160px at phone */
   margin-bottom: 240px;
@@ -1687,7 +1719,7 @@ a:focus-visible > .roll .roll__stack {
   transform: translate(var(--rvx, 0px), var(--rvy, 30px));
   transition-property: opacity, transform;
   transition-duration: 1.4s;
-  transition-delay: 60ms;
+  transition-delay: var(--load-delay, 60ms);
   transition-timing-function: cubic-bezier(0.19, 1, 0.4, 1);
   transition-timing-function: var(--spring-load);
 }

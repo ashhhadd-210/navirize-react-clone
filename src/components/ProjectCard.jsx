@@ -11,7 +11,7 @@ import { useReveal } from './Reveal.jsx'
  * translucent circular arrow inset 20px from the bottom-left of the frame,
  * and the category/title stacked 24px below the image.
  */
-export default function ProjectCard({ project, variant = 'grid', priority = false }) {
+export default function ProjectCard({ project, variant = 'grid', priority = false, index = 0 }) {
   const { ref, className: reveal } = useReveal()
   const featured = variant === 'featured'
   // Featured renders 1280 CSS px, grid cards 620 — so 2048 covers the featured
@@ -19,7 +19,14 @@ export default function ProjectCard({ project, variant = 'grid', priority = fals
   const fallback = featured ? 2048 : 1024
 
   return (
-    <Link ref={ref} to={`/projects/${project.slug}`} className={`card ${reveal}`.trim()}>
+    <Link
+      ref={ref}
+      to={`/projects/${project.slug}`}
+      className={`card ${reveal}`.trim()}
+      /* measured load stagger on the original: each card trails the last
+         by ~40ms */
+      style={{ '--load-delay': `${60 + index * 40}ms` }}
+    >
       <div className={`card__frame card__frame--${featured ? 'featured' : 'grid'}`}>
         <img
           className="card__img"

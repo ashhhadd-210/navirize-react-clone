@@ -83,7 +83,30 @@ export function useReveal(axis = 'y') {
       setState('load')
       return
     }
-    return observe(el, () => setState('shown'))
+    const fire = () => setState('shown')
+    const stopObserving = observe(el, fire)
+    /* Belt and braces: under rapid programmatic scrolling the shared
+       IntersectionObserver occasionally misses an element (seen ~1 in 2
+       automated full-page sweeps). A rAF-gated scroll check guarantees
+       nothing is ever left at opacity 0. */
+    let raf = 0
+    const onScroll = () => {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = 0
+        const r = el.getBoundingClientRect()
+        /* one-shot semantics: past the trigger line counts as revealed,
+           even if the element was flung fully above the viewport between
+           frames */
+        if (r.top < window.innerHeight - 40) fire()
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      stopObserving()
+      window.removeEventListener('scroll', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [state])
 
   useEffect(() => {

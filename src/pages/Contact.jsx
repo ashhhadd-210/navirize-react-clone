@@ -67,7 +67,7 @@ export default function Contact() {
       <div className="shell contact">
         {/* ---- left: heading, lede, details ---- */}
         <div>
-          <p className="label label--grey slidein" style={{ marginBottom: 26 }}>
+          <p className="pagehead__label label--grey slidein">
             Contact
           </p>
           <TwoTone as="h1" className="display slidein" {...headings.contactHero} />

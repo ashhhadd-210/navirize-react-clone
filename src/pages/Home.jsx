@@ -41,7 +41,7 @@ export default function Home() {
         <ProjectCard project={featured} variant="featured" priority />
         <div className="work__grid">
           {rest.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+            <ProjectCard key={project.slug} project={project} index={1} />
           ))}
         </div>
       </section>

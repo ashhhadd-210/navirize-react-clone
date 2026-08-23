@@ -203,7 +203,7 @@ function Marquee({ ids }) {
             {tiles.map(({ id, w }) => (
               <figure className="proj__tile" style={{ width: w }} key={copy + id}>
                 <img
-                  src={img(galleryUrl(id), 512)}
+                  src={img(galleryUrl(id), 1024)}
                   alt=""
                   loading="lazy"
                   decoding="async"

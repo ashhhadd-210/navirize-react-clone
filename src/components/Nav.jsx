@@ -79,25 +79,17 @@ export default function Nav() {
           `visibility: hidden` while closed to keep its links untabbable. */}
       <div id="nav-sheet" className="nav__sheet" data-open={open ? 'true' : 'false'}>
         <div className="nav__sheet-clip">
+          {/* Measured on the original at 390: a compact dropdown with ONLY
+              the two nav links, centred, 18px at a ~48px pitch, and a
+              centred dark pill — not a full link list. */}
           <div className="shell nav__sheet-inner">
-            <Link to="/" className="nav__sheet-link">
-              Home
-            </Link>
             {nav.map((item) => (
               <Link key={item.to} to={item.to} className="nav__sheet-link">
                 {item.label}
               </Link>
             ))}
-            <Link to="/contact" className="nav__sheet-link">
-              Contact
-            </Link>
-            <Link
-              to="/contact"
-              className="btn btn--dark"
-              style={{ marginTop: 26, alignSelf: 'flex-start' }}
-            >
+            <Link to="/contact" className="btn btn--dark nav__sheet-cta">
               Start Your Project
-              <ArrowUpRight />
             </Link>
           </div>
         </div>
