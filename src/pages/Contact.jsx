@@ -8,7 +8,9 @@ const EMPTY = {
   name: '',
   email: '',
   company: '',
-  budget: '',
+  /* the original's select is `required` with no placeholder — it sits on
+     the first range by default */
+  budget: '€2,000 – €10,000',
   details: '',
   website: '', // honeypot
 }
@@ -19,7 +21,6 @@ function validate(v) {
   if (!v.email.trim()) e.email = 'Please add an email so we can reply.'
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email.trim()))
     e.email = 'That email address does not look right.'
-  if (!v.budget) e.budget = 'Pick the range closest to your budget.'
   if (v.details.trim().length < 10)
     e.details = 'A sentence or two about the project helps a lot.'
   return e
@@ -66,10 +67,10 @@ export default function Contact() {
       <div className="shell contact">
         {/* ---- left: heading, lede, details ---- */}
         <div>
-          <p className="label label--grey" style={{ marginBottom: 26 }}>
+          <p className="label label--grey slidein" style={{ marginBottom: 26 }}>
             Contact
           </p>
-          <TwoTone as="h1" className="display" {...headings.contactHero} />
+          <TwoTone as="h1" className="display slidein" {...headings.contactHero} />
 
           <p className="body--lg contact__lede">
             Tell us about your business, your goals, and where you want to go
@@ -157,7 +158,6 @@ export default function Contact() {
                 aria-invalid={errors.budget ? 'true' : undefined}
                 aria-describedby={errors.budget ? 'err-budget' : undefined}
               >
-                <option value="">Select a range</option>
                 {budgets.map((b) => (
                   <option key={b} value={b}>
                     {b}

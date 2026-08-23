@@ -18,8 +18,8 @@ export default function Projects() {
 
       <section className="shell pagehead">
         <div>
-          <TwoTone as="h1" className="display" {...headings.projectsHero} />
-          <p className="pagehead__lede pagehead__lede--big">
+          <TwoTone as="h1" className="display slidein" {...headings.projectsHero} />
+          <p className="pagehead__lede pagehead__lede--big slidein" style={{ '--slide-delay': '0.12s' }}>
             A closer look at how ideas are transformed into identity,
             experience, and advantage.
           </p>

@@ -1015,54 +1015,74 @@ textarea {
   background: var(--grey-soft);
 }
 
-/* ---------- legal ---------- */
+/* ---------- legal ----------
+
+   Measured at 1920: a 760px column centred on the page (x=580), label and
+   body 16px #666, title 40px, section heads 32px, a #e3e3e3 rule between
+   the lede and the first section, real bullets indented 20px. */
 
 .legal {
-  max-width: 795px;
-  padding-top: 60px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding-top: 180px;
+  padding-bottom: 120px;
+}
+
+.legal__updated {
+  font-size: 16px;
+  color: #666;
+}
+
+.legal__title {
+  font-size: 40px;
+  line-height: 1.4;
+  font-weight: 500;
+  margin-top: 24px;
+}
+
+.legal__lede {
+  font-size: 16px;
+  line-height: 1.4;
+  color: #666;
+  margin-top: 24px;
+}
+
+.legal__rule {
+  border: 0;
+  height: 1px;
+  background: var(--rule);
+  margin: 56px 0 0;
 }
 
 .legal__sec {
-  padding-top: 40px;
+  margin-top: 57px;
 }
 
 .legal__h {
-  font-size: var(--fs-card);
-  margin-bottom: 14px;
+  font-size: 32px;
+  line-height: 1.4;
+  font-weight: 500;
 }
 
 .legal__sec p {
-  color: var(--grey);
-  font-size: var(--fs-base);
-  line-height: 1.6;
-}
-
-.legal__sec p + p {
-  margin-top: 14px;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #666;
+  margin-top: 16px;
 }
 
 .legal__list {
-  margin-top: 14px;
-  display: grid;
-  gap: 10px;
+  margin-top: 16px;
+  padding-left: 20px;
+  list-style: disc;
 }
 
 .legal__list li {
-  position: relative;
-  padding-left: 20px;
-  color: var(--grey);
-  font-size: var(--fs-base);
-  line-height: 1.6;
-}
-
-.legal__list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 13px;
-  width: 6px;
-  height: 1px;
-  background: var(--grey);
+  font-size: 16px;
+  line-height: 1.4;
+  color: #666;
+  padding: 0;
+  margin: 0;
 }
 
 /* ---------- 404 ---------- */
@@ -1586,6 +1606,25 @@ a:focus-visible > .roll .roll__stack {
 .rise-in {
   animation: rise-in var(--rise-duration, 0.5s) cubic-bezier(0.33, 1, 0.68, 1)
     var(--rise-delay, 0s) both;
+}
+
+/* Page-head enter, read frame-by-frame off the recordings: titles slide in
+   FROM THE RIGHT (~30px) while fading — visible on /projects and the case
+   pages — with the meta/label leading and the title trailing ~120ms. The
+   home hero keeps its measured 50px vertical rise instead. */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.slidein {
+  animation: slide-in-right 0.5s cubic-bezier(0.25, 1, 0.5, 1) var(--slide-delay, 0s) both;
 }
 
 @keyframes page-fade {
