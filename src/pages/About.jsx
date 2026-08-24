@@ -49,7 +49,7 @@ export default function About() {
       </section>
 
       {/* ---------- mission ---------- */}
-      <Reveal as="section" axis="x" className="shell section">
+      <Reveal as="section" axis="x" className="shell section section--about">
         <SectionRow label="Our Mission" className="row--wide">
           <TwoTone as="h2" className="h-section" {...headings.mission1} />
           <TwoTone as="p" className="h-section" {...headings.mission2} />
@@ -58,12 +58,12 @@ export default function About() {
       </Reveal>
 
       {/* ---------- why us ---------- */}
-      <Reveal as="section" axis="x" className="shell section">
+      <Reveal as="section" axis="x" className="shell section section--about">
         <SectionRow label="Why Us" className="row--wide">
           <TwoTone as="h2" className="h-section" breakLine {...headings.whyUs} />
         </SectionRow>
 
-        <div className="stack">
+        <div className="stack stack--why">
           {whyUs.map((item) => (
             <div className="stack__item stack__item--plain" key={item.title}>
               <div>
@@ -80,26 +80,26 @@ export default function About() {
       </Reveal>
 
       {/* ---------- process ---------- */}
-      <Reveal as="section" axis="x" className="shell section">
+      <Reveal as="section" axis="x" className="shell section section--about">
         <SectionRow label="How We Work" className="row--wide">
           <TwoTone as="h2" className="h-section" {...headings.process} />
         </SectionRow>
 
-        <ol className="stack">
+        <ol className="stack stack--proc">
           {process.map((item) => (
             <li className="stack__item" key={item.step}>
               <p className="stack__k">{item.step}</p>
-              <div>
-                <h3 className="stack__title">{item.title}</h3>
-                <p className="stack__body">{item.body}</p>
-              </div>
+              <h3 className="stack__title">{item.title}</h3>
+              {/* description spans the full row under the number, measured
+                  at x=355 on the original — the number column's own x */}
+              <p className="stack__body">{item.body}</p>
             </li>
           ))}
         </ol>
       </Reveal>
 
       {/* ---------- work closer ---------- */}
-      <Reveal as="section" axis="x" className="shell section">
+      <Reveal as="section" axis="x" className="shell section section--about section--tail">
         <SectionRow
           label="Designing Success"
           action={

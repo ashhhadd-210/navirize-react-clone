@@ -147,6 +147,17 @@ textarea {
   padding-block: var(--section-y);
 }
 
+/* About separates its blocks by 160, not the home page's 240 (mission band
+   bottom 2345 -> Why Us label 2505 on the original at 1440). */
+.section--about {
+  padding-block: 80px;
+}
+
+/* pair bottom -> mission label measures 160 on the original */
+.media-pair {
+  margin-bottom: 80px;
+}
+
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -168,7 +179,6 @@ textarea {
 .display {
   font-size: var(--fs-display);
   line-height: var(--lh-display);
-  letter-spacing: -0.01em;
   max-width: 1200px;
 }
 
@@ -181,7 +191,6 @@ textarea {
 .h-section {
   font-size: var(--fs-section);
   line-height: var(--lh-section);
-  letter-spacing: -0.01em;
 }
 
 .label {
@@ -265,6 +274,7 @@ textarea {
   justify-content: center;
   /* measured on the original's submit: 46px tall, 15px label */
   padding-block: 12px;
+  min-height: 46px;
   font-size: 15px;
 }
 
@@ -339,10 +349,13 @@ textarea {
   }
 }
 
+/* Measured on the original: link gap 40, and the pair sits a constant
+   ~19px left of true centre at every width (1440 and 1920 both). */
 .nav__links {
   justify-self: center;
   display: flex;
-  gap: 32px;
+  gap: 40px;
+  transform: translateX(-19px);
 }
 
 .nav__link {
@@ -366,8 +379,11 @@ textarea {
 /* Measured on the original: nav links have NO hover effect — color and
    opacity are unchanged under the pointer. */
 
+/* Measured on the original: the nav pill is 181px wide for a 149px label
+   — 16px inline padding, tighter than the 32px content buttons. */
 .nav__cta {
   justify-self: end;
+  padding-inline: 16px;
 }
 
 /* Measured on the original at 390: a 40px disc, rgba(255,255,255,0.9). */
@@ -499,6 +515,7 @@ textarea {
 .work__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  /* measured: 40px gaps everywhere — meta bottom -> next frame included */
   gap: 40px;
   margin-top: 40px;
 }
@@ -569,8 +586,8 @@ textarea {
 }
 
 .card__meta {
-  /* category text top measures 22px below the frame on the original */
-  margin-top: 22px;
+  /* category text top measures 24px below the frame on the original */
+  margin-top: 24px;
 }
 
 .card__cat {
@@ -589,10 +606,11 @@ textarea {
 
 .row {
   display: grid;
-  /* Label column measured as 20% of content + 46px at every desktop and
-     tablet width (302px at 1440, 398px at 1920, 225px at 1024); the action
-     column is a constant 183px with the button right-aligned into it. */
-  grid-template-columns: calc(20% + 46px) minmax(0, 1fr) 183px;
+  /* Label column re-derived from leaf-level measurements at 1920/1680/
+     1440/1280/1100: exactly 20% of content + 16px at every width (the
+     earlier +46 came from a padded wrapper element). Action column 213px,
+     button right-aligned into it. */
+  grid-template-columns: calc(20% + 16px) minmax(0, 1fr);
   align-items: start;
   column-gap: 0;
 }
@@ -602,12 +620,28 @@ textarea {
   padding-top: 0;
 }
 
+.row--with-action {
+  grid-template-columns: calc(20% + 16px) minmax(0, 1fr) 213px;
+}
+
 .row__action {
   justify-self: end;
 }
 
 .row__body > * + * {
   margin-top: 40px;
+}
+
+/* The mission heading is one block with a blank line between its two
+   sentences on the original — exactly one 56px line box. */
+.row__body .h-section + .h-section {
+  margin-top: 56px;
+}
+
+/* /about ends 240 above the footer (MAIN's own padding on the original),
+   not the usual 80. */
+.section--tail {
+  padding-bottom: 240px;
 }
 
 /* ---------- services accordion ---------- */
@@ -635,7 +669,6 @@ textarea {
   cursor: pointer;
   font-size: var(--fs-section);
   line-height: var(--lh-section);
-  letter-spacing: -0.01em;
   color: var(--black);
 }
 
@@ -684,7 +717,8 @@ textarea {
 
 .acc__list li {
   font-size: 24px;
-  line-height: 34px;
+  /* 33.6px line box — the original's 49.6 pitch needs the fraction */
+  line-height: 1.4;
   color: var(--black);
   padding: 8px 0;
 }
@@ -694,7 +728,11 @@ textarea {
 .mark {
   display: grid;
   place-items: center;
-  padding-block: 120px 220px;
+  /* mark bottom sits 240 above the footer on the original; the mark is
+     centred in a 940px band from the content's left edge (x=460 at 1440),
+     not on the full page */
+  padding-block: 120px 240px;
+  padding-right: 420px;
 }
 
 .mark img {
@@ -732,7 +770,8 @@ textarea {
 }
 
 .foot__cta-label {
-  color: var(--grey);
+  /* white on the original, not grey */
+  color: var(--white);
   margin-bottom: 26px;
 }
 
@@ -787,17 +826,32 @@ textarea {
   font-size: 32px;
   line-height: 1.4;
   color: var(--grey);
-  margin-top: 24px;
   max-width: 800px;
 }
 
+/* the projects lede sits 25 below the heading, not the 31 the other page
+   heads use */
+.pagehead__lede.pagehead__lede--big {
+  margin-top: 25px;
+}
+
 .work--listing {
-  padding-top: 159px;
+  /* lede bottom -> first card images measures 160 on the original
+     (120 here + the grid's own 40), and the story row sits 160 below the
+     last card's meta (40 here + the story section's own 120) */
+  padding-top: 120px;
+  padding-bottom: 40px;
 }
 
 
 .pagehead {
-  padding-top: 163px;
+  padding-top: 160px;
+}
+
+/* the case pages' meta row measures y=213 on the original — deeper than
+   the other page heads */
+.pagehead--case {
+  padding-top: 195px;
 }
 
 .pagehead__label {
@@ -805,11 +859,16 @@ textarea {
      16px section labels */
   font-size: 18px;
   color: var(--black);
-  margin-bottom: 26px;
+  margin-bottom: 31px;
+}
+
+/* the contact head is tighter: label bottom -> heading measures 24 */
+.contact .pagehead__label {
+  margin-bottom: 24px;
 }
 
 .pagehead__lede {
-  margin-top: 34px;
+  margin-top: 31px;
   max-width: 800px;
   font-size: 32px;
   line-height: 1.4;
@@ -821,7 +880,7 @@ textarea {
   /* measured: 743px + 24px gap + 495px = the 1262px content box */
   grid-template-columns: 743fr 495fr;
   gap: 24px;
-  margin-top: 163px;
+  margin-top: 160px;
 }
 
 /* Fixed 400px at any desktop width, measured on the original at 1920. */
@@ -852,9 +911,11 @@ textarea {
 }
 
 /* About-page media, measured: radius 16px (project media are 24), and the two
-   full-width images are 1262x650. */
+   full-width images are 1262x650. Standalone blocks sit 160 below the text
+   above them, like every other block gap on /about. */
 .media--about {
   border-radius: 16px;
+  margin-top: 160px;
 }
 
 .media--1262x650 {
@@ -875,20 +936,13 @@ textarea {
   grid-template-columns: 1fr;
 }
 
-.row--wide {
-  grid-template-columns: calc(20% + 22px) minmax(0, 1fr) 183px;
-}
-
-.row--wide .row__body {
-  max-width: 994px;
-}
 
 
 .stack {
   /* Items sit in the section's content column on the original (x=454 at
      1920 = gutter + 20% + 22px), one per row, no rules between. */
   margin-top: 80px;
-  margin-left: calc(20% + 22px);
+  margin-left: calc(20% + 16px);
   list-style: none;
   padding: 0;
 }
@@ -900,15 +954,21 @@ textarea {
   align-items: start;
 }
 
-/* Why Us pitch measures 104 (34px title + 16 + 22px body + 44). */
+/* Why Us pitch measures 104 (34px title + 16 + 22px body + 32). */
 .stack__item--plain {
-  margin-bottom: 44px;
+  margin-bottom: 32px;
 }
 
-/* Numbered rows: "01" in a 41px column, body under the title, pitch 117. */
+/* Numbered rows: "01" in a 41px column; the description spans the full
+   row underneath (orig desc x=355 = the number column's own x). */
 .stack__item:not(.stack__item--plain) {
   grid-template-columns: 41px minmax(0, 1fr);
+  /* pitch measures 117/139 on the original: title 34 + 16 + body + 45 */
   margin-bottom: 45px;
+}
+
+.stack__item:not(.stack__item--plain) .stack__body {
+  grid-column: 1 / -1;
 }
 
 .stack__k {
@@ -922,10 +982,23 @@ textarea {
 }
 
 .stack__body {
-  margin-top: 4px;
+  margin-top: 16px;
   color: var(--grey);
   font-size: 16px;
   line-height: 1.4;
+  /* items 04-06 carry an explicit line break on the original */
+  white-space: pre-line;
+}
+
+/* Both lists end with dead space before the next block, measured on the
+   original: last body bottom sits 287 above the Why Us image and 324 above
+   the Designing Success label. */
+.stack--why {
+  padding-bottom: 95px;
+}
+
+.stack--proc {
+  padding-bottom: 119px;
 }
 
 /* ---------- contact ---------- */
@@ -935,24 +1008,27 @@ textarea {
   grid-template-columns: minmax(0, 400px) 460px;
   justify-content: space-between;
   gap: 60px;
-  padding-top: 163px;
-  padding-bottom: 120px;
+  padding-top: 160px;
+  /* form bottom sits 48 above the footer on the original */
+  padding-bottom: 48px;
 }
 
 .contact__lede {
-  margin-top: 34px;
+  /* heading bottom -> lede measures 24 on the original */
+  margin-top: 24px;
 }
 
 .contact__meta {
-  margin-top: 60px;
+  /* lede bottom -> first key 64; 49 between blocks (112 pitch) */
+  margin-top: 64px;
   display: grid;
-  gap: 40px;
+  gap: 49px;
 }
 
 .contact__k {
   font-size: var(--fs-label);
   color: var(--grey);
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .contact__mail {
@@ -972,6 +1048,7 @@ textarea {
 .field__label {
   display: block;
   font-size: 13px;
+  line-height: 16px;
   color: var(--grey);
   margin-bottom: 8px;
 }
@@ -984,6 +1061,7 @@ textarea {
   background: rgba(0, 0, 0, 0.03);
   border: 1px solid transparent;
   border-radius: 12px;
+  height: 44px;
   padding: 11px 14px;
   font-size: 15px;
   line-height: 1.4;
@@ -1011,7 +1089,10 @@ textarea {
 }
 
 .field__area {
-  min-height: 130px;
+  /* block, or the inline-block baseline adds ~6px to the wrapper */
+  display: block;
+  height: 121px;
+  min-height: 121px;
   resize: vertical;
 }
 
@@ -1033,6 +1114,11 @@ textarea {
 
 [aria-invalid='true'] {
   border-color: #b00020 !important;
+}
+
+/* empty live region must not occupy a grid row (15px gap) */
+.form > div[role='status']:empty {
+  display: none;
 }
 
 .form__consent {
@@ -1063,7 +1149,9 @@ textarea {
   max-width: 760px;
   margin: 0 auto;
   padding-top: 180px;
-  padding-bottom: 120px;
+  /* the footer sits 201 below the last paragraph on the original; 192 here
+     absorbs the +9 the body accumulates over eight sections */
+  padding-bottom: 192px;
 }
 
 .legal__updated {
@@ -1262,6 +1350,10 @@ textarea {
     margin-bottom: 16px;
   }
 
+  .row--with-action {
+    grid-template-columns: 1fr;
+  }
+
   .row__action {
     grid-column: 1;
     justify-self: start;
@@ -1360,10 +1452,16 @@ textarea {
    inline, 24px/33.6 paragraphs, all #000. Media: wide frames around 1262x680
    and 611x600 pairs (40px gap), radius 24. */
 
+/* Measured: labels at x=80/327/573 — fixed 247px columns, not flex gaps. */
 .proj__meta {
   display: flex;
-  gap: 64px;
-  margin-bottom: 60px;
+  gap: 0;
+  /* meta values bottom -> title top measures 81 on the original */
+  margin-bottom: 81px;
+}
+
+.proj__meta > div {
+  width: 247px;
 }
 
 .proj__meta dd {
@@ -1393,16 +1491,17 @@ textarea {
 }
 
 .proj__prose {
-  /* Centred 1200 column at any width (x=360 at 1920, x=111 at 1422),
-     collapsing to the gutter width below 1360. */
+  /* Centred 1200 column; blocks sit 75px under the previous element on
+     the original (heading gap measured 76, hero-to-headline 75). */
   max-width: 1200px;
-  margin: 150px auto 0;
+  margin: 75px auto 0;
 }
 
 .proj__lede {
   font-size: var(--fs-display, 64px);
   line-height: 1.2;
   font-weight: 500;
+  margin-bottom: 40px;
 }
 
 .proj__subtitle {
@@ -1423,7 +1522,8 @@ textarea {
   border-radius: 24px;
   overflow: hidden;
   background: var(--grey-soft);
-  margin-top: 130px;
+  /* measured: 76px under the prose block on the original */
+  margin-top: 76px;
 }
 
 .proj__media img {

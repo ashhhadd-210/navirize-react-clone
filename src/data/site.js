@@ -284,17 +284,17 @@ export const process = [
   {
     step: '04',
     title: 'Design & Development',
-    body: 'This is where everything comes together. We fuse visuals, layout, and behavior into a system that’s strong, seamless, and unmistakably yours.',
+    body: 'This is where everything comes together.\nWe fuse visuals, layout, and behavior into a system that’s strong, seamless, and unmistakably yours.',
   },
   {
     step: '05',
     title: 'Refinement & Handoff',
-    body: 'Finalize, document, and hand off. You leave with a brand and/or website ready to launch with confidence.',
+    body: 'Finalize, document, and hand off.\nYou leave with a brand and/or website ready to launch with confidence.',
   },
   {
     step: '06',
     title: 'Ongoing Support',
-    body: 'After handoff, we remain onboard. For a short period, we’re available to fine-tune, solve edge cases, and ensure everything runs smoothly.',
+    body: 'After handoff, we remain onboard.\nFor a short period, we’re available to fine-tune, solve edge cases, and ensure everything runs smoothly.',
   },
 ]
 

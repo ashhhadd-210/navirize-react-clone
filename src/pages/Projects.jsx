@@ -37,7 +37,7 @@ export default function Projects() {
         </div>
       </section>
 
-      <Reveal as="section" axis="x" className="shell section">
+      <Reveal as="section" axis="x" className="shell section section--tail">
         <SectionRow
           label="Our Story"
           action={

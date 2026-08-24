@@ -236,7 +236,7 @@ export default function ProjectDetail() {
       />
 
       <article>
-        <header className="shell pagehead">
+        <header className="shell pagehead pagehead--case">
           <div>
             <dl className="proj__meta slidein">
               <div>
