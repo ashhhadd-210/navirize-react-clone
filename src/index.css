@@ -2123,3 +2123,167 @@ a:focus-visible > .roll .roll__stack {
     animation-play-state: paused;
   }
 }
+
+/* ==========================================================================
+   Phone corrections, measured on the original at 390. Appended last so they
+   win over the tablet (<=1099) layer above.
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  :root {
+    /* home sections sit 80 apart at phone (the work grid runs 72 to the
+       next label via its own smaller padding) */
+    --section-y: 40px;
+  }
+
+  .pagehead,
+  .hero {
+    padding-top: 120px;
+  }
+
+  .hero__cta {
+    margin-top: 68px;
+  }
+
+  .work__grid {
+    gap: 32px;
+  }
+
+  /* the accordion keeps its 96px pitch at phone: 36px title + 30/30 */
+  .acc__btn {
+    padding-block: 30px;
+  }
+
+  .body--lg {
+    font-size: 20px;
+  }
+
+  /* /about blocks sit 80 apart at phone */
+  .section--about {
+    padding-block: 40px;
+  }
+
+  .media--about {
+    margin-top: 80px;
+  }
+
+  .media-pair {
+    margin-top: 80px;
+    margin-bottom: 40px;
+  }
+
+  /* one 36.4px line box between the mission sentences */
+  .row__body .h-section + .h-section {
+    margin-top: 36px;
+  }
+
+  /* stacks span the full width at phone; numbers keep a 33px column */
+  .stack {
+    margin-left: 0;
+  }
+
+  .stack__item:not(.stack__item--plain) {
+    grid-template-columns: 33px minmax(0, 1fr);
+    margin-bottom: 24px;
+  }
+
+  .section--tail {
+    padding-bottom: 129px;
+  }
+
+  .work {
+    padding-top: 80px;
+    padding-bottom: 32px;
+  }
+
+  .contact {
+    padding-top: 88px;
+    padding-bottom: 10px;
+    padding-inline: 25px;
+    gap: 48px;
+  }
+
+  .contact__lede {
+    max-width: none;
+  }
+
+  .contact__meta {
+    margin-top: 80px;
+  }
+
+  .legal {
+    padding-top: 120px;
+    padding-bottom: 89px;
+  }
+
+  .legal__title {
+    font-size: 26px;
+  }
+
+  .legal__h {
+    font-size: 22px;
+  }
+
+  /* the N-mark is a 70x162 box, page-centred, 128 above the footer */
+  .mark {
+    padding: 110px 0 128px;
+  }
+
+  .mark video,
+  .mark img {
+    width: 70px;
+    height: 162px;
+    object-fit: contain;
+  }
+
+  .proj__marquee {
+    margin-bottom: 129px;
+  }
+
+  /* the phone collage: the second pair's right tile is 599 tall, pulled up
+     over the band, bottom-aligned against the 200px left tile */
+  .proj__pair--second {
+    margin-top: 16px;
+  }
+
+  .proj__pair--second .proj__media--sq + .proj__media--sq {
+    height: 599px;
+    margin-top: -399px;
+  }
+
+  .foot {
+    padding-bottom: 48px;
+  }
+
+  .foot__top {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* links sit 40 under the CTA button; the social rows continue the
+     40px link pitch with no extra gap */
+  .foot__top nav {
+    margin-top: 40px;
+  }
+
+  .foot__col li + li {
+    margin-top: 15px;
+  }
+
+  /* the legal line breaks into two centred lines with a 47px pitch */
+  .foot__legal {
+    line-height: 2.2;
+  }
+
+  .foot__cta-label {
+    margin-bottom: 12px;
+  }
+
+  .foot__cta-title {
+    margin-bottom: 41px;
+  }
+
+  .foot__rule {
+    margin: 24px 0 20px;
+  }
+}
