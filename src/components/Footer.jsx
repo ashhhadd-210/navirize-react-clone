@@ -26,10 +26,10 @@ import RollText from './RollText.jsx'
  */
 const CURTAIN_K = 0.685
 export default function Footer() {
-  // The original's /contact page drops the "Ready when you are." CTA —
-  // it would be pointing at the page you are already on.
+  // Measured on the original: the "Ready when you are." CTA renders on
+  // every page, /contact included (872px at 1440, 1506 at 1024).
   const { pathname } = useLocation()
-  const showCta = pathname !== '/contact'
+  const showCta = true
 
   const links = [...footerNav, ...footerLegal]
 

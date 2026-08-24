@@ -51,7 +51,13 @@ export default function About() {
       {/* ---------- mission ---------- */}
       <Reveal as="section" axis="x" className="shell section section--about">
         <SectionRow label="Our Mission" className="row--wide">
-          <TwoTone as="h2" className="h-section" {...headings.mission1} />
+          {/* the original's tablet/phone variant swaps the last words of the
+              first sentence: "premium craftsmanship." -> "excellence." */}
+          <h2 className="h-section">
+            Our mission is to redefine digital aesthetics with precision,
+            clarity, and <span className="bp-lg">premium craftsmanship.</span>
+            <span className="bp-sm">excellence.</span>
+          </h2>
           <TwoTone as="p" className="h-section" {...headings.mission2} />
         </SectionRow>
         <Media item={aboutMedia[2]} />

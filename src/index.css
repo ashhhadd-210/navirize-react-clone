@@ -174,6 +174,21 @@ textarea {
   top: 16px;
 }
 
+/* breakpoint-specific copy (the original authors text per variant) */
+.bp-sm {
+  display: none;
+}
+
+@media (max-width: 1099px) {
+  .bp-lg {
+    display: none;
+  }
+
+  .bp-sm {
+    display: inline;
+  }
+}
+
 /* ---------- type ---------- */
 
 .display {
@@ -810,7 +825,7 @@ textarea {
 
 .foot__legal {
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--grey-dark);
 }
 
@@ -1229,46 +1244,178 @@ textarea {
 
 @media (max-width: 1099px) {
   :root {
-    /* Measured on the original's tablet range: gutter 64, display 52,
-       section headings 32, cards 362 tall. */
+    /* Measured on the original at 1024: gutter 64, display 52, section
+       headings 32, card/stack titles 22, cards 362 tall. */
     --gutter: 64px;
     --fs-display: 52px;
     --fs-section: 32px;
+    --fs-card: 22px;
     --label-col: 200px;
-    --section-y: 100px;
+    /* home blocks sit 120 apart at tablet (60 + 60) */
+    --section-y: 60px;
   }
 
-  /* The original KEEPS the three-column row at tablet (heading x=246 at
-     810 wide, button on the same line). */
+  /* hero button bottom -> featured card 120; last card -> perception 120 */
+  .work {
+    padding-top: 120px;
+    padding-bottom: 60px;
+  }
+
+  .work--listing {
+    padding-top: 80px;
+    padding-bottom: 60px;
+  }
+
+  .mark {
+    /* story button bottom -> mark 105 (60 section pad + 45), mark -> footer 144 */
+    padding-block: 45px 144px;
+  }
+
+  .body--lg {
+    /* contact lede and case-study paragraphs measure 22 at 1024 */
+    font-size: 22px;
+  }
+
+  .legal {
+    padding-top: 150px;
+  }
+
+  .legal__title {
+    font-size: 32px;
+  }
+
+  .legal__h {
+    font-size: 26px;
+  }
+
+  .pagehead--case {
+    padding-top: 210px;
+  }
 
   .card__frame--featured,
   .card__frame--grid {
     height: 362px;
   }
 
-  /* Measured on the original at 810: About bands and pair are 400 tall. */
+  /* Measured on the original at 1024: the About bands and pair stay 400. */
   .media--1262x650 {
     height: 400px;
   }
 
-  .stack__item {
-    grid-template-columns: var(--label-col) minmax(0, 1fr);
+  /* /about blocks sit 120 apart at tablet, not 160 */
+  .section--about {
+    padding-block: 60px;
+  }
+
+  .media--about {
+    margin-top: 120px;
+  }
+
+  .media-pair {
+    margin-top: 120px;
+    margin-bottom: 60px;
+  }
+
+  .pagehead__lede {
+    font-size: 26px;
+  }
+
+  /* rows with a button drop it under the body, left-aligned in the body
+     column, 49 below (measured on /about's Designing Success at 1024) */
+  .row--with-action {
+    grid-template-columns: calc(20% + 16px) minmax(0, 1fr);
+  }
+
+  .row__action {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 49px;
   }
 
   .contact {
     grid-template-columns: 1fr;
-    gap: 56px;
+    gap: 64px;
+    /* /contact keeps the 80px gutter at tablet, and its form ends 64
+       above the footer */
+    padding-inline: 80px;
+    padding-bottom: 64px;
+  }
+
+  .contact__meta {
+    /* lede bottom -> first key measures 120 at tablet */
+    margin-top: 120px;
+  }
+
+  /* The tablet footer is content-height: CTA block full-width, then the
+     link and social columns side by side, all measured at 1024. */
+  .foot {
+    min-height: 0;
+    padding-bottom: 65px;
   }
 
   .foot__top {
     grid-template-columns: 1fr 1fr;
-    row-gap: 56px;
+    gap: 40px 24px;
+  }
+
+  .foot__top > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .foot__cta-label {
+    margin-bottom: 24px;
+  }
+
+  .foot__cta-title {
+    margin-bottom: 65px;
   }
 
   .foot__rule {
-    margin-top: 100px;
+    margin: 25px 0 20px;
   }
 
+  /* every page's last block sits 144 above the footer at tablet (must
+     out-cascade .section--about's padding-block above) */
+  .section--tail {
+    padding-bottom: 144px;
+  }
+
+  /* the accordion keeps its 96px row pitch at tablet: 45px title + 25.5/25.5 */
+  .acc__btn {
+    padding-block: 25.5px;
+  }
+
+  .legal {
+    padding-bottom: 145px;
+  }
+
+  /* the About lede keeps its two-line break at tablet */
+  .pagehead__lede {
+    max-width: 810px;
+  }
+
+  /* one 44.8px line box between the mission sentences at tablet */
+  .row__body .h-section + .h-section {
+    margin-top: 45px;
+  }
+
+  /* the contact lede keeps its 400px measure (the grid column no longer
+     constrains it once the page is single-column) */
+  .contact__lede {
+    max-width: 400px;
+  }
+
+  /* the N-mark box measures 101x388 at 1024, centred in a 634px band */
+  .mark {
+    padding-right: 326px;
+  }
+
+  .mark video,
+  .mark img {
+    width: 101px;
+    height: 388px;
+    object-fit: contain;
+  }
 }
 
 /* ==========================================================================
@@ -1608,6 +1755,49 @@ textarea {
 @keyframes marquee {
   to {
     transform: translateX(-50%);
+  }
+}
+
+/* Case-study tablet values, measured on the original at 1024. Placed after
+   the base rules so they win the cascade; scoped above the phone range. */
+@media (max-width: 1099px) and (min-width: 768px) {
+  .proj__meta {
+    /* meta -> title and title -> hero scale with the viewport on the
+       original's tablet range: 148/135 at 1024, 117/103 at 810 */
+    margin-bottom: 14.5vw;
+  }
+
+  .proj__hero {
+    margin-top: calc(15vw - 18.5px);
+  }
+
+  .proj__prose p {
+    font-size: 22px;
+    margin-top: 31px;
+  }
+
+  .proj__subtitle {
+    font-size: 26px;
+  }
+
+  /* the second pair is a collage at tablet: the 600px right tile is pulled
+     200 up over the band's corner, bottom-aligned with the 400px left tile,
+     and the pair sits 40 under the band */
+  .proj__pair {
+    align-items: end;
+  }
+
+  .proj__pair--second {
+    margin-top: 40px;
+  }
+
+  .proj__pair--second .proj__media--sq + .proj__media--sq {
+    height: 600px;
+    margin-top: -200px;
+  }
+
+  .proj__marquee {
+    margin-bottom: 144px;
   }
 }
 
