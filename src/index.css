@@ -1793,7 +1793,8 @@ textarea {
   /* the second pair is a collage at tablet: the 600px right tile is pulled
      200 up over the band's corner, bottom-aligned with the 400px left tile,
      and the pair sits 40 under the band */
-  .proj__pair {
+  .proj__pair--second {
+    /* band2 bottom 4284 -> pair2 4324 on the original at 1024 */
     margin-top: 40px;
   }
 
@@ -1851,8 +1852,9 @@ textarea {
     height: 234px;
   }
 
-  .proj__pair--second .proj__media--sq {
-    height: 200px;
+  .proj__pair--second {
+    /* band2 bottom 3975 -> pair2 3991 on the original at 390 */
+    margin-top: 16px;
   }
 
   .proj__meta {
@@ -1865,7 +1867,7 @@ textarea {
   }
 
   .proj__pair {
-    margin-top: 18px;
+    margin-top: 32px;
   }
 
   .proj__hero {
@@ -1880,8 +1882,9 @@ textarea {
     gap: 10px;
   }
 
+  /* both pairs are 200 tall at 390 on the original */
   .proj__media--sq {
-    height: 230px;
+    height: 200px;
   }
 
   .proj__tile {
