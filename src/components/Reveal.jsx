@@ -116,6 +116,19 @@ export function useReveal(axis = 'y') {
     return () => cancelAnimationFrame(raf)
   }, [state])
 
+  /* The original does not move a section as one slab — each element inside
+     it arrives after the one before it. Index the direct children so CSS can
+     step their delay. */
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el) return
+    let i = 0
+    for (const child of el.children) {
+      child.style.setProperty('--i', String(i))
+      i += 1
+    }
+  })
+
   const ax = axis === 'x' ? ' reveal-x' : ''
   if (state === 'shown-instant') return { ref, className: '' }
   const className =

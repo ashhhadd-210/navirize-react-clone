@@ -2032,13 +2032,41 @@ a:focus-visible > .roll .roll__stack {
    movement and no stagger — Framer animates each glyph, but every glyph
    shares one start time, so it reads as a single fade.
 
-   The one intentional difference: 420ms instead of 500. It is the same
-   curve and still plainly visible — just a touch crisper. Everything else
-   on the page keeps the original's timing exactly. `will-change` hands the
-   fade to the compositor so it cannot stutter behind first-paint work. */
+   The stagger is per RENDERED LINE: every glyph on a line shares one delay
+   and the delay steps 200ms line by line (0 / 200 / 400 / 600 ...). Line
+   membership is only knowable after layout, so useLineStagger stamps each
+   word span with its line index and the delay is derived from it here. */
 .slidein {
-  animation: load-fade 0.42s cubic-bezier(0, 0.46, 0.56, 1) var(--slide-delay, 0s) both;
-  will-change: opacity;
+  animation: load-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) var(--slide-delay, 0s) both;
+}
+
+/* One word of a staggered heading; --ln is its rendered line index.
+
+   Measured off the client's own phone recording of the original: each LINE
+   enters from ~30px to the right while fading, and the lines follow one
+   another 200ms apart — at a single frame you can see line 3 already
+   settled, line 4 halfway home and line 5 still far right. The fade has a
+   fast attack and a long settle, which is the load spring. */
+.w {
+  display: inline-block;
+  animation: word-in 0.9s var(--spring-load) calc(var(--ln, 0) * 200ms) both;
+  will-change: transform, opacity;
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* a staggered heading animates its words, never the block as a whole */
+.slidein:has(.w) {
+  animation: none;
 }
 
 @keyframes load-fade {
@@ -2123,6 +2151,24 @@ a:focus-visible > .roll .roll__stack {
   opacity: 1;
   transform: none;
   will-change: auto;
+}
+
+/* Elements inside a revealed section follow one another rather than
+   arriving as one slab — the client's note that "each element when
+   scrolling" should stagger. The container carries the fade; its children
+   carry the travel, stepped 120ms apart. */
+.reveal > * {
+  transform: translate(var(--rvx, 0px), var(--rvy, 30px));
+  transition: transform 1.5s var(--reveal-spring);
+  transition-delay: calc(var(--i, 0) * 120ms);
+}
+
+.reveal--in > * {
+  transform: none;
+}
+
+.reveal {
+  transform: none;
 }
 
 /* ---------- reduced motion ---------- */

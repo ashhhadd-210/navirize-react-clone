@@ -18,7 +18,7 @@ export default function Projects() {
 
       <section className="shell pagehead">
         <div>
-          <TwoTone as="h1" className="display slidein" {...headings.projectsHero} />
+          <TwoTone as="h1" stagger className="display slidein" {...headings.projectsHero} />
           <p className="pagehead__lede pagehead__lede--big">
             A closer look at how ideas are transformed into identity,
             experience, and advantage.

@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
 import TwoTone from '../components/TwoTone.jsx'
@@ -5,11 +6,14 @@ import SectionRow from '../components/SectionRow.jsx'
 import ProjectCard from '../components/ProjectCard.jsx'
 import Accordion from '../components/Accordion.jsx'
 import Reveal from '../components/Reveal.jsx'
+import { words, useLineStagger } from '../components/lineStagger.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import MarkVideo from '../components/MarkVideo.jsx'
 import { projects, services, headings } from '../data/site.js'
 
 export default function Home() {
+  const heroRef = useRef(null)
+  useLineStagger(heroRef)
   const [featured, ...rest] = projects
 
   return (
@@ -27,10 +31,11 @@ export default function Home() {
         {/* The original renders each letter as an inline-block for its load
             animation, which drops kerning and makes the line marginally
             wider — at phone it therefore breaks after "presence,". */}
-        <h1 className="display slidein">
-          {headings.hero.black}
+        <h1 className="display slidein" ref={heroRef}>
+          {words(headings.hero.black)}
           <span className="grey" style={{ display: 'block' }}>
-            Your presence,<br className="br-sm" /> shaped with intention and conviction.
+            {words('Your presence,')}
+            <br className="br-sm" /> {words('shaped with intention and conviction.')}
           </span>
         </h1>
 

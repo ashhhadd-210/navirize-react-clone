@@ -35,6 +35,7 @@ export default function About() {
           <p className="label pagehead__label">About Us</p>
           <TwoTone
             as="h1"
+            stagger
             className="display slidein display--narrow"
             {...headings.aboutHero}
           />

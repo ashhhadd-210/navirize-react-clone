@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
 import Reveal from '../components/Reveal.jsx'
+import { words, useLineStagger } from '../components/lineStagger.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import NotFound from './NotFound.jsx'
 import { projects, galleryUrl, caseStudies, caseMedia, img, imgSrcSet } from '../data/site.js'
@@ -220,7 +221,9 @@ function Marquee({ ids }) {
 
 export default function ProjectDetail() {
   const { slug } = useParams()
+  const titleRef = useRef(null)
   const project = projects.find((p) => p.slug === slug)
+  useLineStagger(titleRef, [slug])
   if (!project) return <NotFound />
 
   const study = caseStudies[slug]
@@ -252,7 +255,7 @@ export default function ProjectDetail() {
                 <dd>{project.code}</dd>
               </div>
             </dl>
-            <h1 className="display display--narrow slidein">{project.title}</h1>
+            <h1 className="display display--narrow slidein" ref={titleRef}>{words(project.title)}</h1>
           </div>
 
           <ZoomHero project={project} />

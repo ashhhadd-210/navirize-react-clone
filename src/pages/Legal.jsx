@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import Seo from '../components/Seo.jsx'
+import { words, useLineStagger } from '../components/lineStagger.jsx'
 import { legalPages, brand } from '../data/site.js'
 
 /**
@@ -9,6 +11,8 @@ import { legalPages, brand } from '../data/site.js'
  */
 export default function Legal({ which }) {
   const page = legalPages[which]
+  const titleRef = useRef(null)
+  useLineStagger(titleRef, [which])
 
   return (
     <>
@@ -17,7 +21,7 @@ export default function Legal({ which }) {
       <div className="shell">
         <div className="legal">
           <p className="legal__updated">{page.updated}</p>
-          <h1 className="legal__title slidein">{page.title}</h1>
+          <h1 className="legal__title slidein" ref={titleRef}>{words(page.title)}</h1>
           <p className="legal__lede">{page.intro}</p>
           <hr className="legal__rule" />
 

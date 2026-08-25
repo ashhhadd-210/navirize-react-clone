@@ -70,7 +70,7 @@ export default function Contact() {
           <p className="pagehead__label label--grey">
             Contact
           </p>
-          <TwoTone as="h1" className="display slidein" {...headings.contactHero} />
+          <TwoTone as="h1" stagger className="display slidein" {...headings.contactHero} />
 
           <p className="body--lg contact__lede">
             Tell us about your business, your goals, and where you want to go
