@@ -50,9 +50,11 @@ export function useLineStagger(ref, deps = []) {
     }
 
     assign()
-    // wrapping changes with width, and with the font swapping in
+    /* Only re-group on resize. Re-stamping after fonts.ready would change a
+       line's delay while its animation is already running, which makes the
+       text jump — the font is preloaded, so lines are correct at first
+       layout anyway. */
     window.addEventListener('resize', assign)
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(assign)
     return () => window.removeEventListener('resize', assign)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)

@@ -2049,20 +2049,40 @@ a:focus-visible > .roll .roll__stack {
    fast attack and a long settle, which is the load spring. */
 .w {
   display: inline-block;
-  animation: word-in 0.9s var(--spring-load) calc(var(--ln, 0) * 200ms) both;
+  /* Two curves, not one — that is what makes it read as smooth.
+
+     The original's opacity animation reports 500ms on
+     cubic-bezier(0, 0.46, 0.56, 1); its position, measured off the client's
+     recording, is still easing at ~870ms. So the text fades quickly while
+     it keeps gliding in for a good while after. Running both on a single
+     500ms curve made it arrive with a snap.
+
+     Both share the line's delay, so a line stays one piece. translate3d
+     keeps it on the compositor. */
+  animation:
+    word-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) calc(var(--ln, 0) * 200ms) both,
+    word-slide 0.85s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--ln, 0) * 200ms) both;
   will-change: transform, opacity;
 }
 
-@keyframes word-in {
+@keyframes word-fade {
   from {
     opacity: 0;
-    transform: translateX(30px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
+
+@keyframes word-slide {
+  from {
+    transform: translate3d(30px, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 
 /* a staggered heading animates its words, never the block as a whole */
 .slidein:has(.w) {
