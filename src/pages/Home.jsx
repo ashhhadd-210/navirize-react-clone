@@ -24,7 +24,15 @@ export default function Home() {
         {/* text loads sliding in from the right, like every other page */}
         <p className="label hero__eyebrow slidein">Branding&nbsp; ·&nbsp; Web Design</p>
 
-        <TwoTone as="h1" className="display slidein" breakLine {...headings.hero} style={{ '--slide-delay': '0.12s' }} />
+        {/* The original renders each letter as an inline-block for its load
+            animation, which drops kerning and makes the line marginally
+            wider — at phone it therefore breaks after "presence,". */}
+        <h1 className="display slidein" style={{ '--slide-delay': '0.12s' }}>
+          {headings.hero.black}
+          <span className="grey" style={{ display: 'block' }}>
+            Your presence,<br className="br-sm" /> shaped with intention and conviction.
+          </span>
+        </h1>
 
         <div className="hero__cta slidein" style={{ '--slide-delay': '0.24s' }}>
           <Link to="/projects" className="btn btn--dark">

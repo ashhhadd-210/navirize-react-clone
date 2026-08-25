@@ -176,6 +176,17 @@ textarea {
   display: none;
 }
 
+/* phone-only line break */
+.br-sm {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .br-sm {
+    display: inline;
+  }
+}
+
 @media (max-width: 1099px) {
   .bp-lg {
     display: none;
