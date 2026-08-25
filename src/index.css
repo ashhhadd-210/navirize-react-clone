@@ -2308,3 +2308,58 @@ a:focus-visible > .roll .roll__stack {
     margin: 24px 0 20px;
   }
 }
+
+/* ==========================================================================
+   Mobile motion tuning (a deliberate departure from the original)
+   The original's curves were authored for a large screen: a 1.5s reveal
+   spring with a long crawling tail and a 1.3s page fade read as sluggish on
+   a phone, where content arrives in quick succession under the thumb. These
+   shorten the same motions and swap the long-tailed springs for a clean
+   ease-out, so they land instead of drifting. Distances shrink slightly too
+   — 30px is a big move across a 390px screen. Opacity and transform only,
+   so every one of these stays on the compositor.
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  .reveal {
+    --rvy: 22px;
+    transition-duration: 0.62s;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal-x {
+    --rvx: 22px;
+    --rvy: 0px;
+  }
+
+  .reveal--load {
+    --rvy: 22px;
+    transition-duration: 0.62s;
+    transition-delay: 0s;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* the heading fade keeps its shape, just a touch quicker */
+  .slidein {
+    animation-duration: 0.4s;
+  }
+
+  .page-fade {
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rise-in {
+    animation-duration: 0.42s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* taps should answer immediately rather than easing like a desktop hover */
+  .btn,
+  .btn .btn__arrow,
+  .card__img,
+  .card__badge,
+  .roll__stack {
+    transition-duration: 0.22s;
+  }
+}
