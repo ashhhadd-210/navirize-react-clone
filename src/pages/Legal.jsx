@@ -16,8 +16,8 @@ export default function Legal({ which }) {
 
       <div className="shell">
         <div className="legal">
-          <p className="legal__updated slidein">{page.updated}</p>
-          <h1 className="legal__title slidein" style={{ '--slide-delay': '0.12s' }}>{page.title}</h1>
+          <p className="legal__updated">{page.updated}</p>
+          <h1 className="legal__title slidein">{page.title}</h1>
           <p className="legal__lede">{page.intro}</p>
           <hr className="legal__rule" />
 

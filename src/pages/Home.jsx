@@ -22,19 +22,19 @@ export default function Home() {
       {/* ---------- hero: eyebrow, one two-tone h1, one button ---------- */}
       <section className="shell hero">
         {/* text loads sliding in from the right, like every other page */}
-        <p className="label hero__eyebrow slidein">Branding&nbsp; ·&nbsp; Web Design</p>
+        <p className="label hero__eyebrow">Branding&nbsp; ·&nbsp; Web Design</p>
 
         {/* The original renders each letter as an inline-block for its load
             animation, which drops kerning and makes the line marginally
             wider — at phone it therefore breaks after "presence,". */}
-        <h1 className="display slidein" style={{ '--slide-delay': '0.12s' }}>
+        <h1 className="display slidein">
           {headings.hero.black}
           <span className="grey" style={{ display: 'block' }}>
             Your presence,<br className="br-sm" /> shaped with intention and conviction.
           </span>
         </h1>
 
-        <div className="hero__cta slidein" style={{ '--slide-delay': '0.24s' }}>
+        <div className="hero__cta">
           <Link to="/projects" className="btn btn--dark">
             Explore our Work
             <ArrowUpRight />

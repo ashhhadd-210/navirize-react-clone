@@ -238,7 +238,7 @@ export default function ProjectDetail() {
       <article>
         <header className="shell pagehead pagehead--case">
           <div>
-            <dl className="proj__meta slidein">
+            <dl className="proj__meta">
               <div>
                 <dt className="label">Industry</dt>
                 <dd>{project.industry}</dd>
@@ -252,7 +252,7 @@ export default function ProjectDetail() {
                 <dd>{project.code}</dd>
               </div>
             </dl>
-            <h1 className="display display--narrow slidein" style={{ '--slide-delay': '0.12s' }}>{project.title}</h1>
+            <h1 className="display display--narrow slidein">{project.title}</h1>
           </div>
 
           <ZoomHero project={project} />

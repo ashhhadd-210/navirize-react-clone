@@ -2019,9 +2019,22 @@ a:focus-visible > .roll .roll__stack {
   --spring-load: linear(0 0%, 0.234 2.571%, 0.677 14.29%, 0.714 16.57%, 0.742 18.71%, 0.77 21.07%, 0.795 23.43%, 0.817 25.79%, 0.838 28.21%, 0.856 30.57%, 0.872 32.93%, 0.887 35.36%, 0.9 37.71%, 0.912 40.07%, 0.923 42.43%, 0.938 45.93%, 0.95 50%, 0.965 57.14%, 0.976 64.29%, 0.983 71.43%, 0.989 78.57%, 0.993 85.71%, 0.996 92.86%, 1 100%);
 }
 
+/* Load animation, read straight off the original's Web Animations API at
+   390 and 1440, home and inner pages: the page heading fades opacity
+   0.001 -> 1 over 500ms on cubic-bezier(0, 0.46, 0.56, 1). There is no
+   movement and no stagger — Framer animates each glyph, but every glyph
+   shares one start time, so it reads as a single fade. */
 .slidein {
-  animation: slide-in-right 1.4s cubic-bezier(0.19, 1, 0.4, 1) var(--slide-delay, 0s) both;
-  animation-timing-function: var(--spring-load);
+  animation: load-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) var(--slide-delay, 0s) both;
+}
+
+@keyframes load-fade {
+  from {
+    opacity: 0.001;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* In-view content at page load: same fast spring, 30px rise, trailing the

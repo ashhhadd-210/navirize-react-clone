@@ -73,14 +73,13 @@ export function useReveal(axis = 'y') {
   useLayoutEffect(() => {
     const el = ref.current
     if (!el || state !== 'hidden') return
-    /* Sampled on the original's page loads: content already inside the
-       viewport fades in with the page itself — it does NOT run the slow
-       scroll spring. Only content that arrives by scrolling gets the
-       30px/1.5s reveal. */
+    /* Measured on the original at 390 and 1440: content already inside the
+       viewport on load carries NO animation at all — its first painted
+       frame is opacity 1 with no transform. Only the page heading fades,
+       and only content arriving by scroll gets the 30px reveal. */
     const rect = el.getBoundingClientRect()
     if (rect.top < window.innerHeight - 40 && rect.bottom > 0) {
-      // paint one frame hidden, then run the fast load spring
-      setState('load')
+      setState('shown-instant')
       return
     }
     const fire = () => setState('shown')
@@ -118,6 +117,7 @@ export function useReveal(axis = 'y') {
   }, [state])
 
   const ax = axis === 'x' ? ' reveal-x' : ''
+  if (state === 'shown-instant') return { ref, className: '' }
   const className =
     (state === 'load'
       ? 'reveal--load'

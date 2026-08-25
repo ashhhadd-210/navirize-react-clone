@@ -32,13 +32,13 @@ export default function About() {
 
       <section className="shell pagehead">
         <div>
-          <p className="label pagehead__label slidein">About Us</p>
+          <p className="label pagehead__label">About Us</p>
           <TwoTone
             as="h1"
             className="display slidein display--narrow"
             {...headings.aboutHero}
           />
-          <p className="pagehead__lede slidein" style={{ '--slide-delay': '0.12s' }}>{headings.aboutLede}</p>
+          <p className="pagehead__lede">{headings.aboutLede}</p>
         </div>
 
         {/* paired media directly under the hero */}

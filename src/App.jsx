@@ -24,10 +24,19 @@ import NotFound from './pages/NotFound.jsx'
 /* .page-wrap carries the opaque background and z-index that keep the page
    above the fixed footer; the fade lives on <main> inside it, so the footer
    never flashes through during a route transition. */
+/* The fade belongs to a route CHANGE, not to the first paint: probing the
+   original's Web Animations API on a cold load shows the heading fade and
+   nothing else, so a first-load page fade is ours alone. */
+let hasNavigated = false
+
 function Page({ children }) {
+  const first = !hasNavigated
+  useEffect(() => {
+    hasNavigated = true
+  }, [])
   return (
     <div className="page-wrap">
-      <main id="main" className="page-fade">
+      <main id="main" className={first ? undefined : 'page-fade'}>
         {children}
       </main>
     </div>
