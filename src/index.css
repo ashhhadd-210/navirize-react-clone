@@ -391,11 +391,11 @@ textarea {
 /* Measured on the original: nav links have NO hover effect — color and
    opacity are unchanged under the pointer. */
 
-/* Measured on the original: the nav pill is 181px wide for a 149px label
-   — 16px inline padding, tighter than the 32px content buttons. */
+/* Measured on the original: the nav pill is 181x41 — 8px/16px padding,
+   tighter than the 16px/32px content buttons. */
 .nav__cta {
   justify-self: end;
-  padding-inline: 16px;
+  padding: 8px 16px;
 }
 
 /* Measured on the original at 390: a 40px disc, rgba(255,255,255,0.9). */
