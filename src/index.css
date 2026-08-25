@@ -1818,7 +1818,14 @@ textarea {
   .proj__meta > div {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    align-items: start;
     width: 100%;
+  }
+
+  /* the 8px top margin stacks the value under its label at desktop; here
+     they share a row, and the original puts both tops on the same line */
+  .proj__meta dd {
+    margin-top: 0;
   }
 
   .proj__prose p {
@@ -2159,6 +2166,11 @@ a:focus-visible > .roll .roll__stack {
   .pagehead,
   .hero {
     padding-top: 120px;
+  }
+
+  /* the case pages sit deeper: meta row at y166 on the original at 390 */
+  .pagehead--case {
+    padding-top: 150px;
   }
 
   .hero__cta {
