@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import Seo from '../components/Seo.jsx'
-import RiseIn from '../components/RiseIn.jsx'
 import TwoTone from '../components/TwoTone.jsx'
 import SectionRow from '../components/SectionRow.jsx'
 import ProjectCard from '../components/ProjectCard.jsx'
@@ -22,18 +21,17 @@ export default function Home() {
 
       {/* ---------- hero: eyebrow, one two-tone h1, one button ---------- */}
       <section className="shell hero">
-        <RiseIn delay={0.15}>
-          <p className="label hero__eyebrow">Branding&nbsp; ·&nbsp; Web Design</p>
+        {/* text loads sliding in from the right, like every other page */}
+        <p className="label hero__eyebrow slidein">Branding&nbsp; ·&nbsp; Web Design</p>
 
-          <TwoTone as="h1" className="display" breakLine {...headings.hero} />
+        <TwoTone as="h1" className="display slidein" breakLine {...headings.hero} style={{ '--slide-delay': '0.12s' }} />
 
-          <div className="hero__cta">
-            <Link to="/projects" className="btn btn--dark">
-              Explore our Work
-              <ArrowUpRight />
-            </Link>
-          </div>
-        </RiseIn>
+        <div className="hero__cta slidein" style={{ '--slide-delay': '0.24s' }}>
+          <Link to="/projects" className="btn btn--dark">
+            Explore our Work
+            <ArrowUpRight />
+          </Link>
+        </div>
       </section>
 
       {/* ---------- work: 1 featured + 2-col grid, no section heading ---------- */}

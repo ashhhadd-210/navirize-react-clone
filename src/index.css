@@ -121,11 +121,8 @@ textarea {
   color: inherit;
 }
 
-:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 4px;
-  border-radius: 2px;
-}
+/* keyboard focus uses the browser's native ring, same as the original —
+   the custom black rectangle read as a rendering bug around the wordmark */
 
 ::selection {
   background: var(--black);
@@ -1085,7 +1082,8 @@ textarea {
 
 .field__input::placeholder,
 .field__area::placeholder {
-  color: var(--grey);
+  /* measured rgb(153,153,153) on the original */
+  color: #999;
 }
 
 /* The original shows NO visual change on focus. Keyboard users still get
@@ -1108,7 +1106,8 @@ textarea {
   display: block;
   height: 121px;
   min-height: 121px;
-  resize: vertical;
+  /* the original shows no resize grip */
+  resize: none;
 }
 
 .field__select {
