@@ -130,7 +130,10 @@ export function useReveal(axis = 'y') {
   })
 
   const ax = axis === 'x' ? ' reveal-x' : ''
-  if (state === 'shown-instant') return { ref, className: '' }
+  /* Content already on screen at load still enters — the recording shows
+     the first card fading and sliding in with the head. It just follows the
+     heading rather than waiting to be scrolled to. */
+  if (state === 'shown-instant') return { ref, className: 'load-in reveal--seq' }
   const className =
     (state === 'load'
       ? 'reveal--load'

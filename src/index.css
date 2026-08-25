@@ -2083,6 +2083,23 @@ a:focus-visible > .roll .roll__stack {
   }
 }
 
+/* The same entrance for the other things that load with the page. The
+   client's phone recording is explicit about this: at 0.76s the logo and
+   burger are already solid, while the eyebrow, the button and the first
+   card are all still fading and sliding in behind the heading. Only the
+   nav is exempt. --d places each one in the sequence. */
+.load-in {
+  animation:
+    word-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) var(--d, 0ms) both,
+    word-slide 0.85s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms) both;
+  will-change: transform, opacity;
+}
+
+/* in-view content on load follows the head */
+.reveal--seq {
+  --d: 300ms;
+}
+
 
 /* a staggered heading animates its words, never the block as a whole */
 .slidein:has(.w) {
