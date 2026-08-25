@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { brand, footerNav, footerLegal, socials } from '../data/site.js'
 import { ArrowUpRight } from './icons.jsx'
 import Reveal from './Reveal.jsx'
@@ -12,63 +11,23 @@ import RollText from './RollText.jsx'
  *   centred legal line. No brand block, no description paragraph.
  */
 /*
- * The curtain reveal. First modelled as position:fixed after the scroll
- * recording, but measuring the live original against normal document flow
- * shows the footer is not pinned — its top eases 380 -> 80 in the viewport
- * across the last 800px of scroll. The offset from flow position fits
- *
- *   offset = 0.685 x (flowTop - finalTop), capped at 0.69 x footer height
- *
- * to within 3px at every probed position: a parallax, the footer closing at
- * ~1/3 of scroll speed while the white content (z 1) slides off it. The
- * wrapper stays in flow and untransformed — its rect IS the flow position —
- * and only the inner element is translated, from a rAF-gated scroll handler.
+ * There is NO parallax on the footer. Probing the live original at 390 and
+ * 1440 shows the inner footer holds a constant offset from its wrapper at
+ * every scroll position (-48 phone / -80 desktop, i.e. its own padding) —
+ * it simply scrolls in normal flow. An earlier reading of the scroll
+ * recording modelled this as a curtain, which on mobile dragged the footer
+ * up over the page content and hid its CTA.
  */
-const CURTAIN_K = 0.685
 export default function Footer() {
   // Measured on the original: the "Ready when you are." CTA renders on
   // every page, /contact included (872px at 1440, 1506 at 1024).
-  const { pathname } = useLocation()
   const showCta = true
 
   const links = [...footerNav, ...footerLegal]
 
-  const wrapRef = useRef(null)
-  const innerRef = useRef(null)
-
-  useEffect(() => {
-    const wrap = wrapRef.current
-    const inner = innerRef.current
-    if (!wrap || !inner) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    let raf = 0
-    const update = () => {
-      raf = 0
-      const rect = wrap.getBoundingClientRect()
-      const vh = window.innerHeight
-      if (rect.top > vh + 600) return
-      const finalTop = vh - rect.height
-      const offset = Math.min(
-        rect.height * 0.69,
-        Math.max(0, CURTAIN_K * (rect.top - finalTop))
-      )
-      inner.style.transform = offset > 0.5 ? `translateY(${-offset}px)` : 'none'
-    }
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
-    update()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [pathname])
-
   return (
-    <footer className="foot-wrap" ref={wrapRef}>
-      <div className="foot" ref={innerRef}>
+    <footer className="foot-wrap">
+      <div className="foot">
       <div className="shell">
         <Reveal axis="x" className="foot__top">
           <div>
