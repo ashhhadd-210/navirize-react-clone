@@ -1783,16 +1783,7 @@ textarea {
      200 up over the band's corner, bottom-aligned with the 400px left tile,
      and the pair sits 40 under the band */
   .proj__pair {
-    align-items: end;
-  }
-
-  .proj__pair--second {
     margin-top: 40px;
-  }
-
-  .proj__pair--second .proj__media--sq + .proj__media--sq {
-    height: 600px;
-    margin-top: -200px;
   }
 
   .proj__marquee {
@@ -1806,12 +1797,15 @@ textarea {
      ticker tiles keep their 500/350 widths at 250 tall. */
   .proj__meta {
     flex-direction: column;
-    gap: 15px;
+    /* rows sit 37 apart on the original (166 / 203 / 240) */
+    gap: 12px;
   }
 
+  /* two equal columns on the original at 390: label x25, value x195 —
+     the value is LEFT-aligned in its column, not pushed to the edge */
   .proj__meta > div {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     width: 100%;
   }
 
@@ -2237,17 +2231,6 @@ a:focus-visible > .roll .roll__stack {
 
   .proj__marquee {
     margin-bottom: 129px;
-  }
-
-  /* the phone collage: the second pair's right tile is 599 tall, pulled up
-     over the band, bottom-aligned against the 200px left tile */
-  .proj__pair--second {
-    margin-top: 16px;
-  }
-
-  .proj__pair--second .proj__media--sq + .proj__media--sq {
-    height: 599px;
-    margin-top: -399px;
   }
 
   .foot {
