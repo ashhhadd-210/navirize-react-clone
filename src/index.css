@@ -82,6 +82,8 @@ html {
 
 body {
   margin: 0;
+  /* iOS paints its own grey wash over a tapped link otherwise */
+  -webkit-tap-highlight-color: transparent;
   background: var(--white);
   color: var(--black);
   font-family: var(--font);
@@ -281,14 +283,21 @@ textarea {
   color: var(--white);
 }
 
-/* Measured: the dark button inverts to WHITE on hover (bg #000 -> #fff,
+/* Hover states are gated to devices with a real pointer. On a touch
+   screen :hover latches after a tap and stays there, which left a tapped
+   button sitting inverted — white — until you tapped something else. With
+   the gate a tap leaves the button black, as it is on the original.
+
+   Measured: the dark button inverts to WHITE on hover (bg #000 -> #fff,
    label #fff -> #0d0d0d), blending over ~300ms and reverting on leave.
    It also takes a black outline — without it a white pill on a white page
    loses its edge entirely. Drawn as an inset shadow so nothing reflows. */
-.btn--dark:hover {
-  background: var(--white);
-  color: #0d0d0d;
-  box-shadow: inset 0 0 0 1px var(--black);
+@media (hover: hover) and (pointer: fine) {
+  .btn--dark:hover {
+    background: var(--white);
+    color: #0d0d0d;
+    box-shadow: inset 0 0 0 1px var(--black);
+  }
 }
 
 .btn--soft {
@@ -298,10 +307,12 @@ textarea {
 
 /* Measured: the grey pill lightens to white; the label stays black, and
    the same black edge appears. */
-.btn--soft:hover {
-  background: var(--white);
-  color: var(--black);
-  box-shadow: inset 0 0 0 1px var(--black);
+@media (hover: hover) and (pointer: fine) {
+  .btn--soft:hover {
+    background: var(--white);
+    color: var(--black);
+    box-shadow: inset 0 0 0 1px var(--black);
+  }
 }
 
 .btn--block {
@@ -325,8 +336,10 @@ textarea {
   transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.btn:hover .btn__arrow {
-  transform: rotate(45deg);
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover .btn__arrow {
+    transform: rotate(45deg);
+  }
 }
 
 .btn:disabled {
@@ -580,8 +593,10 @@ textarea {
    1.042 at 200, 1.055 at 350, settling 1.06 ~500ms; reverses on leave).
    Framer does it as a layout change + FLIP counter-scale; a transform
    gives the same visible motion. */
-.card:hover .card__img {
-  transform: scale(1.06);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card__img {
+    transform: scale(1.06);
+  }
 }
 
 .card__img {
@@ -638,15 +653,19 @@ textarea {
 }
 
 /* On hover the pill squares up into a solid white circle and levels out. */
-.card:hover .card__badge::before {
-  width: 56px;
-  height: 56px;
-  background: var(--white);
-  transform: translate(-50%, -50%) rotate(0deg);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card__badge::before {
+    width: 56px;
+    height: 56px;
+    background: var(--white);
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
 }
 
-.card:hover .card__badge {
-  color: var(--black);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card__badge {
+    color: var(--black);
+  }
 }
 
 /* The arrow sits above the shape and stays upright while the pill is
@@ -659,8 +678,10 @@ textarea {
   transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.card:hover .card__badge svg {
-  transform: rotate(45deg);
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .card__badge svg {
+    transform: rotate(45deg);
+  }
 }
 
 .card__meta {
@@ -2028,9 +2049,14 @@ textarea {
   opacity: 0.6;
 }
 
-a:hover > .roll .roll__stack,
 a:focus-visible > .roll .roll__stack {
   transform: translateY(-1.4em);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a:hover > .roll .roll__stack {
+    transform: translateY(-1.4em);
+  }
 }
 
 /* ---------- motion ----------

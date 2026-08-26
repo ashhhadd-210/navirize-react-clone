@@ -24,21 +24,17 @@ import NotFound from './pages/NotFound.jsx'
 /* .page-wrap carries the opaque background and z-index that keep the page
    above the fixed footer; the fade lives on <main> inside it, so the footer
    never flashes through during a route transition. */
-/* The fade belongs to a route CHANGE, not to the first paint: probing the
-   original's Web Animations API on a cold load shows the heading fade and
-   nothing else, so a first-load page fade is ours alone. */
-let hasNavigated = false
-
+/* No page-level fade, on first paint or on navigation. The original loads
+   a fresh document on every link: the screen goes briefly blank and the new
+   page then arrives element by element, heading lines leading. Fading the
+   whole <main> as one block washed all of that out — every element came up
+   together at a uniform opacity, which is what the client saw as the flow
+   being wrong. With it gone, a route change replays the same staggered
+   entrance the first load does. */
 function Page({ children }) {
-  const first = !hasNavigated
-  useEffect(() => {
-    hasNavigated = true
-  }, [])
   return (
     <div className="page-wrap">
-      <main id="main" className={first ? undefined : 'page-fade'}>
-        {children}
-      </main>
+      <main id="main">{children}</main>
     </div>
   )
 }
