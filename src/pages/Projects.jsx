@@ -20,8 +20,8 @@ export default function Projects() {
         <div>
           <TwoTone as="h1" stagger className="display slidein" {...headings.projectsHero} />
           <p className="pagehead__lede pagehead__lede--big">
-            A closer look at how ideas are transformed into identity,
-            experience, and advantage.
+            A closer look at how ideas are transformed into{' '}
+            <span className="grey">identity, experience, and advantage.</span>
           </p>
         </div>
       </section>

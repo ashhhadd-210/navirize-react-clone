@@ -457,8 +457,10 @@ textarea {
   width: 40px;
   height: 40px;
   border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
+  /* No disc behind it on the original — the bars sit straight on the page
+     (its burger reports a transparent background and 0 radius). */
+  border-radius: 0;
+  background: transparent;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -940,7 +942,9 @@ textarea {
 .pagehead__lede--big {
   font-size: 32px;
   line-height: 1.4;
-  color: var(--grey);
+  /* black, with its closing clause carried in a grey span — the original's
+     lede is two-tone here, not grey throughout */
+  color: var(--black);
   max-width: 800px;
 }
 
@@ -2368,6 +2372,12 @@ a:focus-visible > .roll .roll__stack {
   /* buttons hold 18px at phone on the original — 165x57, not 158x54 */
   .btn:not(.btn--block) {
     font-size: 18px;
+  }
+
+  /* The arrow badge on the cards is desktop-only: the original renders no
+     such overlay at phone width. */
+  .card__badge {
+    display: none;
   }
 
   /* the case pages sit deeper: meta row at y166 on the original at 390 */
