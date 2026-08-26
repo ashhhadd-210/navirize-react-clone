@@ -597,41 +597,65 @@ textarea {
    with no backdrop blur. The arrow rests rotated -45deg (pointing up) and
    spins to 0 as the disc turns solid white on hover. */
 .card__badge {
+  /* Positioning box only — the visible shape is the ::before below.
+     Keeping the box a fixed 56x56 means the shape can change size and
+     turn without any of the position maths moving with it. */
   position: absolute;
   left: 16px;
   bottom: 24px;
-  width: 57px;
-  height: 57px;
-  /* At rest this is a ROUNDED SQUARE, not a disc — the client's "they are
-     like a pill and become circle". It rounds into a full circle on hover
-     as the fill goes from translucent to solid white and the arrow flips
-     from black-on-white. */
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.2);
-  transition:
-    background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-    border-radius 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-    color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  width: 56px;
+  height: 56px;
   display: grid;
   place-items: center;
-  /* white at rest — visible over the card image in the recordings */
+  /* white arrow at rest, black once the disc goes solid */
   color: var(--white);
+  transition: color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* the arrow turns on its own, so the rounded square never tilts with it */
+/* At rest: a STADIUM PILL, roughly 47x33, standing on its corner at 45deg.
+   That is what the original really is — a 47+33 box turned 45deg measures
+   (47+33)/sqrt2 = 56.6 across, which is the bounding box its styles report,
+   and its 200px radius makes the short sides fully round. Reading that
+   56.6 as a circle is what had this drawn as a disc. */
+.card__badge::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 47px;
+  height: 33px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition:
+    width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* On hover the pill squares up into a solid white circle and levels out. */
+.card:hover .card__badge::before {
+  width: 56px;
+  height: 56px;
+  background: var(--white);
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.card:hover .card__badge {
+  color: var(--black);
+}
+
+/* The arrow sits above the shape and stays upright while the pill is
+   tilted; on hover it swings 45deg round to point right. */
 .card__badge svg {
+  position: relative;
+  z-index: 1;
   width: 16px;
   height: 16px;
   transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.card:hover .card__badge {
-  background: var(--white);
-  color: var(--black);
-  border-radius: 50%;
-}
-
-/* the up-right arrow swings 45deg clockwise to point right */
 .card:hover .card__badge svg {
   transform: rotate(45deg);
 }
