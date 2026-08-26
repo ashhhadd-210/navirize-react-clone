@@ -2276,18 +2276,11 @@ a:focus-visible > .roll .roll__stack {
    sampled on the project cards). The axis is set per element via
    .reveal-x; vertical is the default. */
 .reveal {
-  opacity: 0;
-  transform: translate(var(--rvx, 0px), var(--rvy, 30px));
-  transition-property: opacity, transform;
-  transition-duration: 1.5s;
-  transition-timing-function: cubic-bezier(0.22, 0.61, 0.24, 1);
-  transition-timing-function: var(--reveal-spring);
+  /* the section is just a container now — its children carry the entrance */
   will-change: opacity, transform;
 }
 
 .reveal--in {
-  opacity: 1;
-  transform: none;
   will-change: auto;
 }
 
@@ -2295,25 +2288,45 @@ a:focus-visible > .roll .roll__stack {
    arriving as one slab — the client's note that "each element when
    scrolling" should stagger. The container carries the fade; its children
    carry the travel, stepped 120ms apart. */
-/* Anything carrying a sequence index moves on its own beat — direct
-   children of a revealed section, and the individual rows of any list
-   inside one. */
+/* A revealed section runs the SAME pair of curves as the heading — a
+   500ms fade with a longer 1s glide underneath — so everything on the page
+   moves to one rhythm instead of the head easing on one curve and the
+   sections on another. Each indexed element (direct children, and the rows
+   of any list inside) follows the one before it by 120ms. */
 .reveal [style*='--i'],
 .reveal > * {
-  transform: translate(var(--rvx, 0px), var(--rvy, 30px));
-  transition: transform 1.5s var(--reveal-spring);
-  transition-delay: calc(var(--i, 0) * 120ms);
-}
-
-/* a parent that handed its rows the sequence must not move as a block too */
-.reveal > *:not([style*='--i']) {
-  transform: none;
-  transition: none;
+  opacity: 0;
 }
 
 .reveal--in [style*='--i'],
 .reveal--in > * {
-  transform: none;
+  animation:
+    rev-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) calc(var(--i, 0) * 120ms) both,
+    rev-slide 1s var(--ease-glide) calc(var(--i, 0) * 120ms) both;
+}
+
+/* a parent that handed its rows the sequence must not move as a block too */
+.reveal > *:not([style*='--i']) {
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes rev-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rev-slide {
+  from {
+    transform: translate(var(--rvx, 0px), var(--rvy, 30px));
+  }
+  to {
+    transform: none;
+  }
 }
 
 .reveal {

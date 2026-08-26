@@ -61,6 +61,12 @@ function observe(el, cb) {
   }
 }
 
+/* Where a section starts its entrance. At 0.95 (the old value) a block
+   fired the instant its first pixel appeared, so it had finished animating
+   before it was properly on screen — the client's "not before or after".
+   0.82 starts it once it is genuinely being looked at. */
+const TRIGGER = 0.82
+
 export function useReveal(axis = 'y') {
   const ref = useRef(null)
   // 'instant' | 'hidden' | 'shown'
@@ -73,13 +79,14 @@ export function useReveal(axis = 'y') {
   useLayoutEffect(() => {
     const el = ref.current
     if (!el || state !== 'hidden') return
-    /* Measured on the original at 390 and 1440: content already inside the
-       viewport on load carries NO animation at all — its first painted
-       frame is opacity 1 with no transform. Only the page heading fades,
-       and only content arriving by scroll gets the 30px reveal. */
+    /* One system for load and scroll. Whether a section is on screen at
+       load or arrives later, it plays the SAME entrance — that is what the
+       client means by the stagger being "in sync with the rest of the
+       content" rather than the head animating on one rhythm and everything
+       else on another. */
     const rect = el.getBoundingClientRect()
-    if (rect.top < window.innerHeight - 40 && rect.bottom > 0) {
-      setState('shown-instant')
+    if (rect.top < window.innerHeight * TRIGGER && rect.bottom > 0) {
+      setState('shown')
       return
     }
     const fire = () => setState('shown')
@@ -97,7 +104,7 @@ export function useReveal(axis = 'y') {
         /* one-shot semantics: past the trigger line counts as revealed,
            even if the element was flung fully above the viewport between
            frames */
-        if (r.top < window.innerHeight - 40) fire()
+        if (r.top < window.innerHeight * TRIGGER) fire()
       })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -144,15 +151,8 @@ export function useReveal(axis = 'y') {
   /* Content already on screen at load still enters — the recording shows
      the first card fading and sliding in with the head. It just follows the
      heading rather than waiting to be scrolled to. */
-  if (state === 'shown-instant') return { ref, className: 'load-in reveal--seq' }
-  const className =
-    (state === 'load'
-      ? 'reveal--load'
-      : state === 'load-in'
-        ? 'reveal--load reveal--in'
-        : state === 'shown'
-          ? 'reveal reveal--in'
-          : 'reveal') + ax
+
+  const className = (state === 'shown' ? 'reveal reveal--in' : 'reveal') + ax
   return { ref, className }
 }
 
