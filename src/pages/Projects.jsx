@@ -16,7 +16,7 @@ export default function Projects() {
         description="A closer look at how ideas are transformed into identity, experience, and advantage."
       />
 
-      <section className="shell pagehead">
+      <Reveal as="section" className="shell pagehead">
         <div>
           <TwoTone as="h1" stagger className="display slidein" {...headings.projectsHero} />
           <p className="pagehead__lede pagehead__lede--big">
@@ -24,18 +24,18 @@ export default function Projects() {
             <span className="grey">identity, experience, and advantage.</span>
           </p>
         </div>
-      </section>
+      </Reveal>
 
       {/* Measured on the original: a uniform two-column grid of all four
           projects (620x509 cards at 1440) — no full-width featured card on
           this page, unlike home. */}
-      <section className="shell work work--listing" aria-label="All projects">
+      <Reveal as="section" className="shell work work--listing" aria-label="All projects">
         <div className="work__grid">
           {projects.map((project, i) => (
             <ProjectCard key={project.slug} project={project} priority={i < 2} index={i} />
           ))}
         </div>
-      </section>
+      </Reveal>
 
       <Reveal as="section" axis="x" className="shell section section--tail">
         <SectionRow

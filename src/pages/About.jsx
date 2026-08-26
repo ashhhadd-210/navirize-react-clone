@@ -30,7 +30,7 @@ export default function About() {
         description="Navirize combines strategy, psychology, and design to create work that feels timeless, intentional, and world-class."
       />
 
-      <section className="shell pagehead">
+      <Reveal as="section" className="shell pagehead">
         <div>
           <p className="label pagehead__label">About Us</p>
           <TwoTone
@@ -47,7 +47,7 @@ export default function About() {
           <Media item={aboutMedia[0]} priority wide={false} />
           <Media item={aboutMedia[1]} wide={false} />
         </div>
-      </section>
+      </Reveal>
 
       {/* ---------- mission ---------- */}
       <Reveal as="section" axis="x" className="shell section section--about">

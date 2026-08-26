@@ -44,7 +44,10 @@ export default function Nav() {
   const hidden = !shown && !open
 
   return (
-    <header className={`nav${hidden ? ' nav--hidden' : ''}`}>
+    <header
+      className={`nav${hidden ? ' nav--hidden' : ''}`}
+      data-menu={open ? 'true' : 'false'}
+    >
       <div className="shell nav__inner">
         <Link to="/" className="nav__logo" aria-label={`${brand.name} — home`}>
           <Wordmark />

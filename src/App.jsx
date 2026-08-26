@@ -100,6 +100,12 @@ export default function App() {
         ))}
       </Routes>
 
+      {/* Transparent run-off the height of the footer. The footer is pinned
+          behind the page, so the document needs this much extra scroll for
+          the page to slide up and uncover it. A margin on .page-wrap would
+          collapse away, and padding there would stay opaque white. */}
+      <div className="foot-spacer" aria-hidden="true" />
+
       <Footer />
     </>
   )

@@ -507,15 +507,49 @@ textarea {
   transform: translateY(-5px) rotate(-45deg);
 }
 
+/* Opens on the same easing as everything else and over a longer beat, so it
+   unrolls rather than snapping — the client asked for it to "open smoother".
+   The links fade up behind the height change instead of appearing with it. */
 .nav__sheet {
   display: grid;
   grid-template-rows: 0fr;
   background: var(--white);
-  transition: grid-template-rows 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+  transition: grid-template-rows 0.55s var(--ease-glide);
 }
 
 .nav__sheet[data-open='true'] {
   grid-template-rows: 1fr;
+}
+
+.nav__sheet-inner > * {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.4s cubic-bezier(0, 0.46, 0.56, 1),
+    transform 0.5s var(--ease-glide);
+}
+
+.nav__sheet[data-open='true'] .nav__sheet-inner > * {
+  opacity: 1;
+  transform: none;
+}
+
+.nav__sheet[data-open='true'] .nav__sheet-inner > *:nth-child(2) {
+  transition-delay: 60ms;
+}
+
+.nav__sheet[data-open='true'] .nav__sheet-inner > *:nth-child(3) {
+  transition-delay: 120ms;
+}
+
+/* the wordmark grows a touch while the menu is open */
+.nav__wordmark {
+  transition: transform 0.55s var(--ease-glide);
+  transform-origin: left center;
+}
+
+.nav[data-menu='true'] .nav__wordmark {
+  transform: scale(1.08);
 }
 
 /* The grid row can only collapse if the single child is itself clippable and
@@ -853,10 +887,26 @@ textarea {
   padding-block: 120px 240px;
 }
 
+/* Centred between the two nav links, which is where the client wants it:
+   their midpoint is the page centre less 14px (the nav sits fractionally
+   left of centre), so the extra right margin pulls the mark off-centre by
+   exactly that much. */
 .mark__band {
-  width: min(940px, 100%);
+  width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.mark__band > * {
+  margin-right: 28px;
+}
+
+/* Compositor-only, and paused while off screen (see MarkVideo) — it was
+   costing frames on the client's machine and glitching on his phone. */
+.mark video,
+.mark img {
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .mark img {
@@ -2035,16 +2085,36 @@ textarea {
    The wrapper keeps its own black background so the strip the inner element
    vacates at the bottom never flashes white. */
 
+/* The page is an opaque sheet ABOVE the footer. The footer is pinned to the
+   bottom of the window underneath it, so scrolling to the end slides the
+   sheet up and uncovers it — the footer looks like a layer behind the page
+   rather than the next thing after it. The flow reserves the footer's height
+   through --foot-h, which Footer measures and publishes. */
 .page-wrap {
   position: relative;
   z-index: 1;
   background: var(--white);
 }
 
+.foot-spacer {
+  height: var(--foot-h, 0px);
+  pointer-events: none;
+}
+
 .foot-wrap {
-  position: relative;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 0;
   background: var(--black);
+}
+
+/* A short page must not leave the footer floating over empty space. */
+@supports (height: 100dvh) {
+  .foot-wrap {
+    max-height: 100dvh;
+  }
 }
 
 /* ---------- rolling link hover ----------
@@ -2282,40 +2352,33 @@ a:focus-visible > .roll .roll__stack {
    and Our Story), while cards and images rise from below (ty 30 -> 0,
    sampled on the project cards). The axis is set per element via
    .reveal-x; vertical is the default. */
-.reveal {
-  /* the section is just a container now — its children carry the entrance */
-  will-change: opacity, transform;
-}
-
-.reveal--in {
-  will-change: auto;
-}
-
 /* Elements inside a revealed section follow one another rather than
    arriving as one slab — the client's note that "each element when
    scrolling" should stagger. The container carries the fade; its children
    carry the travel, stepped 120ms apart. */
-/* A revealed section runs the SAME pair of curves as the heading — a
-   500ms fade with a longer 1s glide underneath — so everything on the page
-   moves to one rhythm instead of the head easing on one curve and the
-   sections on another. Each indexed element (direct children, and the rows
-   of any list inside) follows the one before it by 120ms. */
-.reveal [style*='--i'],
-.reveal > * {
+/* Per-element reveal. Each item is observed on its own, so the cascade is
+   driven by how fast you scroll rather than by a delay chain — the client's
+   "each item should be independent". Text slides in from the right, pictures
+   rise from below, both starting fully invisible and easing out hard: fast
+   away, slow to land. */
+.rv {
   opacity: 0;
 }
 
-.reveal--in [style*='--i'],
-.reveal--in > * {
-  animation:
-    rev-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) calc(var(--i, 0) * 120ms) both,
-    rev-slide 1s var(--ease-glide) calc(var(--i, 0) * 120ms) both;
+.rv--in-x {
+  --rvx: 30px;
+  --rvy: 0px;
 }
 
-/* a parent that handed its rows the sequence must not move as a block too */
-.reveal > *:not([style*='--i']) {
-  opacity: 1;
-  animation: none;
+.rv--up {
+  --rvx: 0px;
+  --rvy: 40px;
+}
+
+.rv--on {
+  animation:
+    rev-fade 0.62s cubic-bezier(0, 0.46, 0.56, 1) both,
+    rev-slide 1.1s var(--ease-glide) both;
 }
 
 @keyframes rev-fade {
@@ -2329,15 +2392,11 @@ a:focus-visible > .roll .roll__stack {
 
 @keyframes rev-slide {
   from {
-    transform: translate(var(--rvx, 0px), var(--rvy, 30px));
+    transform: translate(var(--rvx, 0px), var(--rvy, 0px));
   }
   to {
     transform: none;
   }
-}
-
-.reveal {
-  transform: none;
 }
 
 /* ---------- reduced motion ---------- */

@@ -28,9 +28,26 @@ export default function MarkVideo() {
     play()
     document.addEventListener('touchstart', play, { once: true, passive: true })
     document.addEventListener('click', play, { once: true })
+
+    /* Decoding an alpha video continuously costs frames even when it is
+       nowhere near the screen — the client saw the page lag on desktop and
+       glitch on mobile. Run it only while it is actually in view. */
+    let io
+    if (typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) play()
+          else v.pause()
+        },
+        { rootMargin: '200px' }
+      )
+      io.observe(v)
+    }
+
     return () => {
       document.removeEventListener('touchstart', play)
       document.removeEventListener('click', play)
+      if (io) io.disconnect()
     }
   }, [])
 

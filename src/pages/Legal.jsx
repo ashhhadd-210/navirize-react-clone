@@ -21,9 +21,13 @@ export default function Legal({ which }) {
 
       <div className="shell">
         <div className="legal">
-          <p className="legal__updated">{page.updated}</p>
-          <h1 className="legal__title slidein" ref={titleRef}>{words(page.title)}</h1>
-          <p className="legal__lede">{page.intro}</p>
+          {/* the two small copies either side of the title animate as well
+              — the client spotted them sitting static */}
+          <Reveal className="legal__head">
+            <p className="legal__updated">{page.updated}</p>
+            <h1 className="legal__title slidein" ref={titleRef}>{words(page.title)}</h1>
+            <p className="legal__lede">{page.intro}</p>
+          </Reveal>
           <hr className="legal__rule" />
 
           {/* Each clause arrives as you reach it, like every other section

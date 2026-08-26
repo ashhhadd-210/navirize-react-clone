@@ -24,9 +24,9 @@ export default function Home() {
       />
 
       {/* ---------- hero: eyebrow, one two-tone h1, one button ---------- */}
-      <section className="shell hero">
+      <Reveal as="section" className="shell hero">
         {/* text loads sliding in from the right, like every other page */}
-        <p className="label hero__eyebrow load-in">Branding&nbsp; ·&nbsp; Web Design</p>
+        <p className="label hero__eyebrow">Branding&nbsp; ·&nbsp; Web Design</p>
 
         {/* The original renders each letter as an inline-block for its load
             animation, which drops kerning and makes the line marginally
@@ -39,23 +39,23 @@ export default function Home() {
           </span>
         </h1>
 
-        <div className="hero__cta load-in" style={{ '--d': '200ms' }}>
+        <div className="hero__cta">
           <Link to="/projects" className="btn btn--dark">
             Explore our Work
             <ArrowUpRight />
           </Link>
         </div>
-      </section>
+      </Reveal>
 
       {/* ---------- work: 1 featured + 2-col grid, no section heading ---------- */}
-      <section className="shell work" aria-label="Selected work">
+      <Reveal as="section" className="shell work" aria-label="Selected work">
         <ProjectCard project={featured} variant="featured" priority />
         <div className="work__grid">
           {rest.map((project) => (
             <ProjectCard key={project.slug} project={project} index={1} />
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* ---------- shaping perception ---------- */}
       <Reveal as="section" axis="x" className="shell section">

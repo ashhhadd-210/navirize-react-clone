@@ -1,35 +1,36 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 /**
- * The original's scroll reveal, sampled frame by frame off the live site in
- * headless Chrome.
+ * Scroll reveal, one element at a time.
  *
- * An earlier measurement pass concluded the original had no scroll-triggered
- * reveals — it read mid-page sections as opacity:1 while they were still far
- * below the fold. That was a false negative: those particular sections really
- * are static, but nine other blocks on the home page are not. Snapshotting
- * every element's computed style, scrolling the whole document, then diffing
- * found the featured card, all three grid cards, Shaping Perception, Services,
- * Our Story, their two buttons and the footer CTA all starting at
- * `opacity: 0; translateY(30px)`.
+ * The client's brief for this is precise: "each item should be independent —
+ * when I scroll to the first and second item they should trigger, not the
+ * other items; when I scroll to the fourth, only the first four should
+ * stagger." So a section no longer fires its children on a delay chain when
+ * the section itself appears. Every animatable element is observed on its
+ * own and animates when IT arrives, which means the pace of the stagger is
+ * set by how fast you scroll rather than by a fixed timer.
  *
- * Measured behaviour:
- *   trigger   the element's top crossing 40px inside the viewport bottom
- *   from      opacity 0, translateY 30px
- *   to        opacity 1, translateY 0
- *   duration  ~1500ms
- *   easing    a spring — slow to leave, then a long asymptotic tail. Both
- *             properties are driven by one progress function: at t=378ms
- *             opacity read 0.4579 and translateY read 16.26, and
- *             30 * (1 - 0.4579) = 16.26 exactly.
- *   one-shot  it does not reverse when scrolled back past.
+ * Direction is per element, also from the client: "text is animating from
+ * right to left and images from bottom to up." Anything whose content is a
+ * picture rises; everything else slides in from the right.
  *
- * The spring is reproduced in CSS with `linear()` built from the samples (see
- * --reveal-spring in index.css), so this stays a class toggle with no
- * animation library and no per-frame JS.
+ * The trigger sits well inside the viewport (see TRIGGER). Firing as soon as
+ * an element's first pixel appeared meant it had finished before it was
+ * properly on screen — "it's animating too early and I can't see it".
  */
 
-// One observer for every reveal on the page rather than one each.
+/* Fraction of the viewport an element's top must cross before it starts.
+   0.72 puts it comfortably in view first. */
+const TRIGGER = 0.72
+
+/* Containers whose CHILDREN are the real items — a list must arrive row by
+   row, not as one block. */
+const GROUPS = 'ul, ol, .acc, .stack, .row, .media-pair, .proj__pair, .work__grid, .contact__meta, .foot__col'
+
+/* Elements that are pictures: these rise from below instead of sliding in. */
+const VISUAL = 'img, video, figure, picture, canvas'
+
 let observer = null
 const callbacks = new WeakMap()
 
@@ -44,13 +45,16 @@ function observe(el, cb) {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue
           const fn = callbacks.get(entry.target)
-          observer.unobserve(entry.target) // one-shot, like the original
+          observer.unobserve(entry.target) // one-shot; it never plays backwards
           callbacks.delete(entry.target)
           if (fn) fn()
         }
       },
-      // Measured: fires when the top is 40px inside the viewport bottom.
-      { rootMargin: '0px 0px -40px 0px', threshold: 0 }
+      {
+        // negative bottom margin = the element must come this far in first
+        rootMargin: `0px 0px -${Math.round((1 - TRIGGER) * 100)}% 0px`,
+        threshold: 0,
+      }
     )
   }
   callbacks.set(el, cb)
@@ -61,105 +65,84 @@ function observe(el, cb) {
   }
 }
 
-/* Where a section starts its entrance. At 0.95 (the old value) a block
-   fired the instant its first pixel appeared, so it had finished animating
-   before it was properly on screen — the client's "not before or after".
-   0.82 starts it once it is genuinely being looked at. */
-const TRIGGER = 0.82
+/** The individual things that should animate inside a section. */
+function items(root) {
+  const out = []
+  for (const child of root.children) {
+    if (child.matches(GROUPS)) {
+      for (const row of child.children) out.push(row)
+    } else {
+      out.push(child)
+    }
+  }
+  return out
+}
 
-export function useReveal(axis = 'y') {
+function isVisual(el) {
+  if (el.matches(VISUAL)) return true
+  const inner = el.querySelector(VISUAL)
+  if (!inner) return false
+  // a picture counts only if it IS the element's content, not a stray icon
+  return inner.getBoundingClientRect().height > el.getBoundingClientRect().height * 0.6
+}
+
+export function useReveal() {
   const ref = useRef(null)
-  // 'instant' | 'hidden' | 'shown'
-  const [state, setState] = useState('hidden')
 
-  /* Layout effect, not effect: the in-view decision must land BEFORE the
-     first paint, or above-fold content flashes a frame (or more, under
-     load) of opacity 0 at every route change. The original paints its
-     in-view content faintly from the very first frame of a page fade. */
-  useLayoutEffect(() => {
-    const el = ref.current
-    if (!el || state !== 'hidden') return
-    /* One system for load and scroll. Whether a section is on screen at
-       load or arrives later, it plays the SAME entrance — that is what the
-       client means by the stagger being "in sync with the rest of the
-       content" rather than the head animating on one rhythm and everything
-       else on another. */
-    const rect = el.getBoundingClientRect()
-    if (rect.top < window.innerHeight * TRIGGER && rect.bottom > 0) {
-      setState('shown')
-      return
-    }
-    const fire = () => setState('shown')
-    const stopObserving = observe(el, fire)
-    /* Belt and braces: under rapid programmatic scrolling the shared
-       IntersectionObserver occasionally misses an element (seen ~1 in 2
-       automated full-page sweeps). A rAF-gated scroll check guarantees
-       nothing is ever left at opacity 0. */
-    let raf = 0
-    const onScroll = () => {
-      if (raf) return
-      raf = requestAnimationFrame(() => {
-        raf = 0
-        const r = el.getBoundingClientRect()
-        /* one-shot semantics: past the trigger line counts as revealed,
-           even if the element was flung fully above the viewport between
-           frames */
-        if (r.top < window.innerHeight * TRIGGER) fire()
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      stopObserving()
-      window.removeEventListener('scroll', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [state])
-
-  useEffect(() => {
-    if (state !== 'load') return
-    const raf = requestAnimationFrame(() =>
-      requestAnimationFrame(() => setState('load-in'))
-    )
-    return () => cancelAnimationFrame(raf)
-  }, [state])
-
-  /* The original does not move a section as one slab — each element inside
-     it arrives after the one before it. Index the direct children so CSS can
-     step their delay. */
   useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
-    let i = 0
-    const stamp = (node) => {
-      node.style.setProperty('--i', String(i))
-      i += 1
+    const stops = []
+
+    for (const node of items(el)) {
+      if (node.dataset.rv) continue
+      // a line-staggered heading animates its own words — leave it alone
+      if (node.classList.contains('slidein') || node.querySelector('.w')) continue
+      node.dataset.rv = '1'
+      node.classList.add('rv', isVisual(node) ? 'rv--up' : 'rv--in-x')
+
+      const show = () => node.classList.add('rv--on')
+
+      // already past the line at mount (above the fold): show it straight away
+      const r = node.getBoundingClientRect()
+      if (r.top < window.innerHeight * TRIGGER && r.bottom > 0) {
+        show()
+        continue
+      }
+      stops.push(observe(node, show))
+
+      /* Belt and braces: under a fast flick the observer can miss an element.
+         A rAF-gated scroll check guarantees nothing is left invisible. */
+      let raf = 0
+      const onScroll = () => {
+        if (raf) return
+        raf = requestAnimationFrame(() => {
+          raf = 0
+          if (node.getBoundingClientRect().top < window.innerHeight * TRIGGER) {
+            show()
+            window.removeEventListener('scroll', onScroll)
+          }
+        })
+      }
+      window.addEventListener('scroll', onScroll, { passive: true })
+      stops.push(() => {
+        window.removeEventListener('scroll', onScroll)
+        if (raf) cancelAnimationFrame(raf)
+      })
     }
-    for (const child of el.children) {
-      /* A list arrives item by item, not as one block — the client's note
-         that "the lists aren't staggering one by one". Rows of an accordion
-         or a numbered stack each take their own place in the sequence; any
-         other child is stamped whole. */
-      const rows = child.matches('ul, ol, .acc, .stack')
-        ? [...child.children]
-        : [...child.querySelectorAll(':scope > ul > li, :scope > ol > li, :scope > .acc > *, :scope > .stack > *')]
-      if (rows.length > 1) rows.forEach(stamp)
-      else stamp(child)
-    }
+
+    return () => stops.forEach((s) => s())
   })
 
-  const ax = axis === 'x' ? ' reveal-x' : ''
-  /* Content already on screen at load still enters — the recording shows
-     the first card fading and sliding in with the head. It just follows the
-     heading rather than waiting to be scrolled to. */
-
-  const className = (state === 'shown' ? 'reveal reveal--in' : 'reveal') + ax
-  return { ref, className }
+  return ref
 }
 
-export default function Reveal({ as: Tag = 'div', axis = 'y', className = '', children, ...rest }) {
-  const { ref, className: revealClass } = useReveal(axis)
+export default function Reveal({ as: Tag = 'div', className = '', children, ...rest }) {
+  const ref = useReveal()
+  // `axis` used to be a prop; direction is now decided per element.
+  delete rest.axis
   return (
-    <Tag ref={ref} className={className ? `${className} ${revealClass}` : revealClass} {...rest}>
+    <Tag ref={ref} className={className} {...rest}>
       {children}
     </Tag>
   )

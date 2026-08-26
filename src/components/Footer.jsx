@@ -1,7 +1,7 @@
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { brand, footerNav, footerLegal, socials } from '../data/site.js'
 import { ArrowUpRight } from './icons.jsx'
-import Reveal from './Reveal.jsx'
 import RollText from './RollText.jsx'
 
 /**
@@ -19,6 +19,31 @@ import RollText from './RollText.jsx'
  * up over the page content and hid its CTA.
  */
 export default function Footer() {
+  /* The footer lies BEHIND the page rather than after it: the page is an
+     opaque layer above, and as you reach the end it slides up and uncovers
+     the footer sitting underneath. The client's own words — "it looks like a
+     section behind the page, like with z index behind the page ... and when I
+     scroll I should see the page look independent from the footer and slowly
+     reveal what's behind." A fixed footer needs the flow to reserve its
+     height, so its measured height is published as --foot-h. */
+  const wrapRef = useRef(null)
+
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const publish = () => {
+      document.documentElement.style.setProperty('--foot-h', el.offsetHeight + 'px')
+    }
+    publish()
+    const ro = new ResizeObserver(publish)
+    ro.observe(el)
+    window.addEventListener('resize', publish)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', publish)
+    }
+  }, [])
+
   // Measured on the original: the "Ready when you are." CTA renders on
   // every page, /contact included (872px at 1440, 1506 at 1024).
   const showCta = true
@@ -26,10 +51,10 @@ export default function Footer() {
   const links = [...footerNav, ...footerLegal]
 
   return (
-    <footer className="foot-wrap">
+    <footer className="foot-wrap" ref={wrapRef}>
       <div className="foot">
       <div className="shell">
-        <Reveal axis="x" className="foot__top">
+        <div className="foot__top">
           <div>
             {showCta && (
               <>
@@ -72,7 +97,7 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-        </Reveal>
+        </div>
 
         <hr className="foot__rule" />
 
