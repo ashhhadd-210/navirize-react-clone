@@ -62,6 +62,15 @@ export default function App() {
      entry was, scroll new navigations to the top, restore traversals. */
   const positions = useRef(new Map())
 
+  /* iOS Safari only honours :active on an element once the document has a
+     touch listener, so without this the press on a button does nothing on
+     the client's phone. An empty passive listener is enough. */
+  useEffect(() => {
+    const noop = () => {}
+    document.addEventListener('touchstart', noop, { passive: true })
+    return () => document.removeEventListener('touchstart', noop)
+  }, [])
+
   useEffect(() => {
     if (location === shown) return
     // capture the outgoing page's position once, at navigation time —

@@ -275,7 +275,23 @@ textarea {
   transition:
     background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
     box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.18s cubic-bezier(0.25, 1, 0.5, 1),
     color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Press response. Note this is an ADDITION, not a match: measuring the
+   original's own recording frame by frame, its button holds exactly
+   538x132 at the same spot from before the press until the page navigates
+   — it gives no feedback at all on tap. With hover correctly off on touch
+   that left nothing under the finger, so the button now takes a small
+   press instead. Transform only, so it cannot latch the way :hover did. */
+.btn:active {
+  transform: scale(0.96);
+}
+
+.card:active .card__frame {
+  transform: scale(0.99);
+  transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .btn--dark {
