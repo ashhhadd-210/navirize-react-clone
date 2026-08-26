@@ -626,7 +626,10 @@ textarea {
   height: 33px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.2);
-  transform: translate(-50%, -50%) rotate(45deg);
+  /* NEGATIVE 45: the pill's long axis lies ALONG the arrow, running
+     lower-left to upper-right. A positive 45 tilts it the other way, across
+     the arrow, which is what this looked wrong as. */
+  transform: translate(-50%, -50%) rotate(-45deg);
   transition:
     width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
     height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
