@@ -602,21 +602,37 @@ textarea {
   bottom: 24px;
   width: 57px;
   height: 57px;
-  border-radius: 999px;
+  /* At rest this is a ROUNDED SQUARE, not a disc — the client's "they are
+     like a pill and become circle". It rounds into a full circle on hover
+     as the fill goes from translucent to solid white and the arrow flips
+     from black-on-white. */
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.2);
   transition:
     background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    border-radius 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   display: grid;
   place-items: center;
   /* white at rest — visible over the card image in the recordings */
   color: var(--white);
 }
 
+/* the arrow turns on its own, so the rounded square never tilts with it */
+.card__badge svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 .card:hover .card__badge {
   background: var(--white);
   color: var(--black);
-  /* the up-right arrow swings 45deg clockwise to point right */
+  border-radius: 50%;
+}
+
+/* the up-right arrow swings 45deg clockwise to point right */
+.card:hover .card__badge svg {
   transform: rotate(45deg);
 }
 
