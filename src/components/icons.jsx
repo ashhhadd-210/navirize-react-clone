@@ -1,3 +1,9 @@
+/**
+ * The up-right arrow, taken from the original's own SVG sprite (symbol
+ * svg318331668, viewBox 0 0 16 16). It is a FILLED glyph with rounded ends,
+ * not the thin stroked chevron this used to draw — which is the difference
+ * the client spotted on the buttons.
+ */
 export function ArrowUpRight({ size = 16, className = 'btn__arrow' }) {
   return (
     <svg
@@ -9,13 +15,7 @@ export function ArrowUpRight({ size = 16, className = 'btn__arrow' }) {
       aria-hidden="true"
       focusable="false"
     >
-      <path
-        d="M4 12 12 4M12 4H5.5M12 4v6.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M 13.667 1.583 L 4 1.583 C 3.586 1.583 3.25 1.919 3.25 2.333 C 3.25 2.747 3.586 3.083 4 3.083 L 11.856 3.083 L 1.803 13.136 C 1.51 13.429 1.51 13.904 1.803 14.197 C 2.096 14.49 2.571 14.49 2.864 14.197 L 12.917 4.144 L 12.917 12 C 12.917 12.414 13.252 12.75 13.667 12.75 C 14.081 12.75 14.417 12.414 14.417 12 L 14.417 2.333 C 14.417 1.919 14.081 1.583 13.667 1.583 Z" fill="currentColor" />
     </svg>
   )
 }

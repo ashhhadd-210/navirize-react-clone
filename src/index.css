@@ -61,6 +61,12 @@
   --section-y: 120px;
 
   --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Entrance glide. Fitting the client's own recording, the distance to
+     target decays exponentially with a ~250ms time constant — it leaves
+     fast and creeps the last few pixels, which is exactly the "starting
+     fast and ending slow" they asked for. Sampled every 1.25% early and
+     2.5% later so the interpolation has no visible steps. */
+  --ease-glide: linear(0 0%, 0.0485 1.25%, 0.0969 2.5%, 0.1408 3.75%, 0.1847 5%, 0.2244 6.25%, 0.264 7.5%, 0.3 8.75%, 0.3358 10%, 0.3684 11.25%, 0.4008 12.5%, 0.4303 13.75%, 0.4596 15%, 0.4862 16.25%, 0.5128 17.5%, 0.5369 18.75%, 0.5609 20%, 0.5827 21.25%, 0.6045 22.5%, 0.6242 23.75%, 0.6439 25%, 0.6618 26.25%, 0.6796 27.5%, 0.6957 28.75%, 0.7118 30%, 0.7264 31.25%, 0.741 32.5%, 0.7542 33.75%, 0.7675 35%, 0.7794 36.25%, 0.7914 37.5%, 0.8022 38.75%, 0.813 40%, 0.8317 42.5%, 0.8503 45%, 0.8655 47.5%, 0.8808 50%, 0.8933 52.5%, 0.9058 55%, 0.916 57.5%, 0.9263 60%, 0.9346 62.5%, 0.943 65%, 0.9499 67.5%, 0.9567 70%, 0.9623 72.5%, 0.9679 75%, 0.9725 77.5%, 0.9771 80%, 0.9809 82.5%, 0.9847 85%, 0.9877 87.5%, 0.9908 90%, 0.9933 92.5%, 0.9959 95%, 0.998 97.5%, 1 100%);
   --t: 0.4s var(--ease-out);
 }
 
@@ -266,6 +272,7 @@ textarea {
   /* measured hover blend: ~75% complete at 80ms, settled ~400ms */
   transition:
     background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
     color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -275,10 +282,13 @@ textarea {
 }
 
 /* Measured: the dark button inverts to WHITE on hover (bg #000 -> #fff,
-   label #fff -> #0d0d0d), blending over ~300ms and reverting on leave. */
+   label #fff -> #0d0d0d), blending over ~300ms and reverting on leave.
+   It also takes a black outline — without it a white pill on a white page
+   loses its edge entirely. Drawn as an inset shadow so nothing reflows. */
 .btn--dark:hover {
   background: var(--white);
   color: #0d0d0d;
+  box-shadow: inset 0 0 0 1px var(--black);
 }
 
 .btn--soft {
@@ -286,10 +296,12 @@ textarea {
   color: var(--black);
 }
 
-/* Measured: the grey pill lightens to white; the label stays black. */
+/* Measured: the grey pill lightens to white; the label stays black, and
+   the same black edge appears. */
 .btn--soft:hover {
   background: var(--white);
   color: var(--black);
+  box-shadow: inset 0 0 0 1px var(--black);
 }
 
 .btn--block {
@@ -2061,7 +2073,7 @@ a:focus-visible > .roll .roll__stack {
      keeps it on the compositor. */
   animation:
     word-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) calc(var(--ln, 0) * 200ms) both,
-    word-slide 0.85s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--ln, 0) * 200ms) both;
+    word-slide 1s var(--ease-glide) calc(var(--ln, 0) * 200ms) both;
   will-change: transform, opacity;
 }
 
@@ -2091,7 +2103,7 @@ a:focus-visible > .roll .roll__stack {
 .load-in {
   animation:
     word-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) var(--d, 0ms) both,
-    word-slide 0.85s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms) both;
+    word-slide 1s var(--ease-glide) var(--d, 0ms) both;
   will-change: transform, opacity;
 }
 
@@ -2194,12 +2206,23 @@ a:focus-visible > .roll .roll__stack {
    arriving as one slab — the client's note that "each element when
    scrolling" should stagger. The container carries the fade; its children
    carry the travel, stepped 120ms apart. */
+/* Anything carrying a sequence index moves on its own beat — direct
+   children of a revealed section, and the individual rows of any list
+   inside one. */
+.reveal [style*='--i'],
 .reveal > * {
   transform: translate(var(--rvx, 0px), var(--rvy, 30px));
   transition: transform 1.5s var(--reveal-spring);
   transition-delay: calc(var(--i, 0) * 120ms);
 }
 
+/* a parent that handed its rows the sequence must not move as a block too */
+.reveal > *:not([style*='--i']) {
+  transform: none;
+  transition: none;
+}
+
+.reveal--in [style*='--i'],
 .reveal--in > * {
   transform: none;
 }
@@ -2255,6 +2278,11 @@ a:focus-visible > .roll .roll__stack {
   .pagehead,
   .hero {
     padding-top: 120px;
+  }
+
+  /* buttons hold 18px at phone on the original — 165x57, not 158x54 */
+  .btn:not(.btn--block) {
+    font-size: 18px;
   }
 
   /* the case pages sit deeper: meta row at y166 on the original at 390 */

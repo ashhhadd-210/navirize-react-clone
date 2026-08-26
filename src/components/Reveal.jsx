@@ -123,9 +123,20 @@ export function useReveal(axis = 'y') {
     const el = ref.current
     if (!el) return
     let i = 0
-    for (const child of el.children) {
-      child.style.setProperty('--i', String(i))
+    const stamp = (node) => {
+      node.style.setProperty('--i', String(i))
       i += 1
+    }
+    for (const child of el.children) {
+      /* A list arrives item by item, not as one block — the client's note
+         that "the lists aren't staggering one by one". Rows of an accordion
+         or a numbered stack each take their own place in the sequence; any
+         other child is stamped whole. */
+      const rows = child.matches('ul, ol, .acc, .stack')
+        ? [...child.children]
+        : [...child.querySelectorAll(':scope > ul > li, :scope > ol > li, :scope > .acc > *, :scope > .stack > *')]
+      if (rows.length > 1) rows.forEach(stamp)
+      else stamp(child)
     }
   })
 
