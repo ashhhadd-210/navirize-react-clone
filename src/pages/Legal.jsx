@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import Seo from '../components/Seo.jsx'
 import { words, useLineStagger } from '../components/lineStagger.jsx'
+import Reveal from '../components/Reveal.jsx'
 import { legalPages, brand } from '../data/site.js'
 
 /**
@@ -25,8 +26,11 @@ export default function Legal({ which }) {
           <p className="legal__lede">{page.intro}</p>
           <hr className="legal__rule" />
 
+          {/* Each clause arrives as you reach it, like every other section
+              on the site — the client's note that these pages animate the
+              title and then nothing at all. */}
           {page.sections.map((sec) => (
-            <section className="legal__sec" key={sec.heading}>
+            <Reveal as="section" axis="x" className="legal__sec" key={sec.heading}>
               <h2 className="legal__h">{sec.heading}</h2>
               {sec.body.map((p, i) => (
                 <p key={i}>{p}</p>
@@ -38,7 +42,7 @@ export default function Legal({ which }) {
                   ))}
                 </ul>
               ) : null}
-            </section>
+            </Reveal>
           ))}
         </div>
       </div>
