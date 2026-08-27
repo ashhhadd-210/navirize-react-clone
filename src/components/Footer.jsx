@@ -90,7 +90,7 @@ export default function Footer() {
                     rel="noopener noreferrer"
                     className="foot__ext"
                   >
-                    {item.label}
+                    <RollText>{item.label}</RollText>
                     <ArrowUpRight />
                   </a>
                 </li>

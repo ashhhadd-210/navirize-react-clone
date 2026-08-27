@@ -21,8 +21,10 @@ import { useLayoutEffect, useRef } from 'react'
  */
 
 /* Fraction of the viewport an element's top must cross before it starts.
-   0.72 puts it comfortably in view first. */
-const TRIGGER = 0.72
+   0.72 read as late — "I need to see more content on my screen before I
+   scroll" — while 0.95 had things finishing off screen. 0.86 starts them
+   just as they clear the fold. */
+const TRIGGER = 0.86
 
 /* Containers whose CHILDREN are the real items — a list must arrive row by
    row, not as one block. */
@@ -96,6 +98,8 @@ export function useReveal() {
 
     for (const node of items(el)) {
       if (node.dataset.rv) continue
+      // the marquee drives its own transform — a reveal on it fights the drift
+      if (node.closest('.proj__marquee') || node.querySelector('.proj__marquee')) continue
       // a line-staggered heading animates its own words — leave it alone
       if (node.classList.contains('slidein') || node.querySelector('.w')) continue
       node.dataset.rv = '1'

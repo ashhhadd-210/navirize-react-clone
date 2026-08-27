@@ -72,14 +72,20 @@ function ZoomHero({ project }) {
 }
 
 function Wide({ src, alt, second = false }) {
+  /* The Reveal WRAPS the figure rather than being it. When it was the figure,
+     the animated element was the <img> inside, so the grey frame appeared
+     first and the picture slid around within it — the client's "I see a box
+     and then the image is animating in the box". Now the whole tile moves as
+     one, exactly like the pair below it. */
   return (
-    <Reveal
-      as="figure"
-      className={`proj__media proj__media--wide${second ? ' proj__media--second' : ''}`}
-    >
-      <img src={img(src, 2048)} srcSet={imgSrcSet(src)}
-        sizes="(max-width: 767px) calc(100vw - 50px), (max-width: 1099px) calc(100vw - 128px), calc(100vw - 160px)"
-        alt={alt} loading="lazy" decoding="async" />
+    <Reveal className="proj__band">
+      <figure
+        className={`proj__media proj__media--wide${second ? ' proj__media--second' : ''}`}
+      >
+        <img src={img(src, 2048)} srcSet={imgSrcSet(src)}
+          sizes="(max-width: 767px) calc(100vw - 50px), (max-width: 1099px) calc(100vw - 128px), calc(100vw - 160px)"
+          alt={alt} loading="lazy" decoding="async" />
+      </figure>
     </Reveal>
   )
 }
@@ -100,12 +106,17 @@ function Pair({ items, second = false }) {
 
 function Prose({ title, big = false, paragraphs }) {
   const Tag = big ? 'h2' : 'h3'
+  /* One unit, so the heading and its copy move together — "make the
+     paragraph and the title animate together". The Reveal sits outside so
+     the whole block is the single item. */
   return (
-    <Reveal axis="x" className="proj__prose">
-      <Tag className={big ? 'proj__lede' : 'proj__subtitle'}>{title}</Tag>
-      {paragraphs.map((p) => (
-        <p key={p.slice(0, 32)}>{p}</p>
-      ))}
+    <Reveal className="proj__prose-wrap">
+      <div className="proj__prose">
+        <Tag className={big ? 'proj__lede' : 'proj__subtitle'}>{title}</Tag>
+        {paragraphs.map((p) => (
+          <p key={p.slice(0, 32)}>{p}</p>
+        ))}
+      </div>
     </Reveal>
   )
 }
@@ -135,10 +146,30 @@ function Marquee({ ids }) {
     let raf = 0
     let last = performance.now()
 
+    /* Only drift while the strip is on screen. It used to start at page load,
+       so by the time you had scrolled down to it the first tile had already
+       slid a couple of hundred pixels off the left edge and the strip opened
+       mid-stride — the client's "the carousel was good before, you ruined it
+       again". Now it sits aligned until you reach it, then drifts. */
+    let onScreen = false
+    let io
+    if (typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(
+        ([e]) => {
+          onScreen = e.isIntersecting
+          last = performance.now() // don't bank the time spent off screen
+        },
+        { rootMargin: '100px' }
+      )
+      io.observe(track)
+    } else {
+      onScreen = true
+    }
+
     const step = (now) => {
       const dt = Math.min(64, now - last) / 1000
       last = now
-      if (!st.dragging) {
+      if (!st.dragging && onScreen) {
         st.offset -= drift * dt
         if (Math.abs(st.vel) > 2) {
           st.offset += st.vel * dt
@@ -153,6 +184,7 @@ function Marquee({ ids }) {
       raf = requestAnimationFrame(step)
     }
     raf = requestAnimationFrame(step)
+    const stopIo = () => io && io.disconnect()
 
     const down = (e) => {
       st.dragging = true
@@ -187,6 +219,7 @@ function Marquee({ ids }) {
     track.addEventListener('pointercancel', up)
     return () => {
       cancelAnimationFrame(raf)
+      stopIo()
       track.removeEventListener('pointerdown', down)
       track.removeEventListener('pointermove', move)
       track.removeEventListener('pointerup', up)
@@ -240,7 +273,7 @@ export default function ProjectDetail() {
 
       <article>
         <header className="shell pagehead pagehead--case">
-          <div>
+          <Reveal>
             <dl className="proj__meta">
               <div>
                 <dt className="label">Industry</dt>
@@ -255,8 +288,8 @@ export default function ProjectDetail() {
                 <dd>{project.code}</dd>
               </div>
             </dl>
-            <h1 className="display display--narrow slidein" ref={titleRef}>{words(project.title)}</h1>
-          </div>
+            <h1 className="display display--narrow slidein slidein--trails" ref={titleRef}>{words(project.title)}</h1>
+          </Reveal>
 
           <ZoomHero project={project} />
         </header>
