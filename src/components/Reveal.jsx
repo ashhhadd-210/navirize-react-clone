@@ -21,10 +21,10 @@ import { useLayoutEffect, useRef } from 'react'
  */
 
 /* Fraction of the viewport an element's top must cross before it starts.
-   0.72 read as late — "I need to see more content on my screen before I
-   scroll" — while 0.95 had things finishing off screen. 0.86 starts them
-   just as they clear the fold. */
-const TRIGGER = 0.86
+   Twice reported as late, so it sits high now: an element begins as soon as
+   it is a little way onto the screen. Anything already visible at mount is
+   handled separately, below. */
+const TRIGGER = 0.94
 
 /* Containers whose CHILDREN are the real items — a list must arrive row by
    row, not as one block. */
@@ -73,6 +73,12 @@ function items(root) {
   for (const child of root.children) {
     if (child.matches(GROUPS)) {
       for (const row of child.children) out.push(row)
+    } else if (!child.classList.contains('slidein') && child.querySelector('.w')) {
+      /* A wrapper holding a line-staggered heading. Treating it as one item
+         skipped everything in it, which is why the copy under a page title
+         sat dead still — "this doesn't animate at all". Go a level deeper so
+         its siblings animate and the heading keeps its own word stagger. */
+      for (const inner of child.children) out.push(inner)
     } else {
       out.push(child)
     }
@@ -107,9 +113,13 @@ export function useReveal() {
 
       const show = () => node.classList.add('rv--on')
 
-      // already past the line at mount (above the fold): show it straight away
+      /* At mount, anything with a pixel on screen plays immediately — the
+         client wants "a glimpse of the first project before I scroll", so a
+         card peeking at the bottom edge must not sit invisible waiting for a
+         scroll that has not happened. The tighter TRIGGER applies only to
+         things that arrive later. */
       const r = node.getBoundingClientRect()
-      if (r.top < window.innerHeight * TRIGGER && r.bottom > 0) {
+      if (r.top < window.innerHeight && r.bottom > 0) {
         show()
         continue
       }

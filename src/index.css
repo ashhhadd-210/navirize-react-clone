@@ -1588,8 +1588,8 @@ textarea {
   .mark video,
   .mark img {
     width: 101px;
-    height: 388px;
-    object-fit: contain;
+    height: auto;
+    aspect-ratio: 362 / 392;
   }
 }
 
@@ -1707,7 +1707,8 @@ textarea {
   .mark video,
   .mark img {
     width: 150px;
-    height: 162px;
+    height: auto;
+    aspect-ratio: 362 / 392;
   }
 
   .mark img {
@@ -2520,11 +2521,14 @@ a:focus-visible > .roll .roll__stack {
     padding: 110px 0 128px;
   }
 
+  /* Keep the clip's own 362x392 proportions. Forcing a 70x162 box letterboxed
+     it, and those empty bands paint BLACK on a phone — the dark rectangle
+     around the N the client screenshotted. */
   .mark video,
   .mark img {
     width: 70px;
-    height: 162px;
-    object-fit: contain;
+    height: auto;
+    aspect-ratio: 362 / 392;
   }
 
   .proj__marquee {
@@ -2540,10 +2544,15 @@ a:focus-visible > .roll .roll__stack {
     gap: 0;
   }
 
-  /* links sit 40 under the CTA button; the social rows continue the
-     40px link pitch with no extra gap */
+  /* links sit 40 under the CTA button; the social rows continue the 40px
+     pitch, but the jump from the last page link to Threads is 48 on the
+     original, not 25 — the two lists were running together. */
   .foot__top nav {
     margin-top: 40px;
+  }
+
+  .foot__top > div:last-of-type {
+    margin-top: 23px;
   }
 
   .foot__col li + li {

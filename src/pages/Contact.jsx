@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Seo from '../components/Seo.jsx'
+import Reveal from '../components/Reveal.jsx'
 import TwoTone from '../components/TwoTone.jsx'
 import { ArrowUpRight } from '../components/icons.jsx'
 import { brand, budgets, headings } from '../data/site.js'
@@ -64,9 +65,9 @@ export default function Contact() {
         description="Tell us about your business, your goals, and where you want to go next. We’ll get back to you with a thoughtful response."
       />
 
-      <div className="shell contact">
+      <Reveal className="shell contact">
         {/* ---- left: heading, lede, details ---- */}
-        <div>
+        <Reveal>
           <p className="pagehead__label label--grey">
             Contact
           </p>
@@ -90,7 +91,7 @@ export default function Contact() {
               <p>Based in {brand.country}. Working Globally.</p>
             </div>
           </div>
-        </div>
+        </Reveal>
 
         {/* ---- right: inquiry form ---- */}
         <div>
@@ -224,7 +225,7 @@ export default function Contact() {
             </div>
           </form>
         </div>
-      </div>
+      </Reveal>
     </>
   )
 }
