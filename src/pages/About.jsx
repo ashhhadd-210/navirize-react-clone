@@ -50,7 +50,7 @@ export default function About() {
       </Reveal>
 
       {/* ---------- mission ---------- */}
-      <Reveal as="section" axis="x" className="shell section section--about">
+      <Reveal as="section" className="shell section section--about">
         <SectionRow label="Our Mission" className="row--wide">
           {/* the original's tablet/phone variant swaps the last words of the
               first sentence: "premium craftsmanship." -> "excellence." */}
@@ -65,7 +65,7 @@ export default function About() {
       </Reveal>
 
       {/* ---------- why us ---------- */}
-      <Reveal as="section" axis="x" className="shell section section--about">
+      <Reveal as="section" className="shell section section--about">
         <SectionRow label="Why Us" className="row--wide">
           <TwoTone as="h2" className="h-section" breakLine {...headings.whyUs} />
         </SectionRow>
@@ -87,7 +87,7 @@ export default function About() {
       </Reveal>
 
       {/* ---------- process ---------- */}
-      <Reveal as="section" axis="x" className="shell section section--about">
+      <Reveal as="section" className="shell section section--about">
         <SectionRow label="How We Work" className="row--wide">
           <TwoTone as="h2" className="h-section" {...headings.process} />
         </SectionRow>
@@ -106,7 +106,7 @@ export default function About() {
       </Reveal>
 
       {/* ---------- work closer ---------- */}
-      <Reveal as="section" axis="x" className="shell section section--about section--tail">
+      <Reveal as="section" className="shell section section--about section--tail">
         <SectionRow
           label="Designing Success"
           action={

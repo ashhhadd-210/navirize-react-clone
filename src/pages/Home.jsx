@@ -58,7 +58,7 @@ export default function Home() {
       </Reveal>
 
       {/* ---------- shaping perception ---------- */}
-      <Reveal as="section" axis="x" className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow
           label="Shaping Perception"
           action={
@@ -78,7 +78,7 @@ export default function Home() {
       </Reveal>
 
       {/* ---------- services accordion ---------- */}
-      <Reveal as="section" axis="x" className="shell section" aria-labelledby="services-label">
+      <Reveal as="section" className="shell section" aria-labelledby="services-label">
         <p className="label" id="services-label">
           Services
         </p>
@@ -86,7 +86,7 @@ export default function Home() {
       </Reveal>
 
       {/* ---------- our story ---------- */}
-      <Reveal as="section" axis="x" className="shell section">
+      <Reveal as="section" className="shell section">
         <SectionRow
           label="Our Story"
           action={

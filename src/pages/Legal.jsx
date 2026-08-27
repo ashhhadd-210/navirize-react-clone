@@ -34,7 +34,7 @@ export default function Legal({ which }) {
               on the site — the client's note that these pages animate the
               title and then nothing at all. */}
           {page.sections.map((sec) => (
-            <Reveal as="section" axis="x" className="legal__sec" key={sec.heading}>
+            <Reveal as="section" className="legal__sec" key={sec.heading}>
               <h2 className="legal__h">{sec.heading}</h2>
               {sec.body.map((p, i) => (
                 <p key={i}>{p}</p>
