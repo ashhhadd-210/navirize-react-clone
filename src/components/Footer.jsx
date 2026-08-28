@@ -101,9 +101,12 @@ export default function Footer() {
 
         <hr className="foot__rule" />
 
+        {/* The three clauses are kept whole with non-breaking spaces, so a
+            narrow screen breaks BETWEEN them rather than splitting
+            "Registry Code:" from its number. */}
         <p className="foot__legal">
-          © {brand.year} {brand.legalName} · Registry Code: {brand.registryCode}{' '}
-          · {brand.country}
+          {`© ${brand.year} ${brand.legalName}`} ·{' '}
+          {`Registry Code: ${brand.registryCode}`} · {brand.country}
         </p>
       </div>
       </div>

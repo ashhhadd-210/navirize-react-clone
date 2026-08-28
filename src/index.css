@@ -998,6 +998,8 @@ textarea {
   text-align: center;
   font-size: 16px;
   color: var(--grey-dark);
+  /* even line lengths instead of a long first line and a stub second */
+  text-wrap: balance;
 }
 
 .proj__visit {

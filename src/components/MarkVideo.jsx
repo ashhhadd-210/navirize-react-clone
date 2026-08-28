@@ -8,11 +8,16 @@ import { img, marks } from '../data/site.js'
  *
  * The shader itself isn't extractable, so this is a capture of its canvas
  * output, recorded straight off the live site at 2x:
- *   n-mark-white.mp4  H.264, white-matted — offered FIRST because every
- *                     phone decodes H.264 in hardware, while VP9-with-alpha
- *                     falls to a software decoder and stutters. The page
- *                     behind the mark is white, so the matte is invisible.
- *   n-mark.webm       VP9 with alpha, kept for anything that prefers it.
+ *   n-mark.webm       VP9 with alpha — composites onto whatever is behind it
+ *   n-mark-white.mp4  H.264, white-matted — for Safari, which drops VP9 alpha
+ *
+ * The alpha clip has to come first. Offering the white-matted H.264 ahead of
+ * it decodes in hardware and never stutters, but the matte is only invisible
+ * on a white page: Android's forced dark theme darkens the page and leaves
+ * the media alone, so the matte showed as a white square. Transparency wins
+ * over decode cost, and the play/pause thrash that caused most of the
+ * stutter is fixed separately below.
+ *
  * The PNG stays as poster and reduced-motion/no-video fallback.
  */
 export default function MarkVideo() {
@@ -74,8 +79,8 @@ export default function MarkVideo() {
         poster={img(marks.n, 512)}
         aria-hidden="true"
       >
-        <source src="/media/n-mark-white.mp4" type="video/mp4" />
         <source src="/media/n-mark.webm" type="video/webm" />
+        <source src="/media/n-mark-white.mp4" type="video/mp4" />
         <img src={img(marks.n, 512)} alt="" width="181" height="196" loading="lazy" />
       </video>
       </div>
