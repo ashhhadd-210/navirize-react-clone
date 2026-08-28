@@ -21,10 +21,12 @@ import { useLayoutEffect, useRef } from 'react'
  */
 
 /* Fraction of the viewport an element's top must cross before it starts.
-   Twice reported as late, so it sits high now: an element begins as soon as
-   it is a little way onto the screen. Anything already visible at mount is
-   handled separately, below. */
-const TRIGGER = 0.94
+   0.94 was an overshoot: an element fired with ~6% of it showing, so it had
+   finished before you could see it — the animations read as missing. The
+   "too late" report behind that change was really about the first card not
+   being alive at load, which the mount rule below handles instead. 0.85
+   starts it as it genuinely comes into view. */
+const TRIGGER = 0.85
 
 /* Containers whose CHILDREN are the real items — a list must arrive row by
    row, not as one block. */
@@ -35,6 +37,30 @@ const VISUAL = 'img, video, figure, picture, canvas'
 
 let observer = null
 const callbacks = new WeakMap()
+
+/* A single global sweep, bound once. The observer is the normal path, but it
+   can be torn down by a re-render, and anything it drops would sit at
+   opacity 0 forever — invisible content, not just a missing animation. This
+   guarantees that never happens. */
+let sweepBound = false
+function bindSweep() {
+  if (sweepBound || typeof window === 'undefined') return
+  sweepBound = true
+  let raf = 0
+  const sweep = () => {
+    raf = 0
+    const vh = window.innerHeight
+    for (const el of document.querySelectorAll('.rv:not(.rv--on)')) {
+      const r = el.getBoundingClientRect()
+      if (r.top < vh * TRIGGER && r.bottom > -400) el.classList.add('rv--on')
+    }
+  }
+  const kick = () => {
+    if (!raf) raf = requestAnimationFrame(sweep)
+  }
+  window.addEventListener('scroll', kick, { passive: true })
+  window.addEventListener('resize', kick)
+}
 
 function observe(el, cb) {
   if (typeof IntersectionObserver === 'undefined') {
@@ -100,7 +126,7 @@ export function useReveal() {
   useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
-    const stops = []
+    bindSweep()
 
     for (const node of items(el)) {
       if (node.dataset.rv) continue
@@ -123,30 +149,15 @@ export function useReveal() {
         show()
         continue
       }
-      stops.push(observe(node, show))
-
-      /* Belt and braces: under a fast flick the observer can miss an element.
-         A rAF-gated scroll check guarantees nothing is left invisible. */
-      let raf = 0
-      const onScroll = () => {
-        if (raf) return
-        raf = requestAnimationFrame(() => {
-          raf = 0
-          if (node.getBoundingClientRect().top < window.innerHeight * TRIGGER) {
-            show()
-            window.removeEventListener('scroll', onScroll)
-          }
-        })
-      }
-      window.addEventListener('scroll', onScroll, { passive: true })
-      stops.push(() => {
-        window.removeEventListener('scroll', onScroll)
-        if (raf) cancelAnimationFrame(raf)
-      })
+      observe(node, show)
     }
 
-    return () => stops.forEach((s) => s())
-  })
+    /* Run ONCE per mount. It used to run after every render, and its cleanup
+       unobserved everything while the re-run skipped already-tagged nodes —
+       so after any re-render the observers were gone and those elements
+       stayed invisible. */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return ref
 }
