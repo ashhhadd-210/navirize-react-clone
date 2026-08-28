@@ -1442,8 +1442,10 @@ textarea {
   }
 
   .mark {
-    /* story button bottom -> mark 105 (60 section pad + 45), mark -> footer 144 */
-    padding-block: 45px 144px;
+    /* story button bottom -> mark 105 (60 section pad + 45), mark -> footer
+       144, plus 139 each side standing in for the transparent margin inside
+       the original's taller 388px box */
+    padding-block: 184px 283px;
   }
 
   .body--lg {
@@ -1585,11 +1587,15 @@ textarea {
     padding-right: 326px;
   }
 
+  /* Same story at tablet: the original's box is 101x388 with the glyph
+     centred inside it. Ours takes the glyph's own size and the padding
+     below carries the remaining height. */
   .mark video,
   .mark img {
     width: 101px;
-    height: 388px;
-    object-fit: fill;
+    height: auto;
+    aspect-ratio: 362 / 392;
+    object-fit: contain;
   }
 }
 
@@ -2521,16 +2527,21 @@ a:focus-visible > .roll .roll__stack {
     padding: 110px 0 128px;
   }
 
-  /* The original's phone mark measures 70x162 — taller than its desktop
-     181x196, so its shader re-renders stretched rather than scaled. `fill`
-     matches that. `contain` letterboxed the clip and those bands painted
-     black; keeping the clip's own ratio left the N far too small. */
+  /* The original's phone mark occupies a 70x162 box, but the glyph inside it
+     is NOT stretched — it sits centred with transparent space above and
+     below, about 70x103. We cannot reproduce that with a <video>: browsers
+     paint black bars into any letterboxed area, which was the dark rectangle
+     he first reported. Stretching to fill instead thinned the strokes out.
+
+     So the element carries the clip's own proportions at the glyph's real
+     size (95x103), and the padding makes up the rest of the 162 box, keeping
+     the 150-above / 160-below rhythm intact. */
   .mark video,
   .mark img {
-    width: 70px;
-    height: 162px;
-    object-fit: fill;
-    aspect-ratio: auto;
+    width: 95px;
+    height: auto;
+    aspect-ratio: 362 / 392;
+    object-fit: contain;
   }
 
   /* no nav links to line up with on a phone: centre it on the page */
@@ -2538,9 +2549,10 @@ a:focus-visible > .roll .roll__stack {
     margin-right: 0;
   }
 
-  /* the mark sits 160 above the footer on the original, not 128 */
+  /* 110 + 30 and 160 + 30: the 30s replace the transparent margin the
+     original's taller box provides, so the block height still matches */
   .mark {
-    padding: 110px 0 160px;
+    padding: 140px 0 190px;
   }
 
   .proj__marquee {
