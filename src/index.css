@@ -1227,6 +1227,18 @@ textarea {
   max-width: 400px;
 }
 
+/* "the get in touch link with arrow in the contact page isn't animating" —
+   it now behaves like Threads and Instagram in the footer. */
+.contact__mail svg {
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact__mail:hover svg {
+    transform: rotate(45deg);
+  }
+}
+
 .form {
   /* measured field pitch 83: 16px label + 8 + 44px field + 15 */
   display: grid;
@@ -2331,10 +2343,13 @@ a:focus-visible > .roll .roll__stack {
    few pixels to the right and then animate moving a few pixels to the
    original position after the stagger". Shorter travel and a later, longer
    glide is what makes it read as smooth rather than as a slide. */
+/* Slower overall, per the client, and driven by two variables so a group's
+   rows can start apart and still land together: --rd is the row's delay and
+   --rdur the glide it has left to run. */
 .rv--on {
   animation:
-    rev-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) both,
-    rev-slide 0.95s var(--ease-glide) 0.12s both;
+    rev-fade 0.7s cubic-bezier(0, 0.46, 0.56, 1) var(--rd, 0ms) both,
+    rev-slide var(--rdur, 1.3s) var(--ease-glide) calc(var(--rd, 0ms) + 0.12s) both;
 }
 
 @keyframes rev-fade {

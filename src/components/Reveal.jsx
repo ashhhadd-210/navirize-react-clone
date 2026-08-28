@@ -30,7 +30,8 @@ const TRIGGER = 0.85
 
 /* Containers whose CHILDREN are the real items — a list must arrive row by
    row, not as one block. */
-const GROUPS = 'ul, ol, .acc, .stack, .row, .media-pair, .proj__pair, .work__grid, .contact__meta, .foot__col'
+const GROUPS =
+  'ul, ol, .acc, .stack, .row, .media-pair, .proj__pair, .work__grid, .contact__meta, .foot__col, .form'
 
 /* Elements that are pictures: these rise from below instead of sliding in. */
 const VISUAL = 'img, video, figure, picture, canvas'
@@ -52,7 +53,11 @@ function bindSweep() {
     const vh = window.innerHeight
     for (const el of document.querySelectorAll('.rv:not(.rv--on)')) {
       const r = el.getBoundingClientRect()
-      if (r.top < vh * TRIGGER && r.bottom > -400) el.classList.add('rv--on')
+      if (r.top < vh * TRIGGER && r.bottom > -400) {
+        const g = el.parentElement
+        if (g && g.dataset.rvg) playGroup([...g.children])
+        else el.classList.add('rv--on')
+      }
     }
   }
   const kick = () => {
@@ -93,6 +98,23 @@ function observe(el, cb) {
   }
 }
 
+/* A group's rows start one after another but all LAND together: later rows
+   get a longer delay and a correspondingly shorter glide. The client: "they
+   start at different times and some are faster and end at the same time —
+   that way the animation would be complete." Ours went strictly one by one,
+   which is also why the lists looked like they were jumping. */
+const GROUP_STEP = 90
+const GROUP_TOTAL = 1300
+
+function playGroup(rows) {
+  rows.forEach((row, i) => {
+    const delay = Math.min(i * GROUP_STEP, GROUP_TOTAL - 400)
+    row.style.setProperty('--rd', delay + 'ms')
+    row.style.setProperty('--rdur', GROUP_TOTAL - delay + 'ms')
+    row.classList.add('rv--on')
+  })
+}
+
 /** The individual things that should animate inside a section. */
 function items(root) {
   const out = []
@@ -127,6 +149,23 @@ export function useReveal() {
     const el = ref.current
     if (!el) return
     bindSweep()
+
+    /* Group containers are watched as one: when the list arrives, its rows
+       play together on staggered starts. Individual items outside a group
+       keep their own trigger. */
+    for (const group of el.querySelectorAll(GROUPS)) {
+      if (group.dataset.rvg) continue
+      group.dataset.rvg = '1'
+      const rows = [...group.children]
+      for (const row of rows) {
+        row.dataset.rv = '1'
+        row.classList.add('rv', isVisual(row) ? 'rv--up' : 'rv--in-x')
+      }
+      const fire = () => playGroup(rows)
+      const r = group.getBoundingClientRect()
+      if (r.top < window.innerHeight && r.bottom > 0) fire()
+      else observe(group, fire)
+    }
 
     for (const node of items(el)) {
       if (node.dataset.rv) continue
