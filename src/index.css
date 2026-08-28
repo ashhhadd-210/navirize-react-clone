@@ -1588,8 +1588,8 @@ textarea {
   .mark video,
   .mark img {
     width: 101px;
-    height: auto;
-    aspect-ratio: 362 / 392;
+    height: 388px;
+    object-fit: fill;
   }
 }
 
@@ -2521,14 +2521,26 @@ a:focus-visible > .roll .roll__stack {
     padding: 110px 0 128px;
   }
 
-  /* Keep the clip's own 362x392 proportions. Forcing a 70x162 box letterboxed
-     it, and those empty bands paint BLACK on a phone — the dark rectangle
-     around the N the client screenshotted. */
+  /* The original's phone mark measures 70x162 — taller than its desktop
+     181x196, so its shader re-renders stretched rather than scaled. `fill`
+     matches that. `contain` letterboxed the clip and those bands painted
+     black; keeping the clip's own ratio left the N far too small. */
   .mark video,
   .mark img {
     width: 70px;
-    height: auto;
-    aspect-ratio: 362 / 392;
+    height: 162px;
+    object-fit: fill;
+    aspect-ratio: auto;
+  }
+
+  /* no nav links to line up with on a phone: centre it on the page */
+  .mark__band > * {
+    margin-right: 0;
+  }
+
+  /* the mark sits 160 above the footer on the original, not 128 */
+  .mark {
+    padding: 110px 0 160px;
   }
 
   .proj__marquee {
