@@ -8,8 +8,11 @@ import { img, marks } from '../data/site.js'
  *
  * The shader itself isn't extractable, so this is a capture of its canvas
  * output, recorded straight off the live site at 2x:
- *   n-mark.webm       VP9 with alpha — composites onto the page background
- *   n-mark-white.mp4  H.264, white-matted — Safari, which drops VP9 alpha
+ *   n-mark-white.mp4  H.264, white-matted — offered FIRST because every
+ *                     phone decodes H.264 in hardware, while VP9-with-alpha
+ *                     falls to a software decoder and stutters. The page
+ *                     behind the mark is white, so the matte is invisible.
+ *   n-mark.webm       VP9 with alpha, kept for anything that prefers it.
  * The PNG stays as poster and reduced-motion/no-video fallback.
  */
 export default function MarkVideo() {
@@ -29,17 +32,21 @@ export default function MarkVideo() {
     document.addEventListener('touchstart', play, { once: true, passive: true })
     document.addEventListener('click', play, { once: true })
 
-    /* Decoding an alpha video continuously costs frames even when it is
-       nowhere near the screen — the client saw the page lag on desktop and
-       glitch on mobile. Run it only while it is actually in view. */
+    /* Pause it when it is far away, but only on an actual change of state
+       and with a wide margin. The first version toggled on a 200px boundary
+       and called play() on every callback, so scrolling near that line
+       thrashed play/pause — which is itself visible as a glitch. */
     let io
+    let running = true
     if (typeof IntersectionObserver !== 'undefined') {
       io = new IntersectionObserver(
         ([e]) => {
-          if (e.isIntersecting) play()
+          if (e.isIntersecting === running) return
+          running = e.isIntersecting
+          if (running) play()
           else v.pause()
         },
-        { rootMargin: '200px' }
+        { rootMargin: '600px' }
       )
       io.observe(v)
     }
@@ -62,12 +69,13 @@ export default function MarkVideo() {
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
+        disablePictureInPicture
         poster={img(marks.n, 512)}
         aria-hidden="true"
       >
-        <source src="/media/n-mark.webm" type="video/webm" />
         <source src="/media/n-mark-white.mp4" type="video/mp4" />
+        <source src="/media/n-mark.webm" type="video/webm" />
         <img src={img(marks.n, 512)} alt="" width="181" height="196" loading="lazy" />
       </video>
       </div>
