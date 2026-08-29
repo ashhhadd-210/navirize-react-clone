@@ -90,7 +90,9 @@ export default function Footer() {
                     rel="noopener noreferrer"
                     className="foot__ext"
                   >
-                    <RollText>{item.label}</RollText>
+                    {/* No text roll here: on the original only the arrow
+                        turns on these two, the label stays put. */}
+                    {item.label}
                     <ArrowUpRight />
                   </a>
                 </li>

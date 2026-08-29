@@ -2346,7 +2346,9 @@ a:focus-visible > .roll .roll__stack {
 
 .rv--up {
   --rvx: 0px;
-  --rvy: 26px;
+  /* 30px is the original's own resting offset, read off its live DOM:
+     translateY(30px) at opacity 0 before a reveal fires. */
+  --rvy: 30px;
 }
 
 /* The move TRAILS the fade rather than running with it: the item appears a
@@ -2359,8 +2361,16 @@ a:focus-visible > .roll .roll__stack {
    --rdur the glide it has left to run. */
 .rv--on {
   animation:
-    rev-fade 0.7s cubic-bezier(0, 0.46, 0.56, 1) var(--rd, 0ms) both,
-    rev-slide var(--rdur, 1.3s) var(--ease-glide) calc(var(--rd, 0ms) + 0.12s) both;
+    rev-fade calc(0.7s * var(--rmul, 1)) cubic-bezier(0, 0.46, 0.56, 1)
+      var(--rd, 0ms) both,
+    rev-slide calc(var(--rdur, 1.3s) * var(--rmul, 1)) var(--ease-glide)
+      calc(var(--rd, 0ms) + 0.12s) both;
+}
+
+/* The ones that rise take longer than the ones that slide in — a taller
+   move reads as hurried at the same duration. */
+.rv--up {
+  --rmul: 1.5;
 }
 
 @keyframes rev-fade {
