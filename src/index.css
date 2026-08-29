@@ -987,13 +987,23 @@ textarea {
   width: 100%;
 }
 
-/* Threads and Instagram were the only two footer links with no hover — they
-   roll like the rest now, and their arrow turns as the buttons' does. */
+/* Threads and Instagram dim on hover like every other footer link and their
+   arrow turns. The rolling links land on a copy set to 0.6 opacity, so these
+   two match that rather than staying at full white — which is the difference
+   visible in the client's recording, where the hovered link reads grey
+   against the other one's white. */
+.foot__ext,
 .foot__ext svg {
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  transition:
+    opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .foot__ext:hover {
+    opacity: 0.6;
+  }
+
   .foot__ext:hover svg {
     transform: rotate(45deg);
   }
