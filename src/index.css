@@ -917,6 +917,8 @@ textarea {
   height: 100%;
   transform: translateZ(0);
   backface-visibility: hidden;
+  /* the hand-over is a crossfade, so the window's seam never shows */
+  transition: opacity 0.45s linear;
 }
 
 .mark img {
@@ -2581,7 +2583,11 @@ a:focus-visible > .roll .roll__stack {
     margin-bottom: 129px;
   }
 
+  /* Equal top and bottom, like the original: its footer content sits 48
+     from each edge. Ours had 70 above and 49 below, which pushed every row
+     22px down and left the block looking bottom-heavy. */
   .foot {
+    padding-top: 48px;
     padding-bottom: 48px;
   }
 
