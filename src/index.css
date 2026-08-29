@@ -903,8 +903,18 @@ textarea {
 
 /* Compositor-only, and paused while off screen (see MarkVideo) — it was
    costing frames on the client's machine and glitching on his phone. */
-.mark video,
-.mark img {
+/* .mark__stack is the sized box; the two clips fill it and cross over. */
+.mark__stack {
+  position: relative;
+  width: 181px;
+  aspect-ratio: 362 / 392;
+}
+
+.mark__clip {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -1604,12 +1614,10 @@ textarea {
   /* Same story at tablet: the original's box is 101x388 with the glyph
      centred inside it. Ours takes the glyph's own size and the padding
      below carries the remaining height. */
-  .mark video,
-  .mark img {
+  .mark__stack {
     width: 101px;
     height: auto;
     aspect-ratio: 362 / 392;
-    object-fit: contain;
   }
 }
 
@@ -1724,8 +1732,7 @@ textarea {
     padding-block: 110px 140px;
   }
 
-  .mark video,
-  .mark img {
+  .mark__stack {
     width: 150px;
     height: auto;
     aspect-ratio: 362 / 392;
@@ -2553,12 +2560,10 @@ a:focus-visible > .roll .roll__stack {
      So the element carries the clip's own proportions at the glyph's real
      size (95x103), and the padding makes up the rest of the 162 box, keeping
      the 150-above / 160-below rhythm intact. */
-  .mark video,
-  .mark img {
+  .mark__stack {
     width: 95px;
     height: auto;
     aspect-ratio: 362 / 392;
-    object-fit: contain;
   }
 
   /* no nav links to line up with on a phone: centre it on the page */
