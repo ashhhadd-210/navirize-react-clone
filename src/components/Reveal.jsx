@@ -106,6 +106,29 @@ function observe(el, cb) {
 const GROUP_STEP = 90
 const GROUP_TOTAL = 1300
 
+/* Everything already on screen at mount plays as ONE staggered set, in
+   document order. Each Reveal used to reveal its own visible items the
+   instant it mounted, so a short page (contact especially) fired every item
+   at exactly the same moment — the client's "some aren't staggering". They
+   are collected across all Reveals in the same frame and played together. */
+let pending = []
+let flushQueued = false
+
+function queueMount(node) {
+  pending.push(node)
+  if (flushQueued) return
+  flushQueued = true
+  requestAnimationFrame(() => {
+    flushQueued = false
+    const rows = pending
+    pending = []
+    rows.sort((a, b) =>
+      a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+    )
+    playGroup(rows)
+  })
+}
+
 function playGroup(rows) {
   rows.forEach((row, i) => {
     const delay = Math.min(i * GROUP_STEP, GROUP_TOTAL - 400)
@@ -163,7 +186,7 @@ export function useReveal() {
       }
       const fire = () => playGroup(rows)
       const r = group.getBoundingClientRect()
-      if (r.top < window.innerHeight && r.bottom > 0) fire()
+      if (r.top < window.innerHeight && r.bottom > 0) rows.forEach(queueMount)
       else observe(group, fire)
     }
 
@@ -173,6 +196,9 @@ export function useReveal() {
       if (node.closest('.proj__marquee') || node.querySelector('.proj__marquee')) continue
       // a line-staggered heading animates its own words — leave it alone
       if (node.classList.contains('slidein') || node.querySelector('.w')) continue
+      // nothing to reveal on a boxless node (an empty live region, say)
+      const box = node.getBoundingClientRect()
+      if (box.width === 0 && box.height === 0) continue
       node.dataset.rv = '1'
       node.classList.add('rv', isVisual(node) ? 'rv--up' : 'rv--in-x')
 
@@ -185,7 +211,7 @@ export function useReveal() {
          things that arrive later. */
       const r = node.getBoundingClientRect()
       if (r.top < window.innerHeight && r.bottom > 0) {
-        show()
+        queueMount(node)
         continue
       }
       observe(node, show)
