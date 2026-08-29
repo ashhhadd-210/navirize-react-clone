@@ -104,7 +104,7 @@ function observe(el, cb) {
    that way the animation would be complete." Ours went strictly one by one,
    which is also why the lists looked like they were jumping. */
 const GROUP_STEP = 90
-const GROUP_TOTAL = 1300
+const GROUP_TOTAL = 1400 // the original's measured reveal length
 
 /* Everything already on screen at mount plays as ONE staggered set, in
    document order. Each Reveal used to reveal its own visible items the

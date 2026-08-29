@@ -2356,37 +2356,34 @@ a:focus-visible > .roll .roll__stack {
    few pixels to the right and then animate moving a few pixels to the
    original position after the stagger". Shorter travel and a later, longer
    glide is what makes it read as smooth rather than as a slide. */
-/* Slower overall, per the client, and driven by two variables so a group's
-   rows can start apart and still land together: --rd is the row's delay and
-   --rdur the glide it has left to run. */
+/* ONE progress function drives both opacity and position, over 1.4s. This
+   is sampled straight off the original: at every frame its opacity equals
+   1 - y/30 exactly, so the two are not separate curves. The shape is a
+   slow start, a quick middle and a long asymptotic tail — 3% at 83ms, 49%
+   at 333ms, 85% at 666ms, 96% at 1s, settled by 1.33s.
+
+   Splitting fade and travel into two curves, which is what this was, is
+   what made the page feel hurried next to the original: the fade finished
+   while the element was still moving, so content read as arriving twice. */
+:root {
+  --reveal-curve: linear(
+    0 0%, 0.028 6.2%, 0.103 12.5%, 0.281 18.8%, 0.491 25%, 0.632 31.2%,
+    0.728 37.4%, 0.796 43.7%, 0.847 50%, 0.887 56.2%, 0.918 62.5%,
+    0.942 68.7%, 0.961 74.9%, 0.975 81.2%, 0.986 87.5%, 0.993 93.7%, 1 100%
+  );
+}
+
 .rv--on {
-  animation:
-    rev-fade calc(0.7s * var(--rmul, 1)) cubic-bezier(0, 0.46, 0.56, 1)
-      var(--rd, 0ms) both,
-    rev-slide calc(var(--rdur, 1.3s) * var(--rmul, 1)) var(--ease-glide)
-      calc(var(--rd, 0ms) + 0.12s) both;
+  animation: rev-in var(--rdur, 1.4s) var(--reveal-curve) var(--rd, 0ms) both;
 }
 
-/* The ones that rise take longer than the ones that slide in — a taller
-   move reads as hurried at the same duration. */
-.rv--up {
-  --rmul: 1.5;
-}
-
-@keyframes rev-fade {
+@keyframes rev-in {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes rev-slide {
-  from {
     transform: translate(var(--rvx, 0px), var(--rvy, 0px));
   }
   to {
+    opacity: 1;
     transform: none;
   }
 }
