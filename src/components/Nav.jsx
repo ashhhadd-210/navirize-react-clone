@@ -28,7 +28,20 @@ export default function Nav() {
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+
+    /* "I want to have it appear when I scroll up AND when I move my mouse up
+       towards the nav" — reaching for the bar brings it back without having
+       to scroll. Pointer only; a touch screen has no hover to read. */
+    const onMove = (e) => {
+      if (e.clientY < 90) setShown(true)
+    }
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)')
+    if (fine.matches) window.addEventListener('mousemove', onMove, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('mousemove', onMove)
+    }
   }, [])
 
   useEffect(() => setOpen(false), [pathname])

@@ -53,11 +53,7 @@ function bindSweep() {
     const vh = window.innerHeight
     for (const el of document.querySelectorAll('.rv:not(.rv--on)')) {
       const r = el.getBoundingClientRect()
-      if (r.top < vh * TRIGGER && r.bottom > -400) {
-        const g = el.parentElement
-        if (g && g.dataset.rvg) playGroup([...g.children])
-        else el.classList.add('rv--on')
-      }
+      if (r.top < vh * TRIGGER && r.bottom > -400) el.classList.add('rv--on')
     }
   }
   const kick = () => {
@@ -173,22 +169,13 @@ export function useReveal() {
     if (!el) return
     bindSweep()
 
-    /* Group containers are watched as one: when the list arrives, its rows
-       play together on staggered starts. Individual items outside a group
-       keep their own trigger. */
-    for (const group of el.querySelectorAll(GROUPS)) {
-      if (group.dataset.rvg) continue
-      group.dataset.rvg = '1'
-      const rows = [...group.children]
-      for (const row of rows) {
-        row.dataset.rv = '1'
-        row.classList.add('rv', isVisual(row) ? 'rv--up' : 'rv--in-x')
-      }
-      const fire = () => playGroup(rows)
-      const r = group.getBoundingClientRect()
-      if (r.top < window.innerHeight && r.bottom > 0) rows.forEach(queueMount)
-      else observe(group, fire)
-    }
+    /* Rows are NOT fired as a block. The client: "some stagger animations in
+       lists were fine before, now it's just a whole block ... I need them
+       one by one as I scroll, not scroll a tiny bit and have the whole
+       section move without me seeing it." So every row gets its own trigger
+       below, exactly like the sections on the terms page he pointed at.
+       The land-together timing still applies to what is on screen at mount,
+       where there is no scroll to pace it. */
 
     for (const node of items(el)) {
       if (node.dataset.rv) continue

@@ -1666,6 +1666,13 @@ textarea {
     display: none;
   }
 
+  /* On a phone the bar takes the page's own colour rather than sitting
+     transparent over the content — the client asked for that on mobile only;
+     desktop keeps the transparent bar he liked. */
+  .nav {
+    background: var(--white);
+  }
+
   .nav__burger {
     display: inline-flex;
   }
@@ -2081,8 +2088,12 @@ textarea {
     line-height: 1.4;
   }
 
+  /* The gap above a pair matches the gap between its two tiles — the client
+     pointing at the band and the BEFORE/AFTER pair under it. 16 both ways,
+     which is also the original's: its band sits 16-17 above the pair and its
+     tiles come out 162 wide, same as ours at this gap. */
   .proj__pair {
-    margin-top: 32px;
+    margin-top: 16px;
   }
 
   .proj__hero {
@@ -2094,7 +2105,7 @@ textarea {
   }
 
   .proj__pair {
-    gap: 10px;
+    gap: 16px;
   }
 
   /* both pairs are 200 tall at 390 on the original */
