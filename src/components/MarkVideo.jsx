@@ -11,7 +11,15 @@ import { img, marks } from '../data/site.js'
  *   n-mark.webm       VP9 with alpha — composites onto whatever is behind it
  *   n-mark-white.mp4  H.264, white-matted — for Safari, which drops VP9 alpha
  *
- * The alpha clip has to come first. The white-matted H.264 decodes in
+ * WebKit cannot be offered the alpha clip. Safari decodes VP9 WebM happily
+ * but ignores its alpha channel, so it picks that source and paints the
+ * transparent area BLACK — a black square around the N, which is what the
+ * client sees on iOS. Every browser on iOS is WebKit, so this is not just
+ * Safari. Those engines get the white-matted H.264 instead, which is safe
+ * there because iOS does not force a dark theme onto pages the way Android
+ * Chrome does. Everything else gets the alpha clip.
+ *
+ * The alpha clip has to come first elsewhere. The white-matted H.264 decodes in
  * hardware and never stutters, but its matte is only invisible on a white
  * page: Android's forced dark theme darkens the page and leaves media alone,
  * so it showed as a white square.
@@ -27,6 +35,18 @@ import { img, marks } from '../data/site.js'
  * waits primed at 2.9s, and they cross over. Neither ever seeks while
  * visible, so there is no decode stall either.
  */
+
+/* WebKit ignores alpha in VP9, so it must be given the matted H.264. Every
+   iOS browser is WebKit, hence the platform check as well as the engine one. */
+const SRC = (() => {
+  if (typeof navigator === 'undefined') return '/media/n-mark.webm'
+  const ua = navigator.userAgent || ''
+  const iOS =
+    /iP(hone|ad|od)/.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  const webkitOnly = /AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg|OPR/.test(ua)
+  return iOS || webkitOnly ? '/media/n-mark-white.mp4' : '/media/n-mark.webm'
+})()
 
 /* The clean window inside the capture, and the crossfade that hides its
    seam. Measured, not guessed: see the note above. */
@@ -122,8 +142,7 @@ export default function MarkVideo() {
       poster={img(marks.n, 512)}
       aria-hidden="true"
     >
-      <source src="/media/n-mark.webm" type="video/webm" />
-      <source src="/media/n-mark-white.mp4" type="video/mp4" />
+      <source src={SRC} type={SRC.endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
       <img src={img(marks.n, 512)} alt="" width="181" height="196" loading="lazy" />
     </video>
   )
