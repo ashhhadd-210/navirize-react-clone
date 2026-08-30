@@ -135,7 +135,17 @@ function Marquee({ ids }) {
   const trackRef = useRef(null)
   const state = useRef({ offset: 0, vel: 0, dragging: false, lastX: 0, lastT: 0 })
 
-  const widths = ids.map((_, i) => (i % 2 === 0 ? 500 : 350))
+  /* The strip runs a little smaller on a phone, at the client's request —
+     he liked the spacing but wanted the tiles reduced. The widths are set
+     here rather than in CSS because the wrap-around maths below is built
+     from them; overriding the rendered width alone would desync the loop
+     and show a seam. */
+  const small =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 767px)').matches
+  const widths = ids.map((_, i) => (i % 2 === 0 ? (small ? 430 : 500) : small ? 300 : 350))
+  /* The gap stays 40 at every width — it is set in CSS, and the wrap-around
+     below has to use the same number or the loop drifts and shows a seam. */
   const stripWidth = widths.reduce((a, w) => a + w + 40, 0)
 
   useEffect(() => {
@@ -291,7 +301,13 @@ export default function ProjectDetail() {
             <h1 className="display display--narrow slidein slidein--words slidein--trails" ref={titleRef}>{words(project.title)}</h1>
           </Reveal>
 
-          <ZoomHero project={project} />
+          {/* The hero rises like every other image. It used to carry only a
+              plain fade of its own, so it read as static while the meta and
+              title staggered around it — "except the image, that looks
+              static". */}
+          <Reveal>
+            <ZoomHero project={project} />
+          </Reveal>
         </header>
 
         <div className="shell">

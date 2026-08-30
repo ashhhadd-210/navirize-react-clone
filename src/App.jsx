@@ -31,10 +31,12 @@ import NotFound from './pages/NotFound.jsx'
    together at a uniform opacity, which is what the client saw as the flow
    being wrong. With it gone, a route change replays the same staggered
    entrance the first load does. */
-function Page({ children }) {
+function Page({ children, leaving }) {
   return (
     <div className="page-wrap">
-      <main id="main">{children}</main>
+      <main id="main" className={leaving ? 'page-leaving' : undefined}>
+        {children}
+      </main>
     </div>
   )
 }
@@ -56,6 +58,11 @@ export default function App() {
   const location = useLocation()
   const navType = useNavigationType()
   const [shown, setShown] = useState(location)
+  /* "When I click a link it should fade to white, then load, then stagger
+     animate." The outgoing page fades out over the hold; the incoming one
+     runs its own entrance. page-wrap stays white underneath, so what you see
+     is the content dissolving into the page colour rather than a flash. */
+  const [leaving, setLeaving] = useState(false)
 
   /* The original is a multi-page site, so the browser restores the scroll
      position on back/forward. Mirror that: remember where each history
@@ -76,11 +83,13 @@ export default function App() {
     // capture the outgoing page's position once, at navigation time —
     // a continuous scroll listener would race the swap's own scrollTo
     positions.current.set(shown.key, window.scrollY)
+    setLeaving(true)
     const t = setTimeout(() => {
       const y =
         navType === 'POP' ? (positions.current.get(location.key) ?? 0) : 0
       window.scrollTo(0, y)
       setShown(location)
+      setLeaving(false)
     }, HOLD_MS)
     return () => clearTimeout(t)
   }, [location, shown, navType])
@@ -96,7 +105,7 @@ export default function App() {
 
       <Routes location={shown} key={shown.pathname}>
         {routes.map((r) => (
-          <Route key={r.path} path={r.path} element={<Page>{r.el}</Page>} />
+          <Route key={r.path} path={r.path} element={<Page leaving={leaving}>{r.el}</Page>} />
         ))}
       </Routes>
 

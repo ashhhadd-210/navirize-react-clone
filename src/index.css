@@ -1843,7 +1843,6 @@ textarea {
 /* The case hero trails the page fade slightly in the load recording —
    its own fade starts ~150ms in and runs ~600ms. */
 .proj__hero {
-  animation: page-fade 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.15s both;
   margin-top: 126px;
   border-radius: 24px;
   overflow: hidden;
@@ -1941,9 +1940,11 @@ textarea {
   left: 50%;
   transform: translateX(-50%);
   margin-top: 75px;
-  /* measured on the original: 240px of white between the strip and the
-     footer at desktop, 160px at phone */
-  margin-bottom: 240px;
+  /* Padding, not margin. As the last thing in .page-wrap its bottom margin
+     collapsed straight out of the wrapper, so the strip sat flush against
+     the footer on desktop — "no margin and no space between the section and
+     the footer". Measured on the original: 240 at desktop, 160 at phone. */
+  padding-bottom: 240px;
 }
 
 .proj__marquee-track--drag {
@@ -2016,14 +2017,16 @@ textarea {
   }
 
   .proj__marquee {
-    margin-bottom: 144px;
+    padding-bottom: 144px;
   }
 }
 
 @media (max-width: 767px) {
   /* Measured at 390: meta becomes label/value rows, hero 350 tall, bands
-     250, the pair KEEPS two columns (tiny tiles ~230 tall with a 10px gap),
-     ticker tiles keep their 500/350 widths at 250 tall. */
+     250, the pair KEEPS two columns. The ticker tiles run a little smaller
+     than the original's 500/350 x 250, at the client's request — he liked
+     the spacing but wanted the strip itself reduced. */
+
   .proj__meta {
     flex-direction: column;
     /* rows sit 37 apart on the original (166 / 203 / 240) */
@@ -2116,7 +2119,7 @@ textarea {
   }
 
   .proj__tile {
-    height: 250px;
+    height: 215px;
   }
 
   .proj__marquee {
@@ -2162,6 +2165,14 @@ textarea {
   position: relative;
   z-index: 1;
   background: var(--white);
+}
+
+/* The outgoing page dissolves into the white beneath it before the next one
+   arrives — the client's "fade to white, then load, then stagger animate".
+   Kept just under the 250ms hold so the fade completes before the swap. */
+.page-leaving {
+  opacity: 0;
+  transition: opacity 0.22s ease-out;
 }
 
 .foot-spacer {
@@ -2638,7 +2649,7 @@ a:focus-visible > .roll .roll__stack {
   }
 
   .proj__marquee {
-    margin-bottom: 129px;
+    padding-bottom: 129px;
   }
 
   /* Equal top and bottom, like the original: its footer content sits 48
