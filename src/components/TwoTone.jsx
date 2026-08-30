@@ -31,7 +31,11 @@ export default function TwoTone({
   const render = (text) => (stagger ? words(text) : text)
 
   return (
-    <Tag className={className} ref={stagger ? ref : undefined} {...rest}>
+    <Tag
+      className={stagger ? `${className} slidein--words`.trim() : className}
+      ref={stagger ? ref : undefined}
+      {...rest}
+    >
       {render(black)}
       {grey ? (
         <>

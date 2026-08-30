@@ -25,7 +25,7 @@ export default function Legal({ which }) {
               — the client spotted them sitting static */}
           <Reveal className="legal__head">
             <p className="legal__updated">{page.updated}</p>
-            <h1 className="legal__title slidein" ref={titleRef}>{words(page.title)}</h1>
+            <h1 className="legal__title slidein slidein--words" ref={titleRef}>{words(page.title)}</h1>
             <p className="legal__lede">{page.intro}</p>
           </Reveal>
           <hr className="legal__rule" />

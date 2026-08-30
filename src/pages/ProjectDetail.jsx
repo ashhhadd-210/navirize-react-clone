@@ -288,7 +288,7 @@ export default function ProjectDetail() {
                 <dd>{project.code}</dd>
               </div>
             </dl>
-            <h1 className="display display--narrow slidein slidein--trails" ref={titleRef}>{words(project.title)}</h1>
+            <h1 className="display display--narrow slidein slidein--words slidein--trails" ref={titleRef}>{words(project.title)}</h1>
           </Reveal>
 
           <ZoomHero project={project} />

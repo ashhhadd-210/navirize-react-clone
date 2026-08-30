@@ -514,7 +514,8 @@ textarea {
   display: grid;
   grid-template-rows: 0fr;
   background: var(--white);
-  transition: grid-template-rows 0.55s var(--ease-glide);
+  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-timing-function: var(--ease-glide);
 }
 
 .nav__sheet[data-open='true'] {
@@ -544,7 +545,8 @@ textarea {
 
 /* the wordmark grows a touch while the menu is open */
 .nav__wordmark {
-  transition: transform 0.55s var(--ease-glide);
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-timing-function: var(--ease-glide);
   transform-origin: left center;
 }
 
@@ -2310,8 +2312,16 @@ a:focus-visible > .roll .roll__stack {
      keeps it on the compositor. */
   animation:
     word-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) calc(var(--ln, 0) * 200ms) both,
-    word-slide 1s var(--ease-glide) calc(var(--ln, 0) * 200ms) both;
+    word-slide 1s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--ln, 0) * 200ms) both;
   will-change: transform, opacity;
+}
+
+@supports (animation-timing-function: linear(0, 1)) {
+  .w {
+    animation:
+      word-fade 0.5s cubic-bezier(0, 0.46, 0.56, 1) calc(var(--ln, 0) * 200ms) both,
+      word-slide 1s var(--ease-glide) calc(var(--ln, 0) * 200ms) both;
+  }
 }
 
 @keyframes word-fade {
@@ -2341,6 +2351,11 @@ a:focus-visible > .roll .roll__stack {
 
 
 /* a staggered heading animates its words, never the block as a whole */
+/* Safari only got :has() in 15.4, and without it a word-staggered heading
+   would fade as a block as well as per word. The .slidein--words class is
+   set alongside the words themselves, so this holds on any engine; the
+   :has() rule stays as a belt-and-braces for markup that predates it. */
+.slidein--words,
 .slidein:has(.w) {
   animation: none;
 }
@@ -2394,8 +2409,23 @@ a:focus-visible > .roll .roll__stack {
   );
 }
 
+/* Longhand with a plain-bezier fallback, NOT the shorthand. linear() only
+   arrived in Safari 17.2, and a var() holding an unsupported value makes the
+   whole declaration invalid — with the shorthand that meant no animation at
+   all, and since .rv rests at opacity 0 the content stayed invisible on
+   older iPhones. As longhands, only the timing function is discarded. */
 .rv--on {
-  animation: rev-in var(--rdur, 1.4s) var(--reveal-curve) var(--rd, 0ms) both;
+  animation-name: rev-in;
+  animation-duration: var(--rdur, 1.4s);
+  animation-delay: var(--rd, 0ms);
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@supports (animation-timing-function: linear(0, 1)) {
+  .rv--on {
+    animation-timing-function: var(--reveal-curve);
+  }
 }
 
 @keyframes rev-in {

@@ -31,7 +31,7 @@ export default function Home() {
         {/* The original renders each letter as an inline-block for its load
             animation, which drops kerning and makes the line marginally
             wider — at phone it therefore breaks after "presence,". */}
-        <h1 className="display slidein" ref={heroRef}>
+        <h1 className="display slidein slidein--words" ref={heroRef}>
           {words(headings.hero.black)}
           <span className="grey" style={{ display: 'block' }}>
             {words('Your presence,')}
